@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+html * {
+  -webkit-font-smoothing: antialiased;
+}
+
+html,
+body {
+  background-color: #BBC6C7; /* Prevent the white background from appearing when scrolling excessively */
+}
+
+@theme {
+  --color-mainbg: #BBC6C7;
+  --color-background-secondary: #f7fafc;
+  --color-background-tertiary: #53728D;
+  --color-background-grid-section: #63726C;
+  --color-background-grid-box: #7A593C;
+  --color-text-primary: #E1E3E2;
+  --color-text-secondary: #374151;
+  --color-navigation-icon: #7A593C;
+}
