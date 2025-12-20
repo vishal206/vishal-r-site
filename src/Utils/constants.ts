@@ -27,7 +27,7 @@ export const experiences = [
       "* OKR Mashup, An Performance Dashboards: Developed dashboards using Qlik hooks connection with hypercubes/expressions, resolving data reliability issues and improving KPI tracking.",
       "* Executive Dashboard Template: Built a configurable React dashboard powered by Google Sheets metadata, enabling Qlik developers to deploy new mashups or dashboards through sheet updates **without modifying code**.",
       "* Analytics **Chrome Extension**: Developed a Chrome Extension (React + Chrome APIs) to auto-detect brand sites and surface analytics instantly for editors.",
-      "Slack & Automations: Implemented **Slack API** integrations and Qlik SaaS automations (with OpenAI connector) to streamline reporting, alerts, and collaboration."
+      "Slack & Automations: Implemented **Slack API** integrations and Qlik SaaS automations (with OpenAI connector) to streamline reporting, alerts, and collaboration.",
     ],
   },
   {
@@ -109,28 +109,23 @@ export const sections = [
 
 export const banners = [
   {
-    imageUrl: "https://github.com/vishal206/personal-site-images/blob/main/aa-day-hackathon-2025.png?raw=true",
-    highlight: "Agentic AI Hackathon by Google Cloud",
-    description: "My first 30-hour hackathon experience - pulled an all-nighter building Geo+, a Gemini-powered AI agent for smart cities.",
-    link: "/blog/aa-hackathon",
+    imageUrl:
+      "https://github.com/vishal206/personal-site-images/blob/main/aa-day-hackathon-2025.png?raw=true",
   },
-  {
-    imageUrl: "https://github.com/vishal206/personal-site-images/blob/main/background-1.png?raw=true",
-    highlight: "Promoted to Business Intelligence & Analytics Engineer I 🥳",
-    description: "From Assosiate BI Engineer to Business Intelligence & Analytics Engineer I at Condé Nast Technology Lab.",
-  }
 ];
 
 // Add project images configuration
 export const projectImages: { [key: string]: string } = {
-  "wishlist": "https://github.com/vishal206/personal-site-images/blob/main/aa-day-hackathon-2025.png?raw=true",
-  "WeSaige": "https://github.com/vishal206/personal-site-images/blob/main/wesaige-devlog-2.png?raw=true",
+  wishlist:
+    "https://github.com/vishal206/personal-site-images/blob/main/aa-day-hackathon-2025.png?raw=true",
+  WeSaige:
+    "https://github.com/vishal206/personal-site-images/blob/main/wesaige-devlog-2.png?raw=true",
   // Add more projects as needed
 };
 
 // Add project descriptions configuration
 export const projectDescriptions: { [key: string]: string } = {
-  "wishlist": "A smart wishlist management application",
-  "WeSaige": "A lifestyle brand that helps your flow in life",
+  wishlist: "A smart wishlist management application",
+  WeSaige: "A lifestyle brand that helps your flow in life",
   // Add more project descriptions as needed
 };
