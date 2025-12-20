@@ -4,23 +4,10 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Mon, 08 Dec 2025 15:02:36 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 17 Dec 2025 16:26:26 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Mon, 08 Dec 2025 15:02:36 GMT</pubDate>
+        <pubDate>Wed, 17 Dec 2025 16:26:26 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
-        <item>
-            <title><![CDATA[Candlelight Read]]></title>
-            <description><![CDATA[
-Yo! Welcome to my Weekly Note nummbbberrr 10 🕯️📕
-
-- Have you ever tried to fix your sleep routine? I too tried. This week, I came up with the idea of “candlelight read”.
-
-  Sharp at 10:30 pm, I turn off all the lights and fans, light up my candles & open the window, and I read my book. After like...]]></description>
-            <link>https://vishalr.dev/weeknote/Candlelight-Read</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/Candlelight-Read</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Sun, 07 Dec 2025 18:30:00 GMT</pubDate>
-        </item>
         <item>
             <title><![CDATA[Open Source India 2025]]></title>
             <description><![CDATA[
@@ -35,39 +22,6 @@ _Also because I don’t think we have another option in...]]></description>
             <pubDate>Sat, 06 Dec 2025 18:30:00 GMT</pubDate>
         </item>
         <item>
-            <title><![CDATA[Crispy and soft paniyaram]]></title>
-            <description><![CDATA[
-Hi! Welcome to my Weekly Note nummbbberrr 9 💐🥟🤾‍♂️
-
-- I’m writing this so late that half of what happened I've forgotten. I usually use my mobile gallery to recollect it. From that reference, I see only one day from my weekends.
-
-- Starting with the Cubbon Park flower show, for someone who is st...]]></description>
-            <link>https://vishalr.dev/weeknote/Crispy-and-soft-paniyaram</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/Crispy-and-soft-paniyaram</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Sun, 30 Nov 2025 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Ticks from buy list]]></title>
-            <description><![CDATA[ Hi! Welcome to my Weekly Note nummbbberrr 8 ✨
-
-- On Monday, the usual walk in church street after lunch, I saw an unusual crowd surrounding a camera crew. First, I thought it was some YouTube channel; sometimes I have seen Times Now, but never a crowd around it. Then they all started dancing, ahaa,...]]></description>
-            <link>https://vishalr.dev/weeknote/Ticks-from-buy-list</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/Ticks-from-buy-list</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Sun, 23 Nov 2025 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[8 Minutes of Pure Vroooom]]></title>
-            <description><![CDATA[ Hi! Welcome to my Weekly Note nummbbberrr 7 ✨
-
-- This week I went **go-karting** for the first time. My great friends Sadhana and Mayank took me to **LOCO BEAR**. During a break, Mayank asked, “Let’s go for karting.” I acted casually “Sure, Sadhana, you’re coming too” but damn, my heart was on fire...]]></description>
-            <link>https://vishalr.dev/weeknote/8-Minutes-of-Pure-Vroooom-Weekly-Note-7</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/8-Minutes-of-Pure-Vroooom-Weekly-Note-7</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Tue, 18 Nov 2025 18:30:00 GMT</pubDate>
-        </item>
-        <item>
             <title><![CDATA[Proof That Even I Can Stick to a Routine]]></title>
             <description><![CDATA[
 Recently I have updated my morning routine to something that I'm proud of, so here I'm to boost it.
@@ -77,56 +31,6 @@ Recently I have updated my morning routine to something that I'm proud of, so he
             <guid isPermaLink="false">https://vishalr.dev/blog/Proof-That-Even-I-Can-Stick-to-a-Routine</guid>
             <category><![CDATA[Blog]]></category>
             <pubDate>Fri, 14 Nov 2025 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Learning in Public 🗣️]]></title>
-            <description><![CDATA[
-- Attended my first Open Source India event, sat through 2 days of lectures. Learned a lot, I took notes for almost 20 pages. Aiming to make a blog/notebook going through details on what I understood and what I learned.  
-- Attended a new book club, **SwapBook**. The bunch was so smart, everyone kn...]]></description>
-            <link>https://vishalr.dev/weeknote/learning-in-public</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/learning-in-public</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Sun, 09 Nov 2025 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Atomic habits 🐌]]></title>
-            <description><![CDATA[
-- After 10 days of going to the gym, my body is starting to adjust with all the muscle activation. There was a day when I felt like skipping it but then realized how much better I feel after going to the gym. Still working on the day routine.  
-
-- Current morning routine starts with one competitive...]]></description>
-            <link>https://vishalr.dev/weeknote/atomic-habits</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/atomic-habits</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Sun, 02 Nov 2025 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[A New Habit 🏋]]></title>
-            <description><![CDATA[- Feeling proud that I didn’t take any leave this week even though none of my teammates showed up. One thing that stopped me is that this month I already had 5 office closures, so I’m planning to save the leaves for next month (no office closures 😭).  
-
-- My personal laptop went down; when opened, ...]]></description>
-            <link>https://vishalr.dev/weeknote/a-new-habit</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/a-new-habit</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Sun, 26 Oct 2025 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Escape Room & Diwali 🧨]]></title>
-            <description><![CDATA[
-- Celebrated the **1-year anniversary of the 11 AM Club**, started with paper cutting where the creativity juice flows. I couldn't finalize what to make, every cut I made gave me a new idea. Anyway, I ended up with a unique-looking piece by the end. As usual, Bake Duck got an exquisite cake, this t...]]></description>
-            <link>https://vishalr.dev/weeknote/escape-room-and-diwali</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/escape-room-and-diwali</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Sun, 19 Oct 2025 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[IKEA, Earbuds, and Empathy]]></title>
-            <description><![CDATA[
-- Got my **IKEA delivery!** Finally received the ALGANÄS shoe stand that I’d been waiting for quite some time , loved it! I was afraid it would be *wobbly-wobbly* 😅 but it turned out super steady and slim, so it doesn’t take up much space.  
-  Also grabbed a few other small things along with two c...]]></description>
-            <link>https://vishalr.dev/weeknote/ikea-earbuds-and-empathy</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/ikea-earbuds-and-empathy</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Fri, 10 Oct 2025 18:30:00 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[WeSaige: Something Fresh]]></title>
@@ -140,16 +44,6 @@ where we first understand the user’s skin. For the POC, we fetch a user’s im
             <category><![CDATA[DevLog]]></category>
             <category><![CDATA[WeSaige]]></category>
             <pubDate>Mon, 06 Oct 2025 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[It's Hell-ah-crowded]]></title>
-            <description><![CDATA[
-- Only thing I did on Monday and Tuesday is to wait for Wednesday, as Wed and Thur are holidays that come with a long weekend with Friday as WFH.  
-- Went to Orion Mall to checkout the newly opened Uniqlo and Lego store, first timer to both. Got 3 custom-built Lego characters. One is resting with m...]]></description>
-            <link>https://vishalr.dev/weeknote/04-oct-2025</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/04-oct-2025</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Fri, 03 Oct 2025 18:30:00 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[Agentic AI Hackathon by google cloud]]></title>
