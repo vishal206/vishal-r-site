@@ -19,7 +19,7 @@ const BlogsBoxSection: React.FC = () => {
         </button>
       </div>
       <div className="md:max-h-96 max-h-64 overflow-y-auto">
-        <BlogList />
+        <BlogList from="box" />
       </div>
     </div>
   );

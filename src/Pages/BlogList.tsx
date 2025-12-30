@@ -6,7 +6,7 @@ import {
   getAvailablePosts,
 } from "../Utils/markdownLoader";
 
-const BlogList = () => {
+const BlogList = ({ from = "All Blogs" }: { from?: string }) => {
   const [posts, setPosts] = useState<BlogPostMeta[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,11 +88,21 @@ const BlogList = () => {
           </p>
         </div>
       ) : (
-        <div className="flex flex-row overflow-x-auto gap-6">
+        <div
+          className={` ${
+            from === "All Blogs"
+              ? `grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5`
+              : `flex flex-row overflow-x-auto`
+          }  gap-6`}
+        >
           {posts.map((post) => (
             <div
               key={post.slug}
-              className="flex flex-col flex-none md:w-[11.8rem] w-[8rem] duration-300"
+              className={`flex flex-col ${
+                from === "All Blogs"
+                  ? `h-full max-w-[250px] mx-auto overflow-hidden`
+                  : `flex-none md:w-[11.8rem] w-[8rem]`
+              } duration-300`}
             >
               <Link
                 to={`/blog/${post.slug}`}
