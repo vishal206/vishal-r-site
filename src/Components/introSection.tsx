@@ -59,10 +59,10 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
       className={`bg-background-grid-section rounded-lg md:p-6 p-4 h-full flex flex-col justify-between`}
     >
       <div>
-        <div className="md:text-3xl text-xl font-serif text-center mb-4 md:mb-5 text-white">
+        <div className="md:text-3xl text-xl font-serif text-center mb-4 md:mb-8 text-white">
           Hello, I'm Vishal R
         </div>
-        <p className="text-xs md:text-md font-sans text-center mb-4 md:mb-8  text-gray-200">
+        <p className="text-xs md:text-sm md:font-extralight font-sans text-center mb-4 md:mb-10  text-gray-200">
           I’m Vishal R, a BI & Analytics Engineer working at the intersection of
           AI, data, and web engineering. I build products that make data easier
           to understand — from intelligent dashboards to conversational

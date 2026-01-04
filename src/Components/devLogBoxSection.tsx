@@ -61,7 +61,9 @@ const DevLogBoxSection: React.FC = () => {
   }, []);
 
   return (
-    <div className={`bg-background-secondary rounded-lg p-4 md:p-6 h-full`}>
+    <div
+      className={`bg-background-secondary rounded-lg p-4 md:p-6 h-full overflow-y-auto`}
+    >
       <div className="flex justify-between items-center mb-6">
         <h2 className={`text-base md:text-2xl font-serif text-text-secondary`}>
           Projects (DevLogs)
