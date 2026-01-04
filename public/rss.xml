@@ -4,10 +4,21 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Tue, 30 Dec 2025 02:27:46 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 04 Jan 2026 06:48:37 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Tue, 30 Dec 2025 02:27:46 GMT</pubDate>
+        <pubDate>Sun, 04 Jan 2026 06:48:37 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[Me Now Plan: Init on ME NOW PLAN]]></title>
+            <description><![CDATA[
+Have you ever tried to be productive? Have you ever tried to set up a calendar to schedule your tasks, activities, habits, or even the time you’re going to take a bath?
+It works fine for a day, or even a week, but there comes a point where you mess up one activity, and like a cute little domino, yo...]]></description>
+            <link>https://vishalr.dev/devlog/Me Now Plan/Init-on-me-now-plan</link>
+            <guid isPermaLink="false">https://vishalr.dev/devlog/Me Now Plan/Init-on-me-now-plan</guid>
+            <category><![CDATA[DevLog]]></category>
+            <category><![CDATA[Me Now Plan]]></category>
+            <pubDate>Sat, 03 Jan 2026 18:30:00 GMT</pubDate>
+        </item>
         <item>
             <title><![CDATA[Open Source India 2025]]></title>
             <description><![CDATA[

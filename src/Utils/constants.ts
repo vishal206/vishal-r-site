@@ -110,7 +110,7 @@ export const sections = [
 export const banners = [
   {
     imageUrl:
-      "https://github.com/vishal206/personal-site-images/blob/main/aa-day-hackathon-2025.png?raw=true",
+      "https://github.com/vishal206/personal-site-images/blob/main/osi-cover.png?raw=true",
   },
 ];
 
@@ -120,6 +120,8 @@ export const projectImages: { [key: string]: string } = {
     "https://github.com/vishal206/personal-site-images/blob/main/aa-day-hackathon-2025.png?raw=true",
   WeSaige:
     "https://github.com/vishal206/personal-site-images/blob/main/wesaige-devlog-2.png?raw=true",
+  "Me Now Plan":
+    "https://github.com/vishal206/personal-site-images/blob/main/me-now-plan-logo-high-res.png?raw=true",
   // Add more projects as needed
 };
 

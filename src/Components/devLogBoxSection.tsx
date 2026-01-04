@@ -1,7 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAvailableDevLogProjects, getDevLogsByProject, loadDevLogFile } from "../Utils/markdownLoader";
+import {
+  getAvailableDevLogProjects,
+  getDevLogsByProject,
+  loadDevLogFile,
+} from "../Utils/markdownLoader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 
@@ -25,7 +28,7 @@ const DevLogBoxSection: React.FC = () => {
 
         for (const project of projects) {
           const devLogSlugs = getDevLogsByProject(project);
-          
+
           for (const slug of devLogSlugs) {
             const devLog = await loadDevLogFile(project, slug);
             if (devLog) {
@@ -33,7 +36,7 @@ const DevLogBoxSection: React.FC = () => {
                 slug,
                 title: devLog.frontmatter.title,
                 date: devLog.frontmatter.date,
-                project: project // Use folder name instead of frontmatter.project
+                project: project, // Use folder name instead of frontmatter.project
               });
             }
           }
@@ -41,12 +44,14 @@ const DevLogBoxSection: React.FC = () => {
 
         // Sort by date (newest first) and take latest 4
         const sortedDevLogs = allDevLogs
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+          .sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          )
           .slice(0, 4);
 
         setLatestDevLogs(sortedDevLogs);
       } catch (err) {
-        console.error('Failed to load devlog entries:', err);
+        console.error("Failed to load devlog entries:", err);
       } finally {
         setLoading(false);
       }
@@ -58,9 +63,11 @@ const DevLogBoxSection: React.FC = () => {
   return (
     <div className={`bg-background-secondary rounded-lg p-4 md:p-6 h-full`}>
       <div className="flex justify-between items-center mb-6">
-        <h2 className={`text-base md:text-2xl font-serif text-text-secondary`}>Projects (DevLogs)</h2>
+        <h2 className={`text-base md:text-2xl font-serif text-text-secondary`}>
+          Projects (DevLogs)
+        </h2>
         <button
-          onClick={() => navigate('/?section=devlog')}
+          onClick={() => navigate("/?section=devlog")}
           className={`text-gray-400 hover:text-gray-600 text-xs md:text-sm font-light border-b border-gray-400 hover:border-gray-600 transition-all self-center cursor-pointer pb-0.5 hover:pb-2 hover:font-medium`}
         >
           Projects
@@ -70,7 +77,9 @@ const DevLogBoxSection: React.FC = () => {
         {loading ? (
           <div className="text-center text-gray-500">Loading...</div>
         ) : latestDevLogs.length === 0 ? (
-          <div className="text-gray-500 text-center">No dev log entries available</div>
+          <div className="text-gray-500 text-center">
+            No dev log entries available
+          </div>
         ) : (
           <div className="space-y-3">
             {latestDevLogs.map((devLog) => (
@@ -79,21 +88,25 @@ const DevLogBoxSection: React.FC = () => {
                   <div className="flex items-center md:gap-3 gap-1 text-xs md:text-sm font-sans">
                     <span className={`text-text-secondary`}>{devLog.date}</span>
                     <span className="text-gray-400">•</span>
-                    <span 
-                      onClick={() => navigate(`/?section=devlog&project=${devLog.project}`)}
-                      className="text-gray-600 hover:text-gray-800 cursor-pointer hover:underline uppercase text-xs"
+                    <span
+                      onClick={() =>
+                        navigate(`/?section=devlog&project=${devLog.project}`)
+                      }
+                      className="text-gray-600 hover:text-gray-800 cursor-pointer underline uppercase text-xs"
                     >
                       {devLog.project}
                     </span>
                   </div>
-                  <div 
-                    onClick={() => navigate(`/devlog/${devLog.project}/${devLog.slug}`)}
+                  <div
+                    onClick={() =>
+                      navigate(`/devlog/${devLog.project}/${devLog.slug}`)
+                    }
                     className="text-sm md:text-base hover:underline cursor-pointer mt-1"
                   >
                     {devLog.title}
-                    <FontAwesomeIcon 
-                      icon={faExternalLinkAlt} 
-                      className="text-xs text-gray-600 transition-colors flex-shrink-0 ml-1.5" 
+                    <FontAwesomeIcon
+                      icon={faExternalLinkAlt}
+                      className="text-xs text-gray-600 transition-colors flex-shrink-0 ml-1.5"
                     />
                   </div>
                 </div>

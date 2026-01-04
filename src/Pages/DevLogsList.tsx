@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAvailableDevLogProjects } from '../Utils/markdownLoader';
-import { projectImages, projectDescriptions } from '../Utils/constants';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getAvailableDevLogProjects } from "../Utils/markdownLoader";
+import { projectImages, projectDescriptions } from "../Utils/constants";
 
 const DevLogsList: React.FC = () => {
   const [projects, setProjects] = useState<string[]>([]);
@@ -13,16 +13,16 @@ const DevLogsList: React.FC = () => {
     const fetchProjects = async () => {
       try {
         const projectNames = getAvailableDevLogProjects();
-        
+
         if (projectNames.length === 0) {
           setError("No devlog projects found");
           setLoading(false);
           return;
         }
-        
+
         setProjects(projectNames);
       } catch (err) {
-        setError('Failed to load devlog projects');
+        setError("Failed to load devlog projects");
         console.error(err);
       } finally {
         setLoading(false);
@@ -49,17 +49,20 @@ const DevLogsList: React.FC = () => {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {projects.map((project) => (
-            <div key={project} className="flex flex-col h-full max-w-[250px] mx-auto overflow-hidden duration-300">
-              <div 
+            <div
+              key={project}
+              className="flex flex-col h-full w-[250px] mx-auto overflow-hidden duration-300"
+            >
+              <div
                 onClick={() => navigate(`/?section=devlog&project=${project}`)}
                 className="group block transition-all h-full cursor-pointer"
               >
                 {/* Square image container */}
                 <div className="aspect-square w-full overflow-hidden">
                   {projectImages[project] ? (
-                    <img 
-                      src={projectImages[project]} 
-                      alt={project} 
+                    <img
+                      src={projectImages[project]}
+                      alt={project}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
@@ -68,7 +71,7 @@ const DevLogsList: React.FC = () => {
                     </div>
                   )}
                 </div>
-                
+
                 {/* Content section */}
                 <div className="flex flex-col flex-grow">
                   <h2 className="md:text-xl text-base font-sans transition-colors line-clamp-2 group-hover:underline capitalize mt-2">
