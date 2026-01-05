@@ -6,7 +6,7 @@ const BlogsBoxSection: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className={`bg-background-secondary rounded-lg p-6 h-full`}>
+    <div className={`bg-background-secondary rounded-xl p-6 h-full`}>
       <div className="flex justify-between items-center mb-6">
         <h2 className={`text-base md:text-2xl font-serif text-text-secondary`}>
           Blogs

@@ -56,7 +56,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
 
   return (
     <div
-      className={`bg-background-grid-section rounded-lg md:p-6 p-4 h-full flex flex-col justify-between`}
+      className={`bg-background-grid-section rounded-xl md:p-6 p-4 h-full flex flex-col justify-between`}
     >
       <div>
         <div className="md:text-3xl text-xl font-serif text-center mb-4 md:mb-8 text-white">

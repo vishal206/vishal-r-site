@@ -92,7 +92,7 @@ const BlogList = () => {
           {posts.map((post) => (
             <div
               key={post.slug}
-              className="flex flex-col flex-none md:w-[11.8rem] w-[8rem] duration-300"
+              className="flex flex-col flex-none md:w-[11.3rem] w-[8rem] duration-300"
             >
               <Link
                 to={`/blog/${post.slug}`}

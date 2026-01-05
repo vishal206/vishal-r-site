@@ -59,7 +59,7 @@ const WeekNotesBoxSection: React.FC = () => {
 
   return (
     <div
-      className={`bg-background-secondary rounded-lg py-4 px-4 md:p-6 h-full flex flex-col justify-between gap-3`}
+      className={`bg-background-secondary rounded-xl py-4 px-4 md:p-6 h-full flex flex-col justify-between gap-3`}
     >
       <div className="flex flex-row md:flex-row justify-between items-center">
         <div className={`md:text-lg text-sm font-serif text-text-secondary`}>

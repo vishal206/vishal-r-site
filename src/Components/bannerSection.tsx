@@ -50,7 +50,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
   };
 
   return (
-    <div className="relative bg-gray-800 text-white w-full h-full rounded-lg overflow-hidden">
+    <div className="relative bg-gray-800 text-white w-full h-full rounded-xl overflow-hidden">
       <div
         className={`relative w-full h-full ${
           banners[activeBannerIndex].link ? "cursor-pointer" : ""
