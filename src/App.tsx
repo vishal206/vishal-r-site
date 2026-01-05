@@ -151,7 +151,7 @@ const App = () => {
           </div>
 
           {/* Intro Section */}
-          <div className="col-start-1 col-end-13 row-start-5 row-end-8 md:col-start-6 md:col-end-10 md:row-start-1 md:row-end-6">
+          <div className="col-start-1 col-end-13 row-start-5 row-end-8 md:col-start-6 md:col-end-10 md:row-start-1 md:row-end-7">
             <IntroSection onKnowMoreClick={() => handleSectionClick("about")} />
           </div>
 
@@ -160,7 +160,7 @@ const App = () => {
           </div>
 
           {/* Blogs Section */}
-          <div className="col-start-1 col-end-13 row-start-8 row-end-13 md:row-start-6 md:col-end-10 md:row-end-13">
+          <div className="col-start-1 col-end-13 row-start-8 row-end-13 md:row-start-7 md:col-end-10 md:row-end-13">
             <BlogsBoxSection />
           </div>
 

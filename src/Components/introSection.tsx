@@ -56,13 +56,14 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
 
   return (
     <div
-      className={`bg-background-grid-section rounded-xl md:p-6 p-4 h-full flex flex-col justify-between`}
+      className={`bg-[#D0BAEC] rounded-xl md:p-4 p-4 h-full flex flex-col justify-between`}
     >
       <div>
-        <div className="md:text-3xl text-xl font-serif text-center mb-4 md:mb-8 text-white">
-          Hello, I'm Vishal R
+        <div className="md:text-3xl text-xl font-primary font-black text-start mb-4 text-primary flex flex-col gap-2 tracking-widest">
+          <div>Hello,</div> <div>I'm</div>
+          <div>Vishal R</div>
         </div>
-        <p className="text-xs md:text-sm md:font-extralight font-sans text-center mb-4 md:mb-10  text-gray-200">
+        <p className="text-xs md:text-sm text-body md:font-medium font-sans text-start mb-4 md:mb-6">
           I’m Vishal R, a BI & Analytics Engineer working at the intersection of
           AI, data, and web engineering. I build products that make data easier
           to understand — from intelligent dashboards to conversational
@@ -71,7 +72,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
 
         {/* Social Icons */}
         <div
-          className="flex justify-center gap-5 md:mb-6 cursor-pointer"
+          className="flex justify-start gap-5 md:mb-4 cursor-pointer"
           onMouseLeave={() => setHoveredIndex(null)}
         >
           {socialIcons.map((item, index) => (
@@ -88,7 +89,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
             >
               <FontAwesomeIcon
                 icon={item.icon}
-                className="text-white text-xl transition-all"
+                className="text-body text-xl transition-all"
               />
             </button>
           ))}
@@ -97,9 +98,9 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
 
       <button
         onClick={onKnowMoreClick}
-        className="text-gray-300 hover:text-white text-xs md:text-sm font-light border-b border-gray-400 hover:border-white transition-all self-center cursor-pointer pb-0.5 hover:pb-2 hover:font-medium"
+        className="tracking-widest font-primary font-black text-primary text-xs md:text-xs hover:md:text-sm transition-all self-start cursor-pointer "
       >
-        Know More
+        Know More About Me {">>>>"}
       </button>
     </div>
   );

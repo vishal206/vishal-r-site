@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend+Zetta:wght@100..900&display=swap");
 @import "tailwindcss";
 
 html * {
@@ -11,6 +12,8 @@ body {
 
 @theme {
   --color-mainbg: #222831;
+  --color-primary: #3a65a8;
+  --color-body: #f4f4f4;
   --color-background-secondary: #f7fafc;
   --color-background-tertiary: #53728d;
   --color-background-grid-section: #63726c;
@@ -18,4 +21,5 @@ body {
   --color-text-primary: #e1e3e2;
   --color-text-secondary: #374151;
   --color-navigation-icon: #7a593c;
+  --font-primary: "Lexend Zetta";
 }
