@@ -5,8 +5,6 @@ import {
   loadWeekNoteFile,
   getAvailableWeekNotes,
 } from "../Utils/markdownLoader";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 
 const WeekNotesBoxSection: React.FC = () => {
   const navigate = useNavigate();
