@@ -144,9 +144,9 @@ const App = () => {
     <div className={`bg-mainbg m-2 md:m-8 cursor-default`}>
       <div className="mx-auto">
         {/* Full screen grid with 12 equal columns and 12 equal rows */}
-        <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-2 h-[98vh] md:h-[92vh]">
+        <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-2 h-[140vh] md:h-[92vh]">
           {/* Banner Section */}
-          <div className="col-start-1 col-end-7 row-start-1 row-end-3 md:row-end-7 md:col-end-6">
+          <div className="col-start-1 col-end-13 row-start-1 row-end-3 md:row-end-7 md:col-end-6">
             <BannerSection banners={banners} totalBanners={banners.length} />
           </div>
 
@@ -155,12 +155,12 @@ const App = () => {
             <IntroSection onKnowMoreClick={() => handleSectionClick("about")} />
           </div>
 
-          <div className="col-start-7 col-end-13 row-start-1 row-end-3 md:col-start-10 md:col-end-13 md:row-start-10 md:row-end-13">
+          <div className="col-start-1 col-end-13 row-start-8 row-end-10 md:col-start-10 md:col-end-13 md:row-start-10 md:row-end-13">
             <WeekNotesBoxSection />
           </div>
 
           {/* Blogs Section */}
-          <div className="col-start-1 col-end-13 row-start-8 row-end-13 md:row-start-7 md:col-end-10 md:row-end-13">
+          <div className="col-start-1 col-end-13 row-start-10 row-end-13 md:row-start-7 md:col-end-10 md:row-end-13">
             <BlogsBoxSection />
           </div>
 

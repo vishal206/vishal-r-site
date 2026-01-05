@@ -67,9 +67,9 @@ const WeekNotesBoxSection: React.FC = () => {
         ) : latestWeekNote ? (
           <div
             onClick={() => navigate(`/weeknote/${latestWeekNote.slug}`)}
-            className="h-full cursor-pointer items-start justify-start"
+            className="h-full cursor-pointer"
           >
-            <div className="font-primary font-black text-white tracking-widest text-xl mb-2">
+            <div className="h-full font-primary font-black text-white tracking-widest text-xl mb-2 flex items-end">
               {latestWeekNote.title}
               {" >>>>"}
             </div>
