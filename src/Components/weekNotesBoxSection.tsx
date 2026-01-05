@@ -59,36 +59,19 @@ const WeekNotesBoxSection: React.FC = () => {
 
   return (
     <div
-      className={`bg-background-secondary rounded-xl py-4 px-4 md:p-6 h-full flex flex-col justify-between gap-3`}
+      className={`bg-[#F875AA] rounded-xl py-4 px-4 md:p-6 h-full flex flex-col justify-between gap-3`}
     >
-      <div className="flex flex-row md:flex-row justify-between items-center">
-        <div className={`md:text-lg text-sm font-serif text-text-secondary`}>
-          Week Note
-        </div>
-        <button
-          onClick={() => navigate("/?section=weeknotes")}
-          className={`text-gray-400 hover:text-gray-600 text-xs md:text-xs font-light border-b border-gray-400 hover:border-gray-600 transition-all self-start cursor-pointer pb-0.5 hover:pb-2 hover:font-medium`}
-        >
-          More
-        </button>
-      </div>
       <div className="md:max-h-96 max-h-78 overflow-y-auto h-full">
         {loading ? (
           <div className="text-center text-gray-500">Loading...</div>
         ) : latestWeekNote ? (
           <div
             onClick={() => navigate(`/weeknote/${latestWeekNote.slug}`)}
-            className="h-full cursor-pointer hover:bg-gray-50  rounded transition-colors flex flex-col items-start justify-start"
+            className="h-full cursor-pointer items-start justify-start"
           >
-            <div className={`text-text-secondary text-xs md:text-xs font-sans`}>
-              Week #{latestWeekNote.weeknoteCount} • {latestWeekNote.date}
-            </div>
-            <div className="text-base md:text-base font-sans mb-2 hover:underline flex items-center">
+            <div className="font-primary font-black text-white tracking-widest text-xl mb-2">
               {latestWeekNote.title}
-              <FontAwesomeIcon
-                icon={faExternalLinkAlt}
-                className="text-xs text-black transition-colors flex-shrink-0 ml-1 md:ml-2"
-              />
+              {" >>>>"}
             </div>
           </div>
         ) : (
@@ -96,6 +79,11 @@ const WeekNotesBoxSection: React.FC = () => {
             No week notes available
           </div>
         )}
+      </div>
+      <div
+        className={`font-primary font-black text-primary tracking-widest text-2xl`}
+      >
+        Week #{latestWeekNote?.weeknoteCount}
       </div>
     </div>
   );

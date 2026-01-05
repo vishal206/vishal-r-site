@@ -87,9 +87,7 @@ const DevLogBoxSection: React.FC = () => {
             {latestDevLogs.map((devLog) => (
               <div key={`${devLog.project}-${devLog.slug}`} className="pb-2">
                 <div className="group block transition-colors">
-                  <div className="flex items-center md:gap-3 gap-1 text-xs md:text-sm font-sans">
-                    <span className={`text-text-secondary`}>{devLog.date}</span>
-                    <span className="text-gray-400">•</span>
+                  <div className="flex items-center md:gap-3 gap-1 text-xs md:text-xs font-sans">
                     <span
                       onClick={() =>
                         navigate(`/?section=devlog&project=${devLog.project}`)
@@ -103,7 +101,7 @@ const DevLogBoxSection: React.FC = () => {
                     onClick={() =>
                       navigate(`/devlog/${devLog.project}/${devLog.slug}`)
                     }
-                    className="text-sm md:text-base hover:underline cursor-pointer mt-1"
+                    className="text-sm md:text-lg hover:underline cursor-pointer mt-1"
                   >
                     {devLog.title}
                     <FontAwesomeIcon

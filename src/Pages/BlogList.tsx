@@ -92,7 +92,7 @@ const BlogList = () => {
           {posts.map((post) => (
             <div
               key={post.slug}
-              className="flex flex-col flex-none md:w-[11.3rem] w-[8rem] duration-300"
+              className="flex flex-col flex-none md:w-[9rem] w-[8rem] duration-300"
             >
               <Link
                 to={`/blog/${post.slug}`}
@@ -101,11 +101,13 @@ const BlogList = () => {
                 {/* Square image container */}
                 <div className="aspect-square w-full overflow-hidden">
                   {post.image ? (
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    <div className="w-full h-full overflow-hidden rounded-xl">
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-xl"
+                      />
+                    </div>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gray-200">
                       <span className="text-gray-400 text-sm">No image</span>
