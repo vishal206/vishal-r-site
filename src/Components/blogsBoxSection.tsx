@@ -15,7 +15,7 @@ const BlogsBoxSection: React.FC = () => {
         </h2>
         <button
           onClick={() => navigate("/?section=blog")}
-          className={`flex justify-start md:justify-end w-full font-primary font-black text-primary text-[10px] md:text-xs hover:md:text-sm tracking-widest transition-all self-center cursor-pointer`}
+          className={`flex justify-start md:justify-end w-full font-primary font-black text-primary text-[10px] md:text-xs hover:tracking-widest transition-all self-center cursor-pointer`}
         >
           Find More Blogs I wrote {">>>>"}
         </button>

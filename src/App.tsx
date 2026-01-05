@@ -144,28 +144,28 @@ const App = () => {
     <div className={`bg-mainbg m-2 md:m-8 cursor-default`}>
       <div className="mx-auto">
         {/* Full screen grid with 12 equal columns and 12 equal rows */}
-        <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-2 h-[140vh] md:h-[92vh]">
+        <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-4 h-[140vh] md:h-[92vh]">
           {/* Banner Section */}
-          <div className="col-start-1 col-end-13 row-start-1 row-end-3 md:row-end-7 md:col-end-6">
+          <div className="col-start-1 col-end-13 row-start-1 row-end-3 md:row-end-7 md:col-end-6 hover:scale-102 transition-all duration-600">
             <BannerSection banners={banners} totalBanners={banners.length} />
           </div>
 
           {/* Intro Section */}
-          <div className="col-start-1 col-end-13 row-start-5 row-end-8 md:col-start-6 md:col-end-10 md:row-start-1 md:row-end-7">
+          <div className="col-start-1 col-end-13 row-start-5 row-end-8 md:col-start-6 md:col-end-10 md:row-start-1 md:row-end-7 hover:scale-102 transition-all duration-600">
             <IntroSection onKnowMoreClick={() => handleSectionClick("about")} />
           </div>
 
-          <div className="col-start-1 col-end-13 row-start-8 row-end-10 md:col-start-10 md:col-end-13 md:row-start-10 md:row-end-13">
+          <div className="col-start-1 col-end-13 row-start-8 row-end-10 md:col-start-10 md:col-end-13 md:row-start-10 md:row-end-13 hover:scale-102 transition-all duration-600">
             <WeekNotesBoxSection />
           </div>
 
           {/* Blogs Section */}
-          <div className="col-start-1 col-end-13 row-start-10 row-end-13 md:row-start-7 md:col-end-10 md:row-end-13">
+          <div className="col-start-1 col-end-13 row-start-10 row-end-13 md:row-start-7 md:col-end-10 md:row-end-13 hover:scale-102 transition-all duration-600">
             <BlogsBoxSection />
           </div>
 
           {/* DevLog Section */}
-          <div className="col-start-1 col-end-13 row-start-3 row-end-5 md:row-start-1 md:col-start-10 md:row-end-10">
+          <div className="col-start-1 col-end-13 row-start-3 row-end-5 md:row-start-1 md:col-start-10 md:row-end-10 hover:scale-102 transition-all duration-600">
             <DevLogBoxSection />
           </div>
         </div>

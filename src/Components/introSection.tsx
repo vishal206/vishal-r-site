@@ -98,7 +98,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
 
       <button
         onClick={onKnowMoreClick}
-        className="tracking-widest font-primary font-black text-primary text-xs md:text-xs hover:md:text-sm transition-all self-start cursor-pointer "
+        className="hover:tracking-widest font-primary font-black text-primary text-xs md:text-xs transition-all self-start cursor-pointer "
       >
         Know More About Me {">>>>"}
       </button>
