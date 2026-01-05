@@ -23,3 +23,7 @@ body {
   --color-navigation-icon: #7a593c;
   --font-primary: "Lexend Zetta";
 }
+
+*::-webkit-scrollbar {
+  display: none !important;
+}
