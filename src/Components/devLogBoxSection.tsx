@@ -97,7 +97,7 @@ const DevLogBoxSection: React.FC = () => {
                     onClick={() =>
                       navigate(`/devlog/${devLog.project}/${devLog.slug}`)
                     }
-                    className="text-sm md:text-lg hover:underline cursor-pointer mt-1"
+                    className="text-sm md:text-lg hover:tracking-wider transition-all cursor-pointer mt-1"
                   >
                     {devLog.title}
                     <FontAwesomeIcon

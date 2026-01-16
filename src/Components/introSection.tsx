@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faSquareGithub } from "@fortawesome/free-brands-svg-icons";
-import {
-  faDownload,
-  faBriefcase,
-  faSchool,
-} from "@fortawesome/free-solid-svg-icons";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import Vishal_Resume from "../assets/Vishal_Resume.pdf";
 
 interface IntroSectionProps {
