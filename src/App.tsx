@@ -111,7 +111,7 @@ const App = () => {
     const selectedProject = params.get("project");
 
     return (
-      <div className={`min-h-screen bg-mainbg p-4 md:p-6 pb-8`}>
+      <div className={`min-h-screen bg-background-secondary p-4 md:p-6 pb-8`}>
         <div className="max-w-7xl mx-auto h-full">
           <div className="mb-6">
             <button
