@@ -146,26 +146,26 @@ const App = () => {
         {/* Full screen grid with 12 equal columns and 12 equal rows */}
         <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-4 h-[140vh] md:h-[92vh]">
           {/* Banner Section */}
-          <div className="col-start-1 col-end-13 row-start-1 row-end-2 md:row-end-7 md:col-end-6 hover:scale-102 transition-all duration-600">
+          <div className="col-start-1 col-end-13 row-start-1 row-end-2 md:row-end-7 md:col-end-6 transition-all duration-600">
             <BannerSection banners={banners} totalBanners={banners.length} />
           </div>
 
           {/* Intro Section */}
-          <div className="col-start-1 col-end-13 row-start-4 row-end-7 md:col-start-6 md:col-end-10 md:row-start-1 md:row-end-7 hover:scale-102 transition-all duration-600">
+          <div className="col-start-1 col-end-13 row-start-2 row-end-5 md:col-start-6 md:col-end-10 md:row-start-1 md:row-end-7 transition-all duration-600">
             <IntroSection onKnowMoreClick={() => handleSectionClick("about")} />
           </div>
 
-          <div className="col-start-1 col-end-13 row-start-7 row-end-9 md:col-start-10 md:col-end-13 md:row-start-10 md:row-end-13 hover:scale-102 transition-all duration-600">
+          <div className="col-start-1 col-end-13 row-start-7 row-end-9 md:col-start-10 md:col-end-13 md:row-start-10 md:row-end-13 transition-all duration-600">
             <WeekNotesBoxSection />
           </div>
 
           {/* Blogs Section */}
-          <div className="col-start-1 col-end-13 row-start-9 row-end-13 md:row-start-7 md:col-end-10 md:row-end-13 hover:scale-102 transition-all duration-600">
+          <div className="col-start-1 col-end-13 row-start-9 row-end-13 md:row-start-7 md:col-end-10 md:row-end-13 transition-all duration-600">
             <BlogsBoxSection />
           </div>
 
           {/* DevLog Section */}
-          <div className="col-start-1 col-end-13 row-start-2 row-end-4 md:row-start-1 md:col-start-10 md:row-end-10 hover:scale-102 transition-all duration-600">
+          <div className="col-start-1 col-end-13 row-start-5 row-end-7 md:row-start-1 md:col-start-10 md:row-end-10 transition-all duration-600">
             <DevLogBoxSection />
           </div>
         </div>

@@ -50,8 +50,6 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
       action: () => handleExternalLink("https://github.com/vishal206"),
     },
     { icon: faDownload, action: () => handleExternalLink(Vishal_Resume) },
-    { icon: faBriefcase, action: onKnowMoreClick },
-    { icon: faSchool, action: onKnowMoreClick },
   ];
 
   return (
@@ -59,15 +57,14 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
       className={`bg-[#D0BAEC] rounded-xl md:p-4 p-4 h-full flex flex-col justify-between`}
     >
       <div>
-        <div className="md:text-3xl text-xl font-primary font-black text-start mb-4 text-primary flex flex-col gap-2 tracking-widest">
+        <div className="md:text-3xl text-xl font-primary font-black text-start mb-4 text-primary flex flex-col gap-2 tracking-wider">
           <div>Hello,</div> <div>I'm</div>
           <div>Vishal R</div>
         </div>
         <p className="text-xs md:text-sm text-body md:font-medium font-sans text-start mb-4 md:mb-6">
-          I’m Vishal R, a BI & Analytics Engineer working at the intersection of
-          AI, data, and web engineering. I build products that make data easier
-          to understand — from intelligent dashboards to conversational
-          insights.
+          A developer working at the intersection of AI, data, and web
+          engineering. I build products that make data easier to understand —
+          from intelligent dashboards to conversational insights.
         </p>
 
         {/* Social Icons */}
