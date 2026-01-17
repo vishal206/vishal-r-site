@@ -1,6 +1,6 @@
 # Vishal R - personal website
 
-Find it here - vishalr.dev 
+Find it here - vishalr.dev
 
 ## 🛠️ Tech Stack
 
@@ -13,6 +13,21 @@ Find it here - vishalr.dev
 - **Hosting**: Firebase Hosting
 - **Analytics**: Firebase Analytics
 
+## Mental Model
+
+🧠 Backend (functions/)
+
+- embeddings
+- search
+- chat
+- secrets
+
+🖥 Frontend (src/)
+
+- UI
+- blog reader
+- bot UI
+
 ## 📦 Installation
 
 ```bash
@@ -24,7 +39,7 @@ npm install
 npm run dev
 ```
 
-```
+````
 
 ## 🚀 Deployment
 
@@ -35,7 +50,7 @@ The site is configured for Firebase Hosting:
 npm run generate-rss
 npm run build
 firebase deploy
-```
+````
 
 ## 📄 License
 

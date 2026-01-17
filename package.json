@@ -23,8 +23,10 @@
     "react-router-dom": "^7.1.5",
     "react-vertical-timeline-component": "^3.5.3",
     "rehype-raw": "^7.0.0",
+    "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "rss": "^1.2.2",
+    "strip-markdown": "^6.0.0",
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
