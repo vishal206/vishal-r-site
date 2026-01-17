@@ -57,7 +57,7 @@ const WeekNotesBoxSection: React.FC = () => {
 
   return (
     <div
-      className={`bg-[#F875AA] rounded-xl py-4 px-4 md:p-6 h-full flex flex-col justify-between gap-3`}
+      className={`bg-[#F875AA] rounded-3xl py-4 px-4 md:p-6 h-full flex flex-col justify-between gap-3`}
     >
       <div className="md:max-h-96 max-h-78 overflow-y-auto h-full">
         {loading ? (

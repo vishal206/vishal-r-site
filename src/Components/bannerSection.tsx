@@ -26,7 +26,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveBannerIndex((prevIndex) =>
-        prevIndex === totalBanners - 1 ? 0 : prevIndex + 1
+        prevIndex === totalBanners - 1 ? 0 : prevIndex + 1,
       );
     }, 5000); // Change every 5 seconds
 
@@ -50,7 +50,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
   };
 
   return (
-    <div className="relative bg-gray-800 text-white w-full h-full rounded-xl overflow-hidden">
+    <div className="relative bg-gray-800 text-white w-full h-full rounded-3xl overflow-hidden">
       <div
         className={`relative w-full h-full ${
           banners[activeBannerIndex].link ? "cursor-pointer" : ""

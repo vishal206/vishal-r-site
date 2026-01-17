@@ -50,7 +50,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
 
   return (
     <div
-      className={`bg-[#D0BAEC] rounded-xl md:p-4 p-4 h-full flex flex-col justify-between`}
+      className={`bg-[#D0BAEC] rounded-3xl md:p-4 p-4 h-full flex flex-col justify-between`}
     >
       <div>
         <div className="md:text-3xl text-xl font-primary font-black text-start mb-4 text-highlight flex flex-col gap-2 tracking-wider">

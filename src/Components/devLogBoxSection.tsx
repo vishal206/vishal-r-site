@@ -62,7 +62,7 @@ const DevLogBoxSection: React.FC = () => {
 
   return (
     <div
-      className={`bg-secondarybg rounded-xl p-4 md:p-6 h-full overflow-y-auto`}
+      className={`bg-secondarybg rounded-3xl p-4 md:p-6 h-full overflow-y-auto`}
     >
       <div className="flex justify-start items-start mb-6">
         <h2

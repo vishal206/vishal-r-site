@@ -144,7 +144,7 @@ const App = () => {
     <div className={`bg-mainbg m-2 md:m-8 cursor-default`}>
       <div className="mx-auto">
         {/* Full screen grid with 12 equal columns and 12 equal rows */}
-        <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-4 h-[140vh] md:h-[92vh]">
+        <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-2 h-[140vh] md:h-[92vh]">
           {/* Banner Section */}
           <div className="col-start-1 col-end-13 row-start-1 row-end-2 md:row-end-7 md:col-end-6 transition-all duration-600">
             <BannerSection banners={banners} totalBanners={banners.length} />
