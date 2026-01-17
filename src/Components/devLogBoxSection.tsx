@@ -45,7 +45,7 @@ const DevLogBoxSection: React.FC = () => {
         // Sort by date (newest first) and take latest 4
         const sortedDevLogs = allDevLogs
           .sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
           )
           .slice(0, 4);
 
@@ -62,11 +62,11 @@ const DevLogBoxSection: React.FC = () => {
 
   return (
     <div
-      className={`bg-background-secondary rounded-xl p-4 md:p-6 h-full overflow-y-auto`}
+      className={`bg-secondarybg rounded-xl p-4 md:p-6 h-full overflow-y-auto`}
     >
       <div className="flex justify-start items-start mb-6">
         <h2
-          className={`text-base md:text-base font-primary font-black text-primary tracking-widest`}
+          className={`text-base md:text-base font-primary font-black text-highlight tracking-widest`}
         >
           Projects (DevLogs)
         </h2>

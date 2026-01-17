@@ -51,16 +51,16 @@ const BlogReader = () => {
   if (loading)
     return (
       <div
-        className={`flex justify-center items-center h-screen bg-background-secondary`}
+        className={`flex justify-center items-center h-screen bg-secondarybg`}
       >
-        <p className={`text-lg font-serif text-text-primary`}>Loading...</p>
+        <p className={`text-lg font-serif  text-primary`}>Loading...</p>
       </div>
     );
 
   if (error)
     return (
       <div
-        className={`flex justify-center items-center h-screen bg-background-secondary`}
+        className={`flex justify-center items-center h-screen bg-secondarybg`}
       >
         <p className="text-red-500 font-serif">{error}</p>
       </div>
@@ -69,14 +69,14 @@ const BlogReader = () => {
   if (!post)
     return (
       <div
-        className={`flex justify-center items-center h-screen bg-background-secondary`}
+        className={`flex justify-center items-center h-screen bg-secondarybg`}
       >
-        <p className={`font-serif text-text-primary`}>Post not found</p>
+        <p className={`font-serif  text-primary`}>Post not found</p>
       </div>
     );
 
   return (
-    <div className={`min-h-screen bg-background-secondary py-12 px-4 md:px-0`}>
+    <div className={`min-h-screen bg-secondarybg py-12 px-4 md:px-0`}>
       {/* Breadcrumb navigation */}
       <div className="max-w-3xl mx-auto mb-6">
         <nav className="flex items-center gap-2 text-sm text-gray-600">

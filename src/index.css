@@ -12,15 +12,13 @@ body {
 
 @theme {
   --color-mainbg: #222831;
-  --color-primary: #3a65a8;
+  --color-secondarybg: #f7fafc;
+  --color-highlight: #3a65a8;
+  --color-primary: #e1e3e2;
+  --color-secondary: #374151;
   --color-body: #f4f4f4;
-  --color-background-secondary: #f7fafc;
-  --color-background-tertiary: #53728d;
   --color-background-grid-section: #63726c;
   --color-background-grid-box: #7a593c;
-  --color-text-primary: #e1e3e2;
-  --color-text-secondary: #374151;
-  --color-navigation-icon: #7a593c;
   --font-primary: "Lexend Zetta";
 }
 

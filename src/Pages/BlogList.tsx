@@ -43,7 +43,7 @@ const BlogList = () => {
         });
 
         const fetchedPosts = (await Promise.all(postPromises)).filter(
-          (post) => post !== null
+          (post) => post !== null,
         ) as BlogPostMeta[];
 
         if (fetchedPosts.length === 0) {
@@ -52,8 +52,8 @@ const BlogList = () => {
 
         setPosts(
           fetchedPosts.sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-          )
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          ),
         );
       } catch (err) {
         console.error("Failed to fetch blog posts", err);
@@ -68,9 +68,7 @@ const BlogList = () => {
 
   if (loading)
     return (
-      <div
-        className={`flex justify-center items-center h-full text-text-primary`}
-      >
+      <div className={`flex justify-center items-center h-full  text-primary`}>
         <p className="text-lg font-serif">Loading posts...</p>
       </div>
     );
@@ -130,7 +128,7 @@ const BlogList = () => {
                   </h2>
 
                   <div
-                    className={`text-text-secondary text-xs font-sans uppercase tracking-wider mt-auto`}
+                    className={`text-secondary text-xs font-sans uppercase tracking-wider mt-auto`}
                   >
                     {post.date}
                   </div>

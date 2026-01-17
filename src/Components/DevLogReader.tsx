@@ -54,7 +54,7 @@ const DevLogReader: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-secondary flex items-center justify-center">
+      <div className="min-h-screen bg-secondarybg flex items-center justify-center">
         <div className="text-gray-500">Loading...</div>
       </div>
     );
@@ -62,18 +62,18 @@ const DevLogReader: React.FC = () => {
 
   if (error || !devLog) {
     return (
-      <div className="min-h-screen bg-background-secondaryflex items-center justify-center">
+      <div className="min-h-screen bg-secondarybgflex items-center justify-center">
         <div className="text-red-500">{error || "DevLog not found"}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background-secondary">
+    <div className="min-h-screen bg-secondarybg">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Breadcrumb navigation */}
         <div className="mb-8">
-          <nav className="flex items-center gap-2 text-sm text-text-secondary">
+          <nav className="flex items-center gap-2 text-sm text-secondary">
             <button
               onClick={() => navigate("/")}
               className="hover:underline transition-all flex-shrink-0"
@@ -101,7 +101,7 @@ const DevLogReader: React.FC = () => {
             <span>•</span>
             <span>{devLog.frontmatter.date}</span>
           </div>
-          <h1 className="text-2xl md:text-4xl font-serif font-light text-text-secondary mb-4">
+          <h1 className="text-2xl md:text-4xl font-serif font-light text-secondary mb-4">
             {devLog.frontmatter.title}
           </h1>
         </div>

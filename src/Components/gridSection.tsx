@@ -28,9 +28,8 @@ const GridSection: React.FC<GridSectionProps> = ({
     <>
       {/* Content Section - Hidden on mobile when a section is active */}
       <div
-        className={`bg-background-grid-section  rounded-lg overflow-y-auto p-6 w-full h-[60%] md:w-1/3 md:h-full text-text-primary transition-all ${isSectionActive ? "hidden md:block" : ""} mb-4`}
+        className={`bg-background-grid-section  rounded-lg overflow-y-auto p-6 w-full h-[60%] md:w-1/3 md:h-full  text-primary transition-all ${isSectionActive ? "hidden md:block" : ""} mb-4`}
       >
-
         <div className="text-3xl font-serif text-center">
           Hello, I'm Vishal R
         </div>
@@ -39,7 +38,7 @@ const GridSection: React.FC<GridSectionProps> = ({
           love building products and discussing them!
         </p>
         <div
-          className={`text-text-primary grid md:grid-cols-2 grid-cols-3 gap-1.5`}
+          className={` text-primary grid md:grid-cols-2 grid-cols-3 gap-1.5`}
         >
           {sections.map((section) => (
             <div
@@ -48,7 +47,7 @@ const GridSection: React.FC<GridSectionProps> = ({
               ${
                 section.id === activePanel
                   ? "bg-[#787c82]/50 "
-                  :  "bg-background-grid-box "
+                  : "bg-background-grid-box "
               }`}
               onClick={() =>
                 handleClick(section.id, section.isExternal, section.link)
@@ -69,14 +68,16 @@ const GridSection: React.FC<GridSectionProps> = ({
 
       {/* Bottom Navigation - Visible only on mobile when a section is active */}
       {isSectionActive && (
-        <div className={` rounded-lg w-full flex justify-around items-center py-2 shadow-md md:hidden bg-background-grid-section`}>
+        <div
+          className={` rounded-lg w-full flex justify-around items-center py-2 shadow-md md:hidden bg-background-grid-section`}
+        >
           {sections.map((section) => (
             <div
               key={section.id}
               className={`text-lg cursor-pointer ${
                 section.id === activePanel
                   ? " text-black/50 md:text-white"
-                  : "text-text-primary"
+                  : " text-primary"
               }`}
               onClick={() =>
                 handleClick(section.id, section.isExternal, section.link)

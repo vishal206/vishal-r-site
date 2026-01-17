@@ -37,7 +37,7 @@ const WeekNotesList = () => {
         });
 
         const fetchedWeekNotes = (await Promise.all(weekNotePromises)).filter(
-          (weekNote) => weekNote !== null
+          (weekNote) => weekNote !== null,
         ) as WeekNoteMeta[];
 
         if (fetchedWeekNotes.length === 0) {
@@ -46,8 +46,8 @@ const WeekNotesList = () => {
 
         setWeekNotes(
           fetchedWeekNotes.sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-          )
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          ),
         );
       } catch (err) {
         console.error("Failed to fetch week notes", err);
@@ -62,9 +62,7 @@ const WeekNotesList = () => {
 
   if (loading)
     return (
-      <div
-        className={`flex justify-center items-center h-full text-text-primary`}
-      >
+      <div className={`flex justify-center items-center h-full  text-primary`}>
         <p className="text-lg font-serif">Loading week notes...</p>
       </div>
     );
@@ -90,9 +88,9 @@ const WeekNotesList = () => {
               className="group block md:p-1 rounded transition-colors"
             >
               <div className="flex items-center md:gap-3 gap-1 text-xs md:text-sm font-sans">
-                <span className={`text-text-secondary`}>{weekNote.date}</span>
+                <span className={`text-secondary`}>{weekNote.date}</span>
                 <span className="text-gray-400">•</span>
-                <span className={`text-text-secondary`}>
+                <span className={`text-secondary`}>
                   Week #{weekNote.weeknoteCount}
                 </span>
                 <span className="text-gray-400">•</span>

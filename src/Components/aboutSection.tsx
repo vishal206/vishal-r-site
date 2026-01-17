@@ -49,7 +49,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onClose }) => {
           {/* About Me Box */}
           <div className="col-start-1 md:col-end-6 col-end-13 md:row-start-1 row-start-2 md:row-end-13 row-end-6">
             <div
-              className={`bg-background-secondary rounded-lg p-6 h-full overflow-y-auto`}
+              className={`bg-secondarybg rounded-lg p-6 h-full overflow-y-auto`}
             >
               <h1 className="md:text-3xl font-serif text-gray-800 md:mb-4">
                 About Me
@@ -70,7 +70,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onClose }) => {
                   <button
                     key={index}
                     onClick={() => handleExternalLink(link.url)}
-                    className="group relative md:bg-background-secondary/20 backdrop-blur-sm rounded-lg md:p-2 md:px-4 transition-all duration-300 hover:scale-110 hover:-translate-y-2 md:shadow-lg md:hover:shadow-xl flex-1 min-w-0 cursor-pointer"
+                    className="group relative md:bg-secondarybg/20 backdrop-blur-sm rounded-lg md:p-2 md:px-4 transition-all duration-300 hover:scale-110 hover:-translate-y-2 md:shadow-lg md:hover:shadow-xl flex-1 min-w-0 cursor-pointer"
                   >
                     <div className="flex flex-col items-center gap-2">
                       <FontAwesomeIcon
@@ -89,11 +89,11 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onClose }) => {
 
           {/* Close Button Box */}
           <div
-            className={`md:col-start-11 col-start-11 col-end-13 md:row-start-1 md:row-end-3 row-start-1 row-end-2 flex justify-center items-center bg-background-tertiary rounded-lg`}
+            className={`md:col-start-11 col-start-11 col-end-13 md:row-start-1 md:row-end-3 row-start-1 row-end-2 flex justify-center items-center bg-[#53728d] rounded-lg`}
           >
             <button
               onClick={onClose}
-              className={`text-text-primary w-full p-2 rounded-lg cursor-pointer flex flex-col items-center gap-2`}
+              className={` text-primary w-full p-2 rounded-lg cursor-pointer flex flex-col items-center gap-2`}
             >
               <FontAwesomeIcon
                 icon={faHome}
@@ -108,7 +108,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onClose }) => {
           {/* Work Experience Box - Left Side */}
           <div className="md:col-start-6 col-start-1 md:col-end-10 col-end-13 md:row-start-3 row-start-6 md:row-end-13 row-end-13">
             <div
-              className={`bg-background-secondary rounded-lg p-6 h-full overflow-y-auto`}
+              className={`bg-secondarybg rounded-lg p-6 h-full overflow-y-auto`}
             >
               <Timeline sectionName="Experience" />
             </div>
@@ -117,7 +117,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onClose }) => {
           {/* Education Box - Right Side */}
           <div className="md:col-start-10 col-start-1 col-end-13 md:row-start-3 row-start-13 md:row-end-13 row-end-15">
             <div
-              className={`bg-background-secondary rounded-lg p-6 h-full overflow-y-auto`}
+              className={`bg-secondarybg rounded-lg p-6 h-full overflow-y-auto`}
             >
               <Timeline sectionName="Education" />
             </div>

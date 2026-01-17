@@ -53,7 +53,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
       className={`bg-[#D0BAEC] rounded-xl md:p-4 p-4 h-full flex flex-col justify-between`}
     >
       <div>
-        <div className="md:text-3xl text-xl font-primary font-black text-start mb-4 text-primary flex flex-col gap-2 tracking-wider">
+        <div className="md:text-3xl text-xl font-primary font-black text-start mb-4 text-highlight flex flex-col gap-2 tracking-wider">
           <div>Hello,</div> <div>I'm</div>
           <div>Vishal R</div>
         </div>
@@ -76,7 +76,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
               className="transition-all cursor-pointer transform hover:-translate-y-1 duration-300 ease-out"
               style={{
                 transform: `scale(${getIconScale(
-                  index
+                  index,
                 )}) translateY(${getIconTranslateY(index)}px)`,
               }}
             >
@@ -91,7 +91,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
 
       <button
         onClick={onKnowMoreClick}
-        className="hover:tracking-widest font-primary font-black text-primary text-xs md:text-xs transition-all self-start cursor-pointer "
+        className="hover:tracking-widest font-primary font-black text-highlight text-xs md:text-xs transition-all self-start cursor-pointer "
       >
         Know More About Me {">>>>"}
       </button>

@@ -53,7 +53,7 @@ const WeekNoteReader = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background-secondary flex items-center justify-center">
+      <div className="min-h-screen bg-secondarybg flex items-center justify-center">
         <div className="text-center">
           <p className="text-lg font-serif">Loading week note...</p>
         </div>
@@ -63,7 +63,7 @@ const WeekNoteReader = () => {
 
   if (error || !weekNote) {
     return (
-      <div className="min-h-screen bg-background-secondary flex items-center justify-center">
+      <div className="min-h-screen bg-secondarybg flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
           <button
@@ -78,7 +78,7 @@ const WeekNoteReader = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-background-secondary py-12 px-4 md:px-0`}>
+    <div className={`min-h-screen bg-secondarybg py-12 px-4 md:px-0`}>
       {/* Breadcrumb navigation */}
       <div className="max-w-3xl mx-auto mb-6">
         <nav className="flex items-center gap-2 text-sm text-gray-600">

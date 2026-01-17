@@ -9,7 +9,7 @@ import {
 const WeekNotesBoxSection: React.FC = () => {
   const navigate = useNavigate();
   const [latestWeekNote, setLatestWeekNote] = useState<WeekNoteMeta | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState(true);
 
@@ -36,12 +36,12 @@ const WeekNotesBoxSection: React.FC = () => {
         });
 
         const fetchedWeekNotes = (await Promise.all(weekNotePromises)).filter(
-          (weekNote) => weekNote !== null
+          (weekNote) => weekNote !== null,
         ) as WeekNoteMeta[];
 
         if (fetchedWeekNotes.length > 0) {
           const sortedWeekNotes = fetchedWeekNotes.sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
           );
           setLatestWeekNote(sortedWeekNotes[0]);
         }
@@ -79,7 +79,7 @@ const WeekNotesBoxSection: React.FC = () => {
         )}
       </div>
       <div
-        className={`font-primary font-black text-primary tracking-widest text-2xl`}
+        className={`font-primary font-black text-highlight tracking-widest text-2xl`}
       >
         Week #{latestWeekNote?.weeknoteCount}
       </div>

@@ -54,19 +54,19 @@ const App = () => {
 
   if (activeSection === "blog") {
     return (
-      <div className={`min-h-screen bg-background-secondary p-4 md:p-6 pb-8`}>
+      <div className={`min-h-screen bg-secondarybg p-4 md:p-6 pb-8`}>
         <div className="max-w-7xl mx-auto h-full">
           <div className="mb-6">
             <button
               onClick={closeSectionView}
-              className="text-text-secondary text-sm font-light border-b border-text-secondary transition-all cursor-pointer pb-0.5 hover:font-medium"
+              className="text-secondary text-sm font-light border-b border-text-secondary transition-all cursor-pointer pb-0.5 hover:font-medium"
             >
               ← Back to Home
             </button>
           </div>
           <div className={`h-[calc(100vh-8rem)]`}>
             <h1
-              className={`text-xl md:text-2xl font-serif text-text-secondary mb-6`}
+              className={`text-xl md:text-2xl font-serif text-secondary mb-6`}
             >
               All Blogs
             </h1>
@@ -81,19 +81,19 @@ const App = () => {
 
   if (activeSection === "weeknotes") {
     return (
-      <div className={`min-h-screen bg-background-secondary p-4 md:p-6 pb-8`}>
+      <div className={`min-h-screen bg-secondarybg p-4 md:p-6 pb-8`}>
         <div className="max-w-7xl mx-auto h-full">
           <div className="mb-6">
             <button
               onClick={closeSectionView}
-              className="text-text-secondary text-sm font-light border-b border-text-secondary transition-all cursor-pointer pb-0.5 hover:font-medium"
+              className="text-secondary text-sm font-light border-b border-text-secondary transition-all cursor-pointer pb-0.5 hover:font-medium"
             >
               ← Back to Home
             </button>
           </div>
           <div className={`h-[calc(100vh-8rem)]`}>
             <h1
-              className={`md:text-2xl text-xl font-serif text-text-secondary mb-6`}
+              className={`md:text-2xl text-xl font-serif text-secondary mb-6`}
             >
               Week Notes
             </h1>
@@ -111,19 +111,19 @@ const App = () => {
     const selectedProject = params.get("project");
 
     return (
-      <div className={`min-h-screen bg-background-secondary p-4 md:p-6 pb-8`}>
+      <div className={`min-h-screen bg-secondarybg p-4 md:p-6 pb-8`}>
         <div className="max-w-7xl mx-auto h-full">
           <div className="mb-6">
             <button
               onClick={closeSectionView}
-              className="text-text-secondary text-sm font-light border-b border-text-secondary transition-all cursor-pointer pb-0.5 hover:font-medium"
+              className="text-secondary text-sm font-light border-b border-text-secondary transition-all cursor-pointer pb-0.5 hover:font-medium"
             >
               ← Back to Home
             </button>
           </div>
           <div className={`h-[calc(100vh-8rem)]`}>
             <h1
-              className={`text-xl md:text-2xl font-serif text-text-secondary mb-6`}
+              className={`text-xl md:text-2xl font-serif text-secondary mb-6`}
             >
               {selectedProject ? `${selectedProject} DevLog` : "Projects"}
             </h1>
