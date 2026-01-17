@@ -1,13 +1,13 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import BlogReader from './Components/BlogReader.tsx'
-import WeekNoteReader from './Components/WeekNoteReader.tsx'
-import DevLogReader from './Components/DevLogReader.tsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.tsx";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import BlogReader from "./components/BlogReader.tsx";
+import WeekNoteReader from "./components/WeekNoteReader.tsx";
+import DevLogReader from "./components/DevLogReader.tsx";
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
@@ -18,4 +18,4 @@ createRoot(document.getElementById('root')!).render(
       </Routes>
     </BrowserRouter>
   </StrictMode>,
-)
+);

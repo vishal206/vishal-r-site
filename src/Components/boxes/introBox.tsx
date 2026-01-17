@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faSquareGithub } from "@fortawesome/free-brands-svg-icons";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
-import Vishal_Resume from "../assets/Vishal_Resume.pdf";
+import Vishal_Resume from "../../assets/Vishal_Resume.pdf";
 
-interface IntroSectionProps {
+interface IntroBoxProps {
   onKnowMoreClick: () => void;
 }
 
-const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
+const IntroBox: React.FC<IntroBoxProps> = ({ onKnowMoreClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const handleExternalLink = (url: string) => {
@@ -99,4 +99,4 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onKnowMoreClick }) => {
   );
 };
 
-export default IntroSection;
+export default IntroBox;

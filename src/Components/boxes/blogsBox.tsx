@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import BlogList from "../Pages/BlogList";
+import BlogList from "../../Pages/BlogList";
 
-const BlogsBoxSection: React.FC = () => {
+const BlogsBox: React.FC = () => {
   const navigate = useNavigate();
 
   return (
@@ -27,4 +27,4 @@ const BlogsBoxSection: React.FC = () => {
   );
 };
 
-export default BlogsBoxSection;
+export default BlogsBox;

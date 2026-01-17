@@ -4,7 +4,7 @@ import {
   getAvailableDevLogProjects,
   getDevLogsByProject,
   loadDevLogFile,
-} from "../Utils/markdownLoader";
+} from "../../Utils/markdownLoader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 
@@ -15,7 +15,7 @@ type DevLogMeta = {
   project: string;
 };
 
-const DevLogBoxSection: React.FC = () => {
+const DevLogBox: React.FC = () => {
   const navigate = useNavigate();
   const [latestDevLogs, setLatestDevLogs] = useState<DevLogMeta[]>([]);
   const [loading, setLoading] = useState(true);
@@ -115,4 +115,4 @@ const DevLogBoxSection: React.FC = () => {
   );
 };
 
-export default DevLogBoxSection;
+export default DevLogBox;

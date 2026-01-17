@@ -4,9 +4,9 @@ import {
   WeekNoteMeta,
   loadWeekNoteFile,
   getAvailableWeekNotes,
-} from "../Utils/markdownLoader";
+} from "../../Utils/markdownLoader";
 
-const WeekNotesBoxSection: React.FC = () => {
+const WeekNotesBox: React.FC = () => {
   const navigate = useNavigate();
   const [latestWeekNote, setLatestWeekNote] = useState<WeekNoteMeta | null>(
     null,
@@ -87,4 +87,4 @@ const WeekNotesBoxSection: React.FC = () => {
   );
 };
 
-export default WeekNotesBoxSection;
+export default WeekNotesBox;

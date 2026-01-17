@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "./firebase";
-import BannerSection from "./Components/bannerSection";
-import IntroSection from "./Components/introSection";
-import BlogsBoxSection from "./Components/blogsBoxSection";
 import { banners } from "./Utils/constants";
-import AboutSection from "./Components/aboutSection";
+import AboutSection from "./components/aboutSection";
 import BlogList from "./Pages/BlogList";
-import WeekNotesBoxSection from "./Components/weekNotesBoxSection";
 import WeekNotesList from "./Pages/WeekNotesList";
 import DevLogsList from "./Pages/DevLogsList";
-import DevLogBoxSection from "./Components/devLogBoxSection";
-import ProjectDevLogsList from "./Components/ProjectDevLogsList";
+import ProjectDevLogsList from "./components/ProjectDevLogsList";
+import BannerBox from "./components/boxes/bannerBox";
+import IntroBox from "./components/boxes/introBox";
+import WeekNotesBox from "./components/boxes/weekNotesBox";
+import BlogsBox from "./components/boxes/blogsBox";
+import DevLogBox from "./components/boxes/devLogBox";
 
 const App = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -145,28 +145,26 @@ const App = () => {
       <div className="mx-auto">
         {/* Full screen grid with 12 equal columns and 12 equal rows */}
         <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-2 h-[140vh] md:h-[92vh]">
-          {/* Banner Section */}
           <div className="col-start-1 col-end-13 row-start-1 row-end-2 md:row-end-7 md:col-end-6 transition-all duration-600">
-            <BannerSection banners={banners} totalBanners={banners.length} />
+            <BannerBox banners={banners} totalBanners={banners.length} />
           </div>
 
-          {/* Intro Section */}
           <div className="col-start-1 col-end-13 row-start-2 row-end-5 md:col-start-6 md:col-end-10 md:row-start-1 md:row-end-7 transition-all duration-600">
-            <IntroSection onKnowMoreClick={() => handleSectionClick("about")} />
+            <IntroBox onKnowMoreClick={() => handleSectionClick("about")} />
           </div>
 
           <div className="col-start-1 col-end-13 row-start-7 row-end-9 md:col-start-10 md:col-end-13 md:row-start-10 md:row-end-13 transition-all duration-600">
-            <WeekNotesBoxSection />
+            <WeekNotesBox />
           </div>
 
           {/* Blogs Section */}
           <div className="col-start-1 col-end-13 row-start-9 row-end-13 md:row-start-7 md:col-end-10 md:row-end-13 transition-all duration-600">
-            <BlogsBoxSection />
+            <BlogsBox />
           </div>
 
           {/* DevLog Section */}
           <div className="col-start-1 col-end-13 row-start-5 row-end-7 md:row-start-1 md:col-start-10 md:row-end-10 transition-all duration-600">
-            <DevLogBoxSection />
+            <DevLogBox />
           </div>
         </div>
       </div>

@@ -10,15 +10,12 @@ interface Banner {
   link?: string;
 }
 
-interface BannerSectionProps {
+interface BannerBoxProps {
   banners: Banner[];
   totalBanners: number;
 }
 
-const BannerSection: React.FC<BannerSectionProps> = ({
-  banners,
-  totalBanners,
-}) => {
+const BannerBox: React.FC<BannerBoxProps> = ({ banners, totalBanners }) => {
   const [activeBannerIndex, setActiveBannerIndex] = useState(0);
   const navigate = useNavigate();
 
@@ -107,4 +104,4 @@ const BannerSection: React.FC<BannerSectionProps> = ({
   );
 };
 
-export default BannerSection;
+export default BannerBox;
