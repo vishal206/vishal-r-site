@@ -8,6 +8,9 @@ import { fileURLToPath } from "url";
 import { chunkByHeading } from "./chunkMarkdown.ts";
 import { loadAllMarkdownFiles } from "./loadAllMarkdown.ts";
 
+import { db } from "./firebase.ts";
+import crypto from "crypto";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -43,6 +46,10 @@ async function embed(text: string): Promise<number[]> {
   return data.embedding;
 }
 
+function hash(text: string): string {
+  return crypto.createHash("sha256").update(text).digest("hex");
+}
+
 async function run() {
   console.log("📂 Loading markdown files...");
   const files = loadAllMarkdownFiles(POSTS_ROOT);
@@ -67,15 +74,34 @@ async function run() {
 
       if (!cleanText.trim()) continue;
 
+      const chunkId = hash(cleanText);
+      const docRef = db.collection("embeddings").doc(chunkId);
+
+      const existing = await docRef.get();
+      if (existing.exists) {
+        console.log(`  ⏭️  Skipped existing chunk ${i + 1}`);
+        continue;
+      }
+
       console.log(
         `  ↳ Chunk ${i + 1}/${chunks.length} (${cleanText.length} chars)`,
       );
 
       const embedding = await embed(cleanText);
 
-      console.log(`     Embedding length: ${embedding.length}`);
+      await docRef.set({
+        chunkId,
+        text: cleanText,
+        embedding,
+        title,
+        heading: chunk.heading,
+        category: file.relativePath.split("/")[0],
+        sourcePath: file.relativePath,
+        chunkIndex: i,
+        createdAt: new Date(),
+      });
 
-      // 🔜 Next step: store embedding in Firestore
+      console.log("     ✅ Stored");
     }
 
     console.log("");
