@@ -54,7 +54,3 @@ npm run generate-rss
 npm run build
 firebase deploy
 ````
-
-## 📄 License
-
-This project is private and belongs to Vishal R.
