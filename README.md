@@ -1,32 +1,35 @@
 # Vishal R - personal website
 
-Find it here - vishalr.dev
+🌐 https://vishalr.dev
+
+Personal site, writing archive, and experimentation ground — built to be **static-first**, with a small, intentional backend for embeddings and search.
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 18.3.1 + TypeScript
-- **Build Tool**: Vite 6.0.5
-- **Styling**: Tailwind CSS 4.0.0
-- **Routing**: React Router DOM 7.1.5
-- **Markdown**: React Markdown with GFM and raw HTML support
-- **Icons**: Font Awesome React components
-- **Hosting**: Firebase Hosting
-- **Analytics**: Firebase Analytics
+**Frontend**
 
-## Mental Model
+- React 18 + TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- Markdown (React Markdown + GFM)
+- Firebase Hosting
 
-🧠 Backend (functions/)
+**Backend / Infra**
 
-- embeddings
-- search
-- chat
-- secrets
+- Node.js (build-time & server-side)
+- Firebase (Firestore, Hosting)
+- Ollama (local LLM + embeddings)
 
-🖥 Frontend (src/)
+## 📚 Documentation
 
-- UI
-- blog reader
-- bot UI
+Detailed internal docs live under `docs/`:
+
+- `docs/FUNCTIONS.md` — purpose & structure of the backend
+- `docs/INGESTION-PIPELINE.md` — how markdown becomes embeddings
+- `docs/FIRESTORE-SCHEMA.md` — vector storage design
+
+Start here if you want to understand _why_ things are built this way.
 
 ## 📦 Installation
 
