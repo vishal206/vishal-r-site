@@ -41,25 +41,32 @@ const generateRSSFeed = async () => {
   }
 
   // Process weeknotes
-  // const weekNotesDir = path.join(process.cwd(), 'src/Posts/WeekNotes');
-  // if (fs.existsSync(weekNotesDir)) {
-  //   const weekNoteFiles = fs.readdirSync(weekNotesDir).filter(file => file.endsWith('.md'));
+  const weekNotesDir = path.join(process.cwd(), "src/Posts/WeekNotes");
 
-  //   for (const file of weekNoteFiles) {
-  //     const filePath = path.join(weekNotesDir, file);
-  //     const fileContent = fs.readFileSync(filePath, 'utf8');
-  //     const { data: frontmatter, content } = matter(fileContent);
-  //     const slug = file.replace('.md', '');
+  if (fs.existsSync(weekNotesDir)) {
+    const weekNoteFiles = fs
+      .readdirSync(weekNotesDir)
+      .filter((file) => file.endsWith(".md"));
 
-  //     items.push({
-  //       title: frontmatter.title,
-  //       url: `${baseUrl}/weeknote/${slug}`,
-  //       description: content.substring(0, 300).replace(/[<>]/g, '') + '...',
-  //       date: new Date(frontmatter.date),
-  //       categories: ['WeekNote']
-  //     });
-  //   }
-  // }
+    for (const file of weekNoteFiles) {
+      const filePath = path.join(weekNotesDir, file);
+      const fileContent = fs.readFileSync(filePath, "utf8");
+      const { data: frontmatter, content } = matter(fileContent);
+
+      // ✅ Only include selected weeknotes
+      if (!frontmatter.publishRss) continue;
+
+      const slug = file.replace(".md", "");
+
+      items.push({
+        title: frontmatter.title,
+        url: `${baseUrl}/weeknote/${slug}`,
+        description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
+        date: new Date(frontmatter.date),
+        categories: ["WeekNote"],
+      });
+    }
+  }
 
   // Process devlogs
   const devLogsDir = path.join(process.cwd(), "src/Posts/DevLogs");

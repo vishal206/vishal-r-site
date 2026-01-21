@@ -4,10 +4,21 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Fri, 16 Jan 2026 04:48:17 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 21 Jan 2026 02:57:11 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Fri, 16 Jan 2026 04:48:17 GMT</pubDate>
+        <pubDate>Wed, 21 Jan 2026 02:57:11 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[Theater 1 restaurant 0]]></title>
+            <description><![CDATA[
+Yo!
+
+As per my trip goals for this year, I went to Chennai to celebrate Pongal. This was an educational trip, as I was requested to teach my brother the NCERT. He is jee aspirant and has cleared Olympiads. But he has no interest in opening an NCERT book. So I had to summarize some lessons and motiv...]]></description>
+            <link>https://vishalr.dev/weeknote/16-Theater-1-restaurant-0</link>
+            <guid isPermaLink="false">https://vishalr.dev/weeknote/16-Theater-1-restaurant-0</guid>
+            <category><![CDATA[WeekNote]]></category>
+            <pubDate>Sat, 17 Jan 2026 18:30:00 GMT</pubDate>
+        </item>
         <item>
             <title><![CDATA[Me Now Plan: Init on ME NOW PLAN]]></title>
             <description><![CDATA[
