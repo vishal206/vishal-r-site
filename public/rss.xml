@@ -4,10 +4,20 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Wed, 21 Jan 2026 02:57:11 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 25 Jan 2026 18:57:15 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 21 Jan 2026 02:57:11 GMT</pubDate>
+        <pubDate>Sun, 25 Jan 2026 18:57:15 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[The Goldfinch]]></title>
+            <description><![CDATA[
+A painting that survives. The painting that lived. A painter dies in an accidental explosion. Only survivor is a bird painted — a bird tied at a place. After time, the bird gets into a terrorist explosion in an art museum. Yet again, it survives in the hands of a child.
+But a work of art surviving ...]]></description>
+            <link>https://vishalr.dev/blog/The-Goldfinch</link>
+            <guid isPermaLink="false">https://vishalr.dev/blog/The-Goldfinch</guid>
+            <category><![CDATA[Blog]]></category>
+            <pubDate>Sun, 25 Jan 2026 18:30:00 GMT</pubDate>
+        </item>
         <item>
             <title><![CDATA[Theater 1 restaurant 0]]></title>
             <description><![CDATA[
