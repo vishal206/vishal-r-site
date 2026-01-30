@@ -8,7 +8,7 @@ export const FolderView = () => {
 
   return (
     <div className="w-full h-full transition-all duration-600">
-      <div className="flex gap-2 items-end relative">
+      <div className="flex flex-col md:flex-row gap-2 md:items-end items-start">
         <div className={`p-2 rounded-t-3xl pr-4 cursor-default`}>
           <h2 className="text-base font-bold font-serif">
             Chapters of my life
@@ -33,7 +33,7 @@ export const FolderView = () => {
       </div>
 
       <div
-        className="w-full h-full rounded-3xl p-4"
+        className="w-full h-full rounded-b-3xl rounded-tr-3xl md:rounded-3xl p-4 overflow-y-auto"
         style={{
           backgroundColor: foldersDetail[selectedFolderIndex].colorCode,
         }}

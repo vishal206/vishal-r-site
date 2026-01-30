@@ -43,9 +43,9 @@ const AboutPage: React.FC<AboutSectionProps> = ({ onClose }) => {
     <div className={`bg-[#F5ECDB] p-4 md:p-8`}>
       <div className=" mx-auto">
         {/* Full screen grid with 12 equal columns and 12 equal rows */}
-        <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-4 h-[140vh] md:h-[96vh]">
+        <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-4 h-[120vh] md:h-[96vh]">
           {/* About Me Box */}
-          <div className="col-start-1 col-end-13 row-start-2 md:col-end-4 md:row-start-3 md:row-end-6 row-end-6">
+          <div className="col-start-1 col-end-13 row-start-2 row-end-4 md:col-end-4 md:row-start-3 md:row-end-6">
             <div
               className={`bg-secondarybg rounded-3xl p-4 h-full overflow-y-auto`}
             >
@@ -56,7 +56,7 @@ const AboutPage: React.FC<AboutSectionProps> = ({ onClose }) => {
           </div>
 
           {/* Social Media Box */}
-          <div className=" col-start-1 col-end-11 row-start-1 row-end-2 md:col-start-1 md:col-end-4 md:row-start-11 md:row-end-12">
+          <div className=" col-start-3 col-end-13 row-start-1 row-end-2 md:col-start-1 md:col-end-4 md:row-start-11 md:row-end-12">
             <div
               className={`rounded-3xl h-full flex items-center justify-center`}
             >
@@ -65,7 +65,7 @@ const AboutPage: React.FC<AboutSectionProps> = ({ onClose }) => {
                   <button
                     key={index}
                     onClick={() => handleExternalLink(link.url)}
-                    className="group relative md:bg-mainbg/50 backdrop-blur-sm rounded-xl md:p-2 md:px-4 transition-all duration-300 hover:scale-110 hover:-translate-y-2 md:shadow-lg md:hover:shadow-xl flex-1 min-w-0 cursor-pointer"
+                    className="group relative bg-mainbg/50 backdrop-blur-sm rounded-xl p-4 md:p-2 md:px-4 transition-all duration-300 hover:scale-110 hover:-translate-y-2 md:shadow-lg md:hover:shadow-xl flex-1 min-w-0 cursor-pointer"
                   >
                     <div className="flex flex-col items-center gap-2">
                       <FontAwesomeIcon
@@ -84,7 +84,7 @@ const AboutPage: React.FC<AboutSectionProps> = ({ onClose }) => {
 
           {/* Close Button Box */}
           <div
-            className={` col-start-11 col-end-13 row-start-1 row-end-2 md:col-start-1 md:col-end-4 md:row-start-1 md:row-end-3 flex justify-center items-center bg-[#53728d] rounded-3xl`}
+            className={` col-start-1 col-end-3 row-start-1 row-end-2 md:col-start-1 md:col-end-4 md:row-start-1 md:row-end-3 flex justify-center items-center bg-[#53728d] rounded-3xl`}
           >
             <button
               onClick={onClose}
@@ -100,7 +100,7 @@ const AboutPage: React.FC<AboutSectionProps> = ({ onClose }) => {
             </button>
           </div>
 
-          <div className="row-start-1 row-end-12 col-start-4 col-end-13">
+          <div className="row-start-4 row-end-12 col-start-1 col-end-13 md:row-start-1 md:row-end-12 md:col-start-4 md:col-end-13">
             <FolderView />
           </div>
         </div>
