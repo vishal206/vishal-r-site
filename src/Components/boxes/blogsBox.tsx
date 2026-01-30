@@ -14,6 +14,13 @@ const BlogsBox: React.FC = () => {
     fetchBlogPosts(setError, setLoading, setPosts);
   }, []);
 
+  if (loading)
+    return (
+      <div className={`flex justify-center items-center h-full  text-primary`}>
+        <p className="text-lg font-serif">Loading posts...</p>
+      </div>
+    );
+
   return (
     <div className={`bg-secondarybg rounded-3xl p-6 h-full`}>
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 items-start justify-start">

@@ -32,11 +32,11 @@ const BlogList = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-4 pb-4">
+        <div className="grid md:grid-cols-4 grid-cols-2 pb-4 space-y-8 md:space-y-0">
           {posts.map((post) => (
             <div
               key={post.slug}
-              className="flex flex-col flex-none md:w-[90%] w-[9rem] duration-300"
+              className="flex flex-col flex-none md:w-[90%] w-[90%] duration-300"
             >
               <Link
                 to={`/blog/${post.slug}`}
@@ -62,7 +62,7 @@ const BlogList = () => {
                 {/* Content section */}
                 <div className="flex flex-col flex-grow">
                   {post.tags && (
-                    <div className="mb-2">
+                    <div className="md:mb-2">
                       <span className="text-xs uppercase tracking-wider text-gray-700 rounded">
                         {post.tags}
                       </span>
