@@ -14,7 +14,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<App />} />
         <Route path="/blog/:slug" element={<BlogReader />} />
         <Route path="/weeknote/:slug" element={<WeekNoteReader />} />
-        <Route path="/devlog/:project/:slug" element={<DevLogReader />} />
+        <Route path="/devlog/:slug" element={<DevLogReader />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

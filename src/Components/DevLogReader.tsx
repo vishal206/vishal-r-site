@@ -8,7 +8,7 @@ import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebase";
 
 const DevLogReader: React.FC = () => {
-  const { project, slug } = useParams<{ project: string; slug: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [devLog, setDevLog] = useState<DevLog | null>(null);
   const [loading, setLoading] = useState(true);
@@ -18,11 +18,11 @@ const DevLogReader: React.FC = () => {
     const fetchDevLog = async () => {
       try {
         setLoading(true);
-        if (!project || !slug) {
+        if (!slug) {
           throw new Error("Project or slug not provided");
         }
 
-        const loadedDevLog = await loadDevLogFile(project, slug);
+        const loadedDevLog = await loadDevLogFile(slug);
 
         if (!loadedDevLog) {
           throw new Error("Failed to load devlog");
@@ -34,8 +34,7 @@ const DevLogReader: React.FC = () => {
           page_title: loadedDevLog.frontmatter.title,
           page_location: window.location.href,
           content_type: "devlog",
-          content_id: `${project}/${slug}`,
-          project_name: project,
+          content_id: `${slug}`,
         });
       } catch (err) {
         setError("Failed to load devlog");
@@ -46,7 +45,7 @@ const DevLogReader: React.FC = () => {
     };
 
     fetchDevLog();
-  }, [project, slug]);
+  }, [slug]);
 
   const handleBackClick = () => {
     navigate("/?section=devlog");
@@ -97,8 +96,6 @@ const DevLogReader: React.FC = () => {
         {/* Header section */}
         <div className="mb-8">
           <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-            <span className="capitalize font-medium">{project}</span>
-            <span>•</span>
             <span>{devLog.frontmatter.date}</span>
           </div>
           <h1 className="text-2xl md:text-4xl font-serif font-light text-secondary mb-4">

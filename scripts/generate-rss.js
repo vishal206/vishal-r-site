@@ -70,31 +70,29 @@ const generateRSSFeed = async () => {
 
   // Process devlogs
   const devLogsDir = path.join(process.cwd(), "src/Posts/DevLogs");
+
   if (fs.existsSync(devLogsDir)) {
-    const projects = fs
+    const devLogFiles = fs
       .readdirSync(devLogsDir)
-      .filter((item) => fs.statSync(path.join(devLogsDir, item)).isDirectory());
+      .filter((file) => file.endsWith(".md"));
 
-    for (const project of projects) {
-      const projectDir = path.join(devLogsDir, project);
-      const devLogFiles = fs
-        .readdirSync(projectDir)
-        .filter((file) => file.endsWith(".md"));
+    for (const file of devLogFiles) {
+      const filePath = path.join(devLogsDir, file);
+      const fileContent = fs.readFileSync(filePath, "utf8");
+      const { data: frontmatter, content } = matter(fileContent);
 
-      for (const file of devLogFiles) {
-        const filePath = path.join(projectDir, file);
-        const fileContent = fs.readFileSync(filePath, "utf8");
-        const { data: frontmatter, content } = matter(fileContent);
-        const slug = file.replace(".md", "");
+      // ✅ Only include selected devlogs
+      if (!frontmatter.publishRss) continue;
 
-        items.push({
-          title: `${project}: ${frontmatter.title}`,
-          url: `${baseUrl}/devlog/${project}/${slug}`,
-          description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
-          date: new Date(frontmatter.date),
-          categories: ["DevLog", project],
-        });
-      }
+      const slug = file.replace(".md", "");
+
+      items.push({
+        title: frontmatter.title,
+        url: `${baseUrl}/devlog/${slug}`,
+        description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
+        date: new Date(frontmatter.date),
+        categories: ["Devlog"],
+      });
     }
   }
 

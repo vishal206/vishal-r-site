@@ -7,7 +7,6 @@ import AboutSection from "./components/aboutSection";
 import BlogList from "./Pages/BlogList";
 import WeekNotesList from "./Pages/WeekNotesList";
 import DevLogsList from "./Pages/DevLogsList";
-import ProjectDevLogsList from "./components/ProjectDevLogsList";
 import BannerBox from "./components/boxes/bannerBox";
 import IntroBox from "./components/boxes/introBox";
 import WeekNotesBox from "./components/boxes/weekNotesBox";
@@ -107,9 +106,6 @@ const App = () => {
   }
 
   if (activeSection === "devlog") {
-    const params = new URLSearchParams(location.search);
-    const selectedProject = params.get("project");
-
     return (
       <div className={`min-h-screen bg-secondarybg p-4 md:p-6 pb-8`}>
         <div className="max-w-7xl mx-auto h-full">
@@ -125,14 +121,10 @@ const App = () => {
             <h1
               className={`text-xl md:text-2xl font-serif text-secondary mb-6`}
             >
-              {selectedProject ? `${selectedProject} DevLog` : "Projects"}
+              {`DevLogs`}
             </h1>
             <div className="h-[calc(100%-4rem)] overflow-y-auto">
-              {selectedProject ? (
-                <ProjectDevLogsList project={selectedProject} />
-              ) : (
-                <DevLogsList />
-              )}
+              <DevLogsList />
             </div>
           </div>
         </div>

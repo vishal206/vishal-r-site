@@ -1,19 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  getAvailableDevLogProjects,
-  getDevLogsByProject,
+  DevLogMeta,
+  getDevLogs,
   loadDevLogFile,
 } from "../../Utils/markdownLoader";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-
-type DevLogMeta = {
-  slug: string;
-  title: string;
-  date: string;
-  project: string;
-};
 
 const DevLogBox: React.FC = () => {
   const navigate = useNavigate();
@@ -23,22 +14,18 @@ const DevLogBox: React.FC = () => {
   useEffect(() => {
     const fetchLatestDevLogs = async () => {
       try {
-        const projects = getAvailableDevLogProjects();
         const allDevLogs: DevLogMeta[] = [];
 
-        for (const project of projects) {
-          const devLogSlugs = getDevLogsByProject(project);
+        const devLogSlugs = getDevLogs();
 
-          for (const slug of devLogSlugs) {
-            const devLog = await loadDevLogFile(project, slug);
-            if (devLog) {
-              allDevLogs.push({
-                slug,
-                title: devLog.frontmatter.title,
-                date: devLog.frontmatter.date,
-                project: project, // Use folder name instead of frontmatter.project
-              });
-            }
+        for (const slug of devLogSlugs) {
+          const devLog = await loadDevLogFile(slug);
+          if (devLog) {
+            allDevLogs.push({
+              slug,
+              title: devLog.frontmatter.title,
+              date: devLog.frontmatter.date,
+            });
           }
         }
 
@@ -79,31 +66,18 @@ const DevLogBox: React.FC = () => {
             No dev log entries available
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {latestDevLogs.map((devLog) => (
-              <div key={`${devLog.project}-${devLog.slug}`} className="pb-2">
+              <div key={`${devLog.slug}`}>
                 <div className="group block transition-colors">
-                  <div className="flex items-center md:gap-3 gap-1 text-xs md:text-xs font-sans">
-                    <span
-                      onClick={() =>
-                        navigate(`/?section=devlog&project=${devLog.project}`)
-                      }
-                      className="text-gray-600 hover:text-gray-800 cursor-pointer underline uppercase text-xs"
-                    >
-                      {devLog.project}
-                    </span>
-                  </div>
                   <div
-                    onClick={() =>
-                      navigate(`/devlog/${devLog.project}/${devLog.slug}`)
-                    }
-                    className="text-sm md:text-lg hover:tracking-wider transition-all cursor-pointer mt-1"
+                    onClick={() => navigate(`/devlog/${devLog.slug}`)}
+                    className="text-sm md:text-xl transition-all cursor-pointer"
                   >
-                    {devLog.title}
-                    <FontAwesomeIcon
-                      icon={faExternalLinkAlt}
-                      className="text-xs text-gray-600 transition-colors flex-shrink-0 ml-1.5"
-                    />
+                    <div className="flex items-baseline hover:underline">
+                      <div>{devLog.title}</div>
+                    </div>
+                    <div className="text-xs font-light">{devLog.date}</div>
                   </div>
                 </div>
               </div>
