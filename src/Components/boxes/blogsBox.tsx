@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import BlogList from "../../Pages/BlogList";
 import { BlogPostMeta } from "../../Utils/markdownLoader";
 import { fetchBlogPosts } from "../../Utils/functions";
 
@@ -55,7 +54,7 @@ const BlogsBox: React.FC = () => {
               {posts.map((post) => (
                 <div
                   key={post.slug}
-                  className="flex flex-col flex-none md:w-[14rem] w-[9rem] duration-300"
+                  className="flex flex-col flex-none md:w-[14rem] w-[14rem] duration-300"
                 >
                   <Link
                     to={`/blog/${post.slug}`}

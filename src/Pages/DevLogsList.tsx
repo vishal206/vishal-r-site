@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   DevLogMeta,
   getDevLogs,
@@ -12,7 +12,6 @@ const DevLogsList: React.FC = () => {
   const [devLogs, setDevlogs] = useState<DevLogMeta[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProjects = async () => {
