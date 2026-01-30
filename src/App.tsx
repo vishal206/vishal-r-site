@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "./firebase";
 import { banners } from "./Utils/constants";
-import AboutSection from "./components/aboutSection";
 import BlogList from "./Pages/BlogList";
 import WeekNotesList from "./Pages/WeekNotesList";
 import DevLogsList from "./Pages/DevLogsList";
@@ -12,6 +11,7 @@ import IntroBox from "./components/boxes/introBox";
 import WeekNotesBox from "./components/boxes/weekNotesBox";
 import BlogsBox from "./components/boxes/blogsBox";
 import DevLogBox from "./components/boxes/devLogBox";
+import AboutPage from "./Pages/AboutPage";
 
 const App = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -48,7 +48,7 @@ const App = () => {
   };
 
   if (activeSection === "about") {
-    return <AboutSection onClose={closeSectionView} />;
+    return <AboutPage onClose={closeSectionView} />;
   }
 
   if (activeSection === "blog") {
