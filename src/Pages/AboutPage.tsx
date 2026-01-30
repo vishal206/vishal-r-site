@@ -8,8 +8,8 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import Vishal_Resume from "../assets/Vishal_Resume.pdf";
-import { MarkdownReader } from "../components/markdownReader";
 import { FolderView } from "../components/FolderView";
+import { CustomMarkdownReader } from "../components/CustomMarkdownReader";
 
 interface AboutSectionProps {
   onClose: () => void;
@@ -50,7 +50,7 @@ const AboutPage: React.FC<AboutSectionProps> = ({ onClose }) => {
               className={`bg-secondarybg rounded-3xl p-4 h-full overflow-y-auto`}
             >
               <p className="text-gray-700 leading-relaxed md:text-sm text-xs whitespace-pre-line">
-                <MarkdownReader content={aboutValue} />
+                <CustomMarkdownReader content={aboutValue} />
               </p>
             </div>
           </div>

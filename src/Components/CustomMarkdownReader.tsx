@@ -6,7 +6,7 @@ type MarkdownReaderProps = {
   content: string;
 };
 
-export const MarkdownReader = ({ content }: MarkdownReaderProps) => {
+export const CustomMarkdownReader = ({ content }: MarkdownReaderProps) => {
   return (
     <ReactMarkdown
       components={{

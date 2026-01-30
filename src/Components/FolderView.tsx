@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ABOUT_FOLDER_VALUES } from "../Utils/constants";
-import { MarkdownReader } from "./markdownReader";
+import { CustomMarkdownReader } from "./CustomMarkdownReader";
 
 export const FolderView = () => {
   const [selectedFolderIndex, setSelectedFolderIndex] = useState(0);
@@ -38,7 +38,9 @@ export const FolderView = () => {
           backgroundColor: foldersDetail[selectedFolderIndex].colorCode,
         }}
       >
-        <MarkdownReader content={foldersDetail[selectedFolderIndex].content} />
+        <CustomMarkdownReader
+          content={foldersDetail[selectedFolderIndex].content}
+        />
       </div>
     </div>
   );

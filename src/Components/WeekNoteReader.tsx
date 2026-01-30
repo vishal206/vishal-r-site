@@ -3,7 +3,7 @@ import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebase";
 import { useParams, useNavigate } from "react-router-dom";
 import { WeekNote, loadWeekNoteFile } from "../Utils/markdownLoader";
-import { MarkdownReader } from "./markdownReader";
+import { CustomMarkdownReader } from "./CustomMarkdownReader";
 
 const WeekNoteReader = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -116,7 +116,7 @@ const WeekNoteReader = () => {
 
         {/* Content section */}
         <div className="prose prose-lg max-w-none font-serif mx-auto">
-          <MarkdownReader content={weekNote.content} />
+          <CustomMarkdownReader content={weekNote.content} />
         </div>
       </article>
     </div>
