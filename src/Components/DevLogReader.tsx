@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
 import { loadDevLogFile, DevLog } from "../Utils/markdownLoader";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebase";
+import { MarkdownReader } from "./markdownReader";
 
 const DevLogReader: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -105,45 +103,7 @@ const DevLogReader: React.FC = () => {
 
         {/* Content section */}
         <div className="prose prose-lg max-w-none font-serif mx-auto">
-          <ReactMarkdown
-            components={{
-              h1: ({ node, ...props }) => (
-                <h1
-                  className="text-2xl md:text-3xl font-serif font-light mt-10 mb-4"
-                  {...props}
-                />
-              ),
-              h2: ({ node, ...props }) => (
-                <h2
-                  className="text-xl md:text-2xl font-serif font-light mt-8 mb-3"
-                  {...props}
-                />
-              ),
-              h3: ({ node, ...props }) => (
-                <h3
-                  className="text-lg md:text-xl font-serif font-light mt-6 mb-2"
-                  {...props}
-                />
-              ),
-              p: ({ node, ...props }) => (
-                <p className="mb-6 leading-relaxed font-light" {...props} />
-              ),
-              a: (props) => (
-                <a
-                  {...props}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-700 border-b border-gray-300 hover:border-gray-700 transition-colors"
-                >
-                  {props.children}
-                </a>
-              ),
-            }}
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw]}
-          >
-            {devLog.content}
-          </ReactMarkdown>
+          <MarkdownReader content={devLog.content} />
         </div>
       </div>
     </div>
