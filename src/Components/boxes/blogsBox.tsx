@@ -1,9 +1,18 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import BlogList from "../../Pages/BlogList";
+import { BlogPostMeta } from "../../Utils/markdownLoader";
+import { fetchBlogPosts } from "../../Utils/functions";
 
 const BlogsBox: React.FC = () => {
   const navigate = useNavigate();
+  const [posts, setPosts] = useState<BlogPostMeta[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchBlogPosts(setError, setLoading, setPosts);
+  }, []);
 
   return (
     <div className={`bg-secondarybg rounded-3xl p-6 h-full`}>
@@ -21,7 +30,75 @@ const BlogsBox: React.FC = () => {
         </button>
       </div>
       <div className="md:max-h-96 max-h-64 overflow-y-auto">
-        <BlogList />
+        <div className={`blog-list h-full overflow-x-auto`}>
+          {error && (
+            <p className="text-red-500 font-sans text-sm mb-4">{error}</p>
+          )}
+
+          {posts.length === 0 ? (
+            <div className="text-gray-600 font-sans">
+              <p>No posts found.</p>
+              <p className="text-sm text-gray-500 mt-2">
+                Make sure your markdown files are in the correct location and
+                properly formatted.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-row overflow-x-auto gap-6">
+              {posts.map((post) => (
+                <div
+                  key={post.slug}
+                  className="flex flex-col flex-none md:w-[14rem] w-[9rem] duration-300"
+                >
+                  <Link
+                    to={`/blog/${post.slug}`}
+                    className="group block transition-all h-full"
+                  >
+                    {/* Square image container */}
+                    <div className="aspect-3/2 w-full overflow-hidden">
+                      {post.image ? (
+                        <div className="w-full h-full overflow-hidden rounded-xl">
+                          <img
+                            src={post.image}
+                            alt={post.title}
+                            className="w-full h-full object-cover transition-transform duration-300 rounded-xl group-hover:scale-105"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                          <span className="text-gray-400 text-sm">
+                            No image
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content section */}
+                    <div className="flex flex-col flex-grow">
+                      {post.tags && (
+                        <div className="mb-2">
+                          <span className="text-xs uppercase tracking-wider text-gray-700 rounded">
+                            {post.tags}
+                          </span>
+                        </div>
+                      )}
+
+                      <h2 className="md:text-xl text-base font-sans transition-colors line-clamp-2 group-hover:underline ">
+                        {post.title}
+                      </h2>
+
+                      <div
+                        className={`text-secondary text-xs font-sans uppercase tracking-wider mt-auto`}
+                      >
+                        {post.date}
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

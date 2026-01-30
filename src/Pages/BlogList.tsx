@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  BlogPostMeta,
-  loadMarkdownFile,
-  getAvailablePosts,
-} from "../Utils/markdownLoader";
+import { BlogPostMeta } from "../Utils/markdownLoader";
+import { fetchBlogPosts } from "../Utils/functions";
 
 const BlogList = () => {
   const [posts, setPosts] = useState<BlogPostMeta[]>([]);
@@ -12,58 +9,7 @@ const BlogList = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchBlogPosts = async () => {
-      try {
-        const postSlugs = getAvailablePosts();
-
-        if (postSlugs.length === 0) {
-          setError("No blog post files found");
-          setLoading(false);
-          return;
-        }
-
-        const postPromises = postSlugs.map(async (slug) => {
-          const post = await loadMarkdownFile(slug);
-          if (!post) return null;
-
-          // Extract first image from content if no featured image in frontmatter
-          let image = post.frontmatter.image;
-          if (!image) {
-            const imgMatch = post.content.match(/<img.*?src=["'](.*?)["']/);
-            image = imgMatch ? imgMatch[1] : undefined;
-          }
-
-          return {
-            slug,
-            title: post.frontmatter.title,
-            date: post.frontmatter.date,
-            image: image,
-            tags: post.frontmatter.tags || "",
-          };
-        });
-
-        const fetchedPosts = (await Promise.all(postPromises)).filter(
-          (post) => post !== null,
-        ) as BlogPostMeta[];
-
-        if (fetchedPosts.length === 0) {
-          setError("Could not load any posts. Check console for details.");
-        }
-
-        setPosts(
-          fetchedPosts.sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-          ),
-        );
-      } catch (err) {
-        console.error("Failed to fetch blog posts", err);
-        setError("Failed to fetch blog posts");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBlogPosts();
+    fetchBlogPosts(setError, setLoading, setPosts);
   }, []);
 
   if (loading)
@@ -86,18 +32,18 @@ const BlogList = () => {
           </p>
         </div>
       ) : (
-        <div className="flex flex-row overflow-x-auto gap-6">
+        <div className="grid grid-cols-4 pb-4">
           {posts.map((post) => (
             <div
               key={post.slug}
-              className="flex flex-col flex-none md:w-[9rem] w-[9rem] duration-300"
+              className="flex flex-col flex-none md:w-[90%] w-[9rem] duration-300"
             >
               <Link
                 to={`/blog/${post.slug}`}
                 className="group block transition-all h-full"
               >
                 {/* Square image container */}
-                <div className="aspect-square w-full overflow-hidden">
+                <div className="aspect-3/2 w-full overflow-hidden">
                   {post.image ? (
                     <div className="w-full h-full overflow-hidden rounded-xl">
                       <img

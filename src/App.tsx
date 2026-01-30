@@ -69,7 +69,7 @@ const App = () => {
             >
               All Blogs
             </h1>
-            <div className="h-[calc(100%-4rem)] overflow-y-auto">
+            <div className="h-[100%] overflow-y-auto">
               <BlogList />
             </div>
           </div>
@@ -145,17 +145,17 @@ const App = () => {
             <IntroBox onKnowMoreClick={() => handleSectionClick("about")} />
           </div>
 
-          <div className="col-start-1 col-end-13 row-start-7 row-end-9 md:col-start-10 md:col-end-13 md:row-start-10 md:row-end-13 transition-all duration-600">
+          <div className="col-start-1 col-end-13 row-start-7 row-end-9 md:col-start-10 md:col-end-13 md:row-start-4 md:row-end-7 transition-all duration-600">
             <WeekNotesBox />
           </div>
 
           {/* Blogs Section */}
-          <div className="col-start-1 col-end-13 row-start-9 row-end-13 md:row-start-7 md:col-end-10 md:row-end-13 transition-all duration-600">
+          <div className="col-start-1 col-end-13 row-start-9 row-end-13 md:row-start-7 md:col-end-13 md:row-end-13 transition-all duration-600">
             <BlogsBox />
           </div>
 
           {/* DevLog Section */}
-          <div className="col-start-1 col-end-13 row-start-5 row-end-7 md:row-start-1 md:col-start-10 md:row-end-10 transition-all duration-600">
+          <div className="col-start-1 col-end-13 row-start-5 row-end-7 md:row-start-1 md:col-start-10 md:row-end-4 transition-all duration-600">
             <DevLogBox />
           </div>
         </div>
