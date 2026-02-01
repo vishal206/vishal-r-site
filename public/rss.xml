@@ -4,10 +4,22 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Fri, 30 Jan 2026 14:02:03 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 01 Feb 2026 07:20:01 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Fri, 30 Jan 2026 14:02:03 GMT</pubDate>
+        <pubDate>Sun, 01 Feb 2026 07:20:01 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[It’s a Wonderful Life]]></title>
+            <description><![CDATA[
+Yo 🙋‍♂️!
+
+I just found a new Christmas movie.
+A movie released before you were born that will make you cherish the life you have. 2 hours about a man, getting what he deserved for being good. I recommend it if you are feeling your life is racing by, and you need a cozy ending slice of life movie. ...]]></description>
+            <link>https://vishalr.dev/blog/Its-a-Wonderful-Life</link>
+            <guid isPermaLink="false">https://vishalr.dev/blog/Its-a-Wonderful-Life</guid>
+            <category><![CDATA[Blog]]></category>
+            <pubDate>Sat, 31 Jan 2026 18:30:00 GMT</pubDate>
+        </item>
         <item>
             <title><![CDATA[The Goldfinch]]></title>
             <description><![CDATA[

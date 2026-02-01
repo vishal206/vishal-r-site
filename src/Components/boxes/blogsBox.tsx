@@ -51,7 +51,7 @@ const BlogsBox: React.FC = () => {
             </div>
           ) : (
             <div className="flex flex-row overflow-x-auto gap-6">
-              {posts.map((post) => (
+              {posts.slice(0, 6).map((post) => (
                 <div
                   key={post.slug}
                   className="flex flex-col flex-none md:w-[14rem] w-[14rem] duration-300"
