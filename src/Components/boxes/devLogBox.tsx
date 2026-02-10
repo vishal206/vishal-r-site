@@ -51,11 +51,11 @@ const DevLogBox: React.FC = () => {
     <div
       className={`bg-secondarybg rounded-3xl p-4 md:p-6 h-full overflow-y-auto`}
     >
-      <div className="flex justify-start items-start mb-6">
+      <div className="flex justify-start items-start mb-3">
         <h2
-          className={`text-base md:text-base font-primary font-black text-highlight tracking-widest`}
+          className={`text-base md:text-lg font-primary font-black text-highlight tracking-widest`}
         >
-          Projects (DevLogs)
+          DevLogs
         </h2>
       </div>
       <div className="md:max-h-96 max-h-30 overflow-y-auto">
