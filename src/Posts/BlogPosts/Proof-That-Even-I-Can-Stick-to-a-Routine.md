@@ -4,6 +4,7 @@ date: "15 Nov 2025"
 image: "https://github.com/vishal206/personal-site-images/blob/main/morning-routine.png?raw=true"
 banner: "https://github.com/vishal206/personal-site-images/blob/main/morning-routine.png?raw=true"
 tags: "Life"
+isTech: true
 ---
 
 Recently I have updated my morning routine to something that I'm proud of, so here I'm to boost it.
@@ -12,10 +13,10 @@ Recently I have updated my morning routine to something that I'm proud of, so he
 
 2. Next I head to **gym**, I'm still working on it. There are days when I missed to go but overall happy with the progress. Finally my body is set to the exercise that I don't get sore muscle cramps.
 
-3. My **adventure to office** starts now. I have to board metro. Now I have 2 paths:  
-   1. Walk to metro station  
+3. My **adventure to office** starts now. I have to board metro. Now I have 2 paths:
+   1. Walk to metro station
    2. Take an auto  
-I created a rule that I wait 10 mins for auto. If I get one confirmed by then I take it. Mostly it gets cancelled or no one picks it, and after this 10 mins bracket I start to walk to metro station. Walking is not so bad, I just have to stay in shade and walk slow so that I don't get sweaty.
+      I created a rule that I wait 10 mins for auto. If I get one confirmed by then I take it. Mostly it gets cancelled or no one picks it, and after this 10 mins bracket I start to walk to metro station. Walking is not so bad, I just have to stay in shade and walk slow so that I don't get sweaty.
 
 4. Now the **metro journey**, usually it's peaceful. My stop is one of the last stops, so it is empty and I get a seat. Now I have to sit for the next 35 mins till I reach MG Road. Get crampy after Majestic. Thank God I don't have to change line.
 

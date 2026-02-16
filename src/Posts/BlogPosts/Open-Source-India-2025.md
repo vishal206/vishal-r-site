@@ -4,6 +4,7 @@ date: "07 Dec 2025"
 image: "https://github.com/vishal206/personal-site-images/blob/main/osi-cover.png?raw=true"
 banner: "https://github.com/vishal206/personal-site-images/blob/main/osi-cover.png?raw=true"
 tags: "Tech"
+isTech: true
 ---
 
 Konnichiwa Readers!

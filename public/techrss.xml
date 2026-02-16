@@ -1,46 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title><![CDATA[Vishal R]]></title>
-        <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
+        <description><![CDATA[Tech Blogs and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
         <lastBuildDate>Mon, 16 Feb 2026 03:18:27 GMT</lastBuildDate>
-        <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
+        <atom:link href="https://vishalr.dev/techrss.xml" rel="self" type="application/rss+xml"/>
         <pubDate>Mon, 16 Feb 2026 03:18:27 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
-        <item>
-            <title><![CDATA[It’s a Wonderful Life]]></title>
-            <description><![CDATA[
-Yo 🙋‍♂️!
-
-I just found a new Christmas movie.
-A movie released before you were born that will make you cherish the life you have. 2 hours about a man, getting what he deserved for being good. I recommend it if you are feeling your life is racing by, and you need a cozy ending slice of life movie. ...]]></description>
-            <link>https://vishalr.dev/blog/Its-a-Wonderful-Life</link>
-            <guid isPermaLink="false">https://vishalr.dev/blog/Its-a-Wonderful-Life</guid>
-            <category><![CDATA[Blog]]></category>
-            <pubDate>Sat, 31 Jan 2026 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[The Goldfinch]]></title>
-            <description><![CDATA[
-A painting that survives. The painting that lived. A painter dies in an accidental explosion. Only survivor is a bird painted — a bird tied at a place. After time, the bird gets into a terrorist explosion in an art museum. Yet again, it survives in the hands of a child.
-But a work of art surviving ...]]></description>
-            <link>https://vishalr.dev/blog/The-Goldfinch</link>
-            <guid isPermaLink="false">https://vishalr.dev/blog/The-Goldfinch</guid>
-            <category><![CDATA[Blog]]></category>
-            <pubDate>Sun, 25 Jan 2026 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Theater 1 restaurant 0]]></title>
-            <description><![CDATA[
-Yo!
-
-As per my trip goals for this year, I went to Chennai to celebrate Pongal. This was an educational trip, as I was requested to teach my brother the NCERT. He is jee aspirant and has cleared Olympiads. But he has no interest in opening an NCERT book. So I had to summarize some lessons and motiv...]]></description>
-            <link>https://vishalr.dev/weeknote/16-Theater-1-restaurant-0</link>
-            <guid isPermaLink="false">https://vishalr.dev/weeknote/16-Theater-1-restaurant-0</guid>
-            <category><![CDATA[WeekNote]]></category>
-            <pubDate>Sat, 17 Jan 2026 18:30:00 GMT</pubDate>
-        </item>
         <item>
             <title><![CDATA[Open Source India 2025]]></title>
             <description><![CDATA[
@@ -93,18 +60,6 @@ Good health — Freedom — Strong Re...]]></description>
             <guid isPermaLink="false">https://vishalr.dev/blog/time-money-life</guid>
             <category><![CDATA[Blog]]></category>
             <pubDate>Sun, 13 Jul 2025 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Totem Totem Totem]]></title>
-            <description><![CDATA[
-div style="display: flex; gap: 20px; margin-bottom: 20px;"
-  div style="flex: 1;"
-    pI see this picture of my favorite character Luffy from One Piece—a happy, free-living person jumping toward his dreams and goals while taking great pleasure in his journey—I feel inspired./p
-    pI saw ...]]></description>
-            <link>https://vishalr.dev/blog/totem-totem-totem</link>
-            <guid isPermaLink="false">https://vishalr.dev/blog/totem-totem-totem</guid>
-            <category><![CDATA[Blog]]></category>
-            <pubDate>Fri, 04 Jul 2025 18:30:00 GMT</pubDate>
         </item>
     </channel>
 </rss>

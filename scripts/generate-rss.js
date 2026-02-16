@@ -15,6 +15,15 @@ const generateRSSFeed = async () => {
     pubDate: new Date(),
   });
 
+  const techFeed = new RSS({
+    title: "Vishal R",
+    description: "Tech Blogs and DevLogs from Vishal R",
+    feed_url: `${baseUrl}/techrss.xml`,
+    site_url: baseUrl,
+    language: "en-us",
+    pubDate: new Date(),
+  });
+
   const items = [];
 
   // Process blogs
@@ -36,6 +45,7 @@ const generateRSSFeed = async () => {
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
         date: new Date(frontmatter.date),
         categories: ["Blog"],
+        isTech: frontmatter?.isTech,
       });
     }
   }
@@ -64,6 +74,7 @@ const generateRSSFeed = async () => {
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
         date: new Date(frontmatter.date),
         categories: ["WeekNote"],
+        isTech: frontmatter?.isTech,
       });
     }
   }
@@ -92,6 +103,7 @@ const generateRSSFeed = async () => {
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
         date: new Date(frontmatter.date),
         categories: ["Devlog"],
+        isTech: frontmatter?.isTech,
       });
     }
   }
@@ -100,6 +112,15 @@ const generateRSSFeed = async () => {
   items
     .sort((a, b) => b.date.getTime() - a.date.getTime())
     .forEach((item) => {
+      if (item.isTech)
+        techFeed.item({
+          title: item.title,
+          url: item.url,
+          description: item.description,
+          date: item.date,
+          categories: item.categories,
+          guid: item.url,
+        });
       feed.item({
         title: item.title,
         url: item.url,
@@ -119,7 +140,12 @@ const generateRSSFeed = async () => {
   // Write RSS file
   const xml = feed.xml({ indent: true });
   fs.writeFileSync(path.join(publicDir, "rss.xml"), xml);
-  console.log("RSS feed generated at public/rss.xml");
+
+  // Write RSS file
+  const techxml = techFeed.xml({ indent: true });
+  fs.writeFileSync(path.join(publicDir, "techrss.xml"), techxml);
+
+  console.log("RSS feed generated at public/rss.xml & public/techrss.xml");
 };
 
 generateRSSFeed().catch(console.error);
