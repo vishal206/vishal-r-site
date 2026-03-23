@@ -4,10 +4,21 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sun, 08 Mar 2026 16:06:14 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 23 Mar 2026 05:12:21 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Sun, 08 Mar 2026 16:06:14 GMT</pubDate>
+        <pubDate>Mon, 23 Mar 2026 05:12:21 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[My First Hotwheel Trade]]></title>
+            <description><![CDATA[
+Yo!
+
+- Traded my Mercedes Hot Wheels for a Nissan this week. On paper, not a fair swap, but I'm building a themed collection, strictly JDMs , so the Mercedes had to go. I've watched enough History Channel car trading shows to know a good deal when I see one. This felt like that, just in miniature. ...]]></description>
+            <link>https://vishalr.dev/weeknote/25-my-first-hotwheel-trade</link>
+            <guid isPermaLink="false">https://vishalr.dev/weeknote/25-my-first-hotwheel-trade</guid>
+            <category><![CDATA[WeekNote]]></category>
+            <pubDate>Sat, 21 Mar 2026 18:30:00 GMT</pubDate>
+        </item>
         <item>
             <title><![CDATA[It’s a Wonderful Life]]></title>
             <description><![CDATA[
