@@ -7,6 +7,7 @@ import BlogReader from "./components/BlogReader.tsx";
 import WeekNoteReader from "./components/WeekNoteReader.tsx";
 import DevLogReader from "./components/DevLogReader.tsx";
 import ArchivePage from "./Pages/ArchivePage.tsx";
+import AboutPage from "./Pages/AboutPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -14,6 +15,7 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/archive" element={<ArchivePage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/blog/:slug" element={<BlogReader />} />
         <Route path="/weeknote/:slug" element={<WeekNoteReader />} />
         <Route path="/devlog/:slug" element={<DevLogReader />} />

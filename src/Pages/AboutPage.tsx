@@ -1,109 +1,274 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
-import {
-  faLinkedin,
-  faSquareGithub,
-  faXTwitter,
-} from "@fortawesome/free-brands-svg-icons";
-import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { Link, useNavigate } from "react-router-dom";
 import Vishal_Resume from "../assets/Vishal_Resume.pdf";
-import { FolderView } from "../components/FolderView";
-import { CustomMarkdownReader } from "../components/CustomMarkdownReader";
 
-interface AboutSectionProps {
-  onClose: () => void;
+// Load all About chapter files eagerly
+const aboutFiles = import.meta.glob("/src/Posts/About/*.d", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+});
+
+interface Chapter {
+  slug: string;
+  title: string;
+  sno: number;
+  content: string;
 }
 
-const AboutPage: React.FC<AboutSectionProps> = ({ onClose }) => {
-  const handleExternalLink = (url: string) => {
-    window.open(url, "_blank");
-  };
+const parseFrontmatter = (raw: string): { data: Record<string, string>; content: string } => {
+  const match = raw.match(/^---\s*([\s\S]*?)\s*---/);
+  if (!match) return { data: {}, content: raw };
+  const content = raw.replace(/^---\s*[\s\S]*?\s*---/, "").trim();
+  const data: Record<string, string> = {};
+  match[1].split("\n").forEach((line) => {
+    const idx = line.indexOf(":");
+    if (idx === -1) return;
+    const key = line.slice(0, idx).trim();
+    const val = line.slice(idx + 1).trim().replace(/^["']|["']$/g, "");
+    if (key) data[key] = val;
+  });
+  return { data, content };
+};
 
-  const socialLinks = [
-    {
-      icon: faLinkedin,
-      label: "LinkedIn",
-      url: "https://linkedin.com/in/vishal-r-profile",
-    },
-    {
-      icon: faSquareGithub,
-      label: "GitHub",
-      url: "https://github.com/vishal206",
-    },
-    { icon: faDownload, label: "Resume", url: Vishal_Resume },
-    { icon: faXTwitter, label: "X", url: "https://x.com/vishal_r_dev" },
-  ];
+const getExcerpt = (content: string, maxChars = 300): string => {
+  const firstPara = content.split(/\n\n+/)[0] || "";
+  const plain = firstPara
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/`[^`]+`/g, "")
+    .trim();
+  return plain.length > maxChars ? plain.slice(0, maxChars).trimEnd() + "…" : plain;
+};
 
-  const aboutValue = `**Business Intelligence & Analytics Engineer 1** @ Condé Nast.
-  
-  **Bachelor’s degree in Computer Science and Engineering** from Vellore Institute of Technology (VIT), India.`;
+const chapters: Chapter[] = Object.entries(aboutFiles)
+  .map(([path, raw]) => {
+    const slug = path.match(/\/([^/]+)\.d$/)?.[1] ?? path;
+    const { data, content } = parseFrontmatter(raw as string);
+    return {
+      slug,
+      title: data.title ?? "Untitled",
+      sno: parseInt(data.sno ?? "0", 10),
+      content,
+    };
+  })
+  .sort((a, b) => a.sno - b.sno);
+
+// Latest = highest sno
+const latestChapter = chapters[chapters.length - 1] ?? null;
+
+const TECH_STACK = [
+  "React JS", "TailwindCSS", "Langchain", "OpenAI",
+  "Node JS", "Python", "Qlik Sense", "RAG Systems",
+  "LLM Orchestration", "Vite", "Firebase",
+];
+
+const AboutPage: React.FC = () => {
+  const navigate = useNavigate();
 
   return (
-    <div className={`bg-[#F5ECDB] p-4 md:p-8`}>
-      <div className=" mx-auto">
-        {/* Full screen grid with 12 equal columns and 12 equal rows */}
-        <div className="grid grid-cols-12 grid-rows-12 gap-2 md:gap-4 h-[120vh] md:h-[96vh]">
-          {/* About Me Box */}
-          <div className="col-start-1 col-end-13 row-start-2 row-end-4 md:col-end-4 md:row-start-3 md:row-end-6">
-            <div
-              className={`bg-secondarybg rounded-3xl p-4 h-full overflow-y-auto`}
+    <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
+      <div className="px-6 md:px-12 py-6 max-w-screen-xl mx-auto">
+
+        {/* ── Header ── */}
+        <header className="flex items-center justify-between pb-6 border-b border-editorial-divider">
+          <Link
+            to="/"
+            className="text-3xl md:text-5xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
+          >
+            Vishal R
+          </Link>
+
+          <nav className="flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
+            <button
+              onClick={() => navigate("/archive")}
+              className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
             >
-              <p className="text-gray-700 leading-relaxed md:text-sm text-xs whitespace-pre-line">
-                <CustomMarkdownReader content={aboutValue} />
-              </p>
+              Blog
+            </button>
+            <span className="text-editorial-text border-b border-editorial-text pb-0.5">
+              About
+            </span>
+          </nav>
+
+          <div className="text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right hidden md:block">
+            Developer. Writer. Builder.
+          </div>
+        </header>
+
+        {/* ── Narrative Hero — latest chapter ── */}
+        {latestChapter && (
+          <section className="py-10 md:py-14">
+            <div className="flex items-center gap-4 mb-8">
+              <span className="text-[10px] uppercase tracking-[0.22em] text-available whitespace-nowrap">
+                The Narrative
+              </span>
+              <div className="w-12 h-px bg-editorial-divider shrink-0" />
+              <span className="text-[10px] uppercase tracking-[0.22em] text-editorial-label whitespace-nowrap hidden sm:block">
+                Chapters of My Life
+              </span>
             </div>
+
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.95] mb-8 max-w-4xl">
+              {latestChapter.title}
+            </h1>
+
+            <p className="text-base md:text-lg text-editorial-muted leading-relaxed max-w-2xl">
+              {getExcerpt(latestChapter.content)}
+            </p>
+
+            <div className="h-px bg-editorial-divider mt-12" />
+          </section>
+        )}
+
+        {/* ── Three Columns ── */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 pb-12">
+
+          {/* 01 / Chapters of Life */}
+          <div className="md:border-r border-editorial-divider md:pr-10 py-8 border-b md:border-b-0">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-6">
+              01 / Chapters of Life
+            </div>
+
+            {chapters.length === 0 ? (
+              <p className="text-sm text-editorial-muted">No chapters yet.</p>
+            ) : (
+              <div className="space-y-0">
+                {chapters.map((ch) => (
+                  <div
+                    key={ch.slug}
+                    className="py-4 border-b border-editorial-divider"
+                  >
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-1">
+                      {String(ch.sno).padStart(2, "0")}
+                    </div>
+                    <p className="text-base md:text-lg font-display font-bold text-editorial-text leading-tight">
+                      {ch.title}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Social Media Box */}
-          <div className=" col-start-3 col-end-13 row-start-1 row-end-2 md:col-start-1 md:col-end-4 md:row-start-11 md:row-end-12">
-            <div
-              className={`rounded-3xl h-full flex items-center justify-center`}
-            >
-              <div className="flex gap-4">
-                {socialLinks.map((link, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleExternalLink(link.url)}
-                    className="group relative bg-mainbg/50 backdrop-blur-sm rounded-xl p-4 md:p-2 md:px-4 transition-all duration-300 hover:scale-110 hover:-translate-y-2 md:shadow-lg md:hover:shadow-xl flex-1 min-w-0 cursor-pointer"
-                  >
-                    <div className="flex flex-col items-center gap-2">
-                      <FontAwesomeIcon
-                        icon={link.icon}
-                        className="md:text-2xl text-2xl text-white group-hover:text-background-secondary transition-colors duration-300"
-                      />
-                      <span className="hidden md:block text-xs text-white/80 group-hover:text-white font-light truncate">
-                        {link.label}
-                      </span>
-                    </div>
-                  </button>
-                ))}
+          {/* 02 / Experience */}
+          <div className="md:border-r border-editorial-divider md:px-10 py-8 border-b md:border-b-0">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-6">
+              02 / Experience
+            </div>
+
+            <div className="mb-6">
+              <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-3">
+                Current Experience
+              </div>
+              <h3 className="text-xl md:text-2xl font-display font-bold text-editorial-text leading-tight mb-2">
+                Business Intelligence &amp; Analytics Engineer
+              </h3>
+              <div className="text-[10px] uppercase tracking-[0.2em] text-editorial-label">
+                @ Condé Nast
+              </div>
+            </div>
+
+            <div className="h-px bg-editorial-divider my-6" />
+
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-3">
+                Academic Background
+              </div>
+              <h3 className="text-xl md:text-2xl font-display font-bold text-editorial-text leading-tight mb-2">
+                Computer Science and Engineering
+              </h3>
+              <div className="text-[10px] uppercase tracking-[0.2em] text-editorial-label">
+                VIT (Vellore Institute of Technology)
               </div>
             </div>
           </div>
 
-          {/* Close Button Box */}
-          <div
-            className={` col-start-1 col-end-3 row-start-1 row-end-2 md:col-start-1 md:col-end-4 md:row-start-1 md:row-end-3 flex justify-center items-center bg-[#53728d] rounded-3xl`}
-          >
-            <button
-              onClick={onClose}
-              className={` text-primary w-full p-2 rounded-3xl cursor-pointer flex flex-col items-center gap-2`}
-            >
-              <FontAwesomeIcon
-                icon={faHome}
-                className="md:text-3xl text-base hover:text-4xl"
-              />
-              <span className="hidden md:block text-xs text-white/80 group-hover:text-white font-light truncate">
-                {"Back to Home"}
-              </span>
-            </button>
-          </div>
+          {/* 03 / Systems */}
+          <div className="md:pl-10 py-8">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-6">
+              03 / Systems
+            </div>
 
-          <div className="row-start-4 row-end-12 col-start-1 col-end-13 md:row-start-1 md:row-end-12 md:col-start-4 md:col-end-13">
-            <FolderView />
+            <div className="mb-8">
+              <div className="text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-4">
+                Skills / Tech Stack
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {TECH_STACK.map((skill) => (
+                  <span
+                    key={skill}
+                    className="text-[10px] uppercase tracking-[0.15em] text-editorial-text border border-editorial-divider px-2 py-1 hover:border-editorial-label transition-colors"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="h-px bg-editorial-divider mb-6" />
+
+            <div className="space-y-3">
+              <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.18em]">
+                <span className="text-editorial-label">LinkedIn</span>
+                <a
+                  href="https://linkedin.com/in/vishal-r-profile"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-editorial-text hover:text-editorial-label transition-colors"
+                >
+                  /in/Vishal-R
+                </a>
+              </div>
+              <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.18em]">
+                <span className="text-editorial-label">Github</span>
+                <a
+                  href="https://github.com/vishal206"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-editorial-text hover:text-editorial-label transition-colors"
+                >
+                  /Vishal206
+                </a>
+              </div>
+              <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.18em]">
+                <span className="text-editorial-label">X / Twitter</span>
+                <a
+                  href="https://x.com/vishal_r_dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-editorial-text hover:text-editorial-label transition-colors"
+                >
+                  @Vishal_R_Dev
+                </a>
+              </div>
+              <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.18em]">
+                <span className="text-editorial-label">Resume</span>
+                <a
+                  href={Vishal_Resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-editorial-text hover:text-editorial-label transition-colors"
+                >
+                  Vishal_Resume.pdf
+                </a>
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* ── Footer ── */}
+        <footer className="border-t border-editorial-divider py-6 flex justify-end">
+          <div className="flex gap-8 text-[10px] uppercase tracking-[0.18em] text-editorial-label">
+            <a href="/rss.xml" className="hover:text-editorial-text transition-colors">
+              RSS Feed
+            </a>
+            <Link to="/about" className="hover:text-editorial-text transition-colors">
+              Contact
+            </Link>
+          </div>
+        </footer>
+
       </div>
     </div>
   );

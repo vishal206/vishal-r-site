@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
-import { logEvent } from "firebase/analytics";
-import { analytics } from "./firebase";
-import AboutPage from "./Pages/AboutPage";
+import { useNavigate, Link } from "react-router-dom";
 import {
   BlogPostMeta,
   WeekNoteMeta,
@@ -44,17 +41,10 @@ const formatDateShort = (dateStr: string): string => {
 };
 
 const App = () => {
-  const [showAbout, setShowAbout] = useState(false);
   const [blogs, setBlogs] = useState<BlogPostMeta[]>([]);
   const [weekNotes, setWeekNotes] = useState<WeekNoteMeta[]>([]);
   const [featuredPost, setFeaturedPost] = useState<BlogPostMeta | null>(null);
-  const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    setShowAbout(params.get("section") === "about");
-  }, [location]);
 
   useEffect(() => {
     fetchBlogPosts(
@@ -94,34 +84,18 @@ const App = () => {
     fetchWeekNotes();
   }, []);
 
-  const openAbout = () => {
-    navigate("/?section=about", { replace: false });
-    logEvent(analytics, "select_content", {
-      content_type: "section",
-      content_id: "about",
-    });
-  };
-
-  const closeAbout = () => {
-    navigate("/", { replace: true });
-  };
-
-  if (showAbout) {
-    return <AboutPage onClose={closeAbout} />;
-  }
-
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
       <div className="px-6 md:px-12 py-6 max-w-screen-xl mx-auto">
 
         {/* ── Header ── */}
         <header className="flex items-center justify-between pb-6 border-b border-editorial-divider">
-          <button
-            onClick={closeAbout}
-            className="text-3xl md:text-5xl font-display font-black text-editorial-text cursor-pointer hover:opacity-80 transition-opacity leading-none"
+          <Link
+            to="/"
+            className="text-3xl md:text-5xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
           >
             Vishal R
-          </button>
+          </Link>
 
           <nav className="flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
             <button
@@ -131,7 +105,7 @@ const App = () => {
               Blog
             </button>
             <button
-              onClick={openAbout}
+              onClick={() => navigate("/about")}
               className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
             >
               About
@@ -274,7 +248,7 @@ const App = () => {
               RSS Feed
             </a>
             <button
-              onClick={openAbout}
+              onClick={() => navigate("/about")}
               className="hover:text-editorial-text transition-colors cursor-pointer"
             >
               Contact

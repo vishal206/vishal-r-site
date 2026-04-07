@@ -149,7 +149,7 @@ const ArchivePage: React.FC = () => {
               Blog
             </span>
             <button
-              onClick={() => navigate("/?section=about")}
+              onClick={() => navigate("/about")}
               className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
             >
               About
