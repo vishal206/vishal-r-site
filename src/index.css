@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Lexend+Zetta:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lexend+Zetta:wght@100..900&display=swap");
 @import "tailwindcss";
 
 html * {
@@ -7,10 +7,11 @@ html * {
 
 html,
 body {
-  background-color: #222831; /* Prevent the white background from appearing when scrolling excessively */
+  background-color: #111111; /* Prevent the white background from appearing when scrolling excessively */
 }
 
 @theme {
+  /* Legacy colors kept for existing components */
   --color-mainbg: #222831;
   --color-secondarybg: #f7fafc;
   --color-highlight: #3a65a8;
@@ -20,6 +21,15 @@ body {
   --color-background-grid-section: #63726c;
   --color-background-grid-box: #7a593c;
   --font-primary: "Lexend Zetta";
+
+  /* Editorial design tokens */
+  --color-editorial-bg: #111111;
+  --color-editorial-text: #e8e3dc;
+  --color-editorial-label: #6b7280;
+  --color-editorial-divider: #2a2a2a;
+  --color-editorial-muted: #9ca3af;
+  --color-available: #4ade80;
+  --font-display: "Playfair Display";
 }
 
 *::-webkit-scrollbar {
