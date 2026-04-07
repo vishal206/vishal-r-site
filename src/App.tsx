@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "./firebase";
-import BlogList from "./Pages/BlogList";
-import WeekNotesList from "./Pages/WeekNotesList";
-import DevLogsList from "./Pages/DevLogsList";
 import AboutPage from "./Pages/AboutPage";
 import {
   BlogPostMeta,
@@ -35,16 +32,19 @@ const formatDateShort = (dateStr: string): string => {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr.toUpperCase();
     return d
-      .toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+      .toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
       .toUpperCase();
   } catch {
     return dateStr.toUpperCase();
   }
 };
 
-
 const App = () => {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [showAbout, setShowAbout] = useState(false);
   const [blogs, setBlogs] = useState<BlogPostMeta[]>([]);
   const [weekNotes, setWeekNotes] = useState<WeekNoteMeta[]>([]);
   const [featuredPost, setFeaturedPost] = useState<BlogPostMeta | null>(null);
@@ -53,16 +53,7 @@ const App = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const section = params.get("section");
-    if (section) {
-      setActiveSection(section);
-      logEvent(analytics, "page_view", {
-        page_title: `${section} Section`,
-        page_location: window.location.href,
-      });
-    } else {
-      setActiveSection(null);
-    }
+    setShowAbout(params.get("section") === "about");
   }, [location]);
 
   useEffect(() => {
@@ -103,73 +94,20 @@ const App = () => {
     fetchWeekNotes();
   }, []);
 
-  const handleSectionClick = (section: string) => {
-    setActiveSection(section);
-    navigate(`/?section=${section}`, { replace: false });
+  const openAbout = () => {
+    navigate("/?section=about", { replace: false });
     logEvent(analytics, "select_content", {
       content_type: "section",
-      content_id: section,
+      content_id: "about",
     });
   };
 
-  const closeSectionView = () => {
-    setActiveSection(null);
+  const closeAbout = () => {
     navigate("/", { replace: true });
   };
 
-  const SectionBackButton = () => (
-    <button
-      onClick={closeSectionView}
-      className="text-editorial-label text-[10px] uppercase tracking-[0.2em] mb-10 cursor-pointer hover:text-editorial-text transition-colors block"
-    >
-      ← Back to Home
-    </button>
-  );
-
-  if (activeSection === "about") {
-    return <AboutPage onClose={closeSectionView} />;
-  }
-
-  if (activeSection === "blog") {
-    return (
-      <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary px-6 md:px-12 py-8">
-        <div className="max-w-5xl mx-auto">
-          <SectionBackButton />
-          <h1 className="text-3xl font-display font-bold text-editorial-text mb-8">
-            All Blogs
-          </h1>
-          <BlogList />
-        </div>
-      </div>
-    );
-  }
-
-  if (activeSection === "weeknotes") {
-    return (
-      <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary px-6 md:px-12 py-8">
-        <div className="max-w-5xl mx-auto">
-          <SectionBackButton />
-          <h1 className="text-3xl font-display font-bold text-editorial-text mb-8">
-            Week Notes
-          </h1>
-          <WeekNotesList />
-        </div>
-      </div>
-    );
-  }
-
-  if (activeSection === "devlog") {
-    return (
-      <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary px-6 md:px-12 py-8">
-        <div className="max-w-5xl mx-auto">
-          <SectionBackButton />
-          <h1 className="text-3xl font-display font-bold text-editorial-text mb-8">
-            DevLogs
-          </h1>
-          <DevLogsList />
-        </div>
-      </div>
-    );
+  if (showAbout) {
+    return <AboutPage onClose={closeAbout} />;
   }
 
   return (
@@ -179,7 +117,7 @@ const App = () => {
         {/* ── Header ── */}
         <header className="flex items-center justify-between pb-6 border-b border-editorial-divider">
           <button
-            onClick={closeSectionView}
+            onClick={closeAbout}
             className="text-3xl md:text-5xl font-display font-black text-editorial-text cursor-pointer hover:opacity-80 transition-opacity leading-none"
           >
             Vishal R
@@ -187,19 +125,13 @@ const App = () => {
 
           <nav className="flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
             <button
-              onClick={() => handleSectionClick("blog")}
+              onClick={() => navigate("/archive")}
               className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
             >
               Blog
             </button>
             <button
-              onClick={() => handleSectionClick("weeknotes")}
-              className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
-            >
-              Archive
-            </button>
-            <button
-              onClick={() => handleSectionClick("about")}
+              onClick={openAbout}
               className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
             >
               About
@@ -237,12 +169,12 @@ const App = () => {
         {/* ── Main 2 : 1 Split ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
 
-          {/* Left — 01 / Blogs (2 cols of 3 each) */}
+          {/* Left — 01 / Blogs */}
           <div className="md:col-span-2 md:border-r border-editorial-divider md:pr-12 py-8">
             <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
               01 / Blogs
             </div>
-            <div className="h-px bg-editorial-divider mb-0" />
+            <div className="h-px bg-editorial-divider" />
 
             <div className="grid grid-cols-1 md:grid-cols-2">
               {blogs.slice(0, 6).map((post, i) => (
@@ -278,14 +210,11 @@ const App = () => {
             <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
               02 / Archive
             </div>
-            <div className="h-px bg-editorial-divider mb-0" />
+            <div className="h-px bg-editorial-divider" />
 
             <div>
               {weekNotes.slice(0, 4).map((wn) => (
-                <div
-                  key={wn.slug}
-                  className="py-5"
-                >
+                <div key={wn.slug} className="py-5">
                   <Link to={`/weeknote/${wn.slug}`} className="group block">
                     <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-2">
                       <span>{formatDateLabel(wn.date)}</span>
@@ -345,7 +274,7 @@ const App = () => {
               RSS Feed
             </a>
             <button
-              onClick={() => handleSectionClick("about")}
+              onClick={openAbout}
               className="hover:text-editorial-text transition-colors cursor-pointer"
             >
               Contact

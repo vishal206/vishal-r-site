@@ -6,12 +6,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import BlogReader from "./components/BlogReader.tsx";
 import WeekNoteReader from "./components/WeekNoteReader.tsx";
 import DevLogReader from "./components/DevLogReader.tsx";
+import ArchivePage from "./Pages/ArchivePage.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/archive" element={<ArchivePage />} />
         <Route path="/blog/:slug" element={<BlogReader />} />
         <Route path="/weeknote/:slug" element={<WeekNoteReader />} />
         <Route path="/devlog/:slug" element={<DevLogReader />} />
