@@ -63,6 +63,12 @@ export const CustomMarkdownReader = ({ content }: MarkdownReaderProps) => {
           <ul className="list-disc pl-6 mb-6" {...props} />
         ),
         li: ({ node, ...props }) => <li className="mb-2" {...props} />,
+        blockquote: ({ node, ...props }) => (
+          <blockquote
+            className="border-l-2 border-gray-400 pl-4 my-6 italic text-gray-600 font-light"
+            {...props}
+          />
+        ),
       }}
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw]}
