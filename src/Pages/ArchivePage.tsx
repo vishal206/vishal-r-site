@@ -232,11 +232,7 @@ const ArchivePage: React.FC = () => {
                   {pagedEntries.map((entry) => (
                     <Link
                       key={`${entry.type}-${entry.slug}`}
-                      to={
-                        entry.type === "blog"
-                          ? `/blog/${entry.slug}`
-                          : `/weeknote/${entry.slug}`
-                      }
+                      to={`/archive/${entry.slug}`}
                       className="group flex items-start gap-4 md:gap-8 py-5 md:py-6 border-b border-editorial-divider"
                     >
                       {/* Date — desktop only */}

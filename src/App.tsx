@@ -130,7 +130,7 @@ const App = () => {
               </span>
             </div>
 
-            <Link to={`/blog/${featuredPost.slug}`} className="group block">
+            <Link to={`/archive/${featuredPost.slug}`} className="group block">
               <h2 className="text-4xl md:text-7xl lg:text-8xl font-display font-black text-editorial-text leading-[0.92] mb-6 group-hover:opacity-75 transition-opacity">
                 {featuredPost.title}
               </h2>
@@ -160,7 +160,7 @@ const App = () => {
                     i >= 4 ? "hidden md:block" : "",
                   ].join(" ")}
                 >
-                  <Link to={`/blog/${post.slug}`} className="group block">
+                  <Link to={`/archive/${post.slug}`} className="group block">
                     <div className="flex justify-between items-center mb-3">
                       <span className="text-[10px] uppercase tracking-[0.2em] text-available">
                         {post.tags || "Essay"}
@@ -189,7 +189,7 @@ const App = () => {
             <div>
               {weekNotes.slice(0, 4).map((wn) => (
                 <div key={wn.slug} className="py-5">
-                  <Link to={`/weeknote/${wn.slug}`} className="group block">
+                  <Link to={`/archive/${wn.slug}`} className="group block">
                     <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-2">
                       <span>{formatDateLabel(wn.date)}</span>
                       {wn.weeknoteCount && (

@@ -12,60 +12,78 @@ export const CustomMarkdownReader = ({ content }: MarkdownReaderProps) => {
       components={{
         h1: ({ node, ...props }) => (
           <h1
-            className="text-2xl md:text-3xl font-serif font-light mt-10 mb-4"
+            className="font-display text-2xl md:text-3xl font-bold text-editorial-text mt-10 mb-4 leading-tight"
             {...props}
           />
         ),
         h2: ({ node, ...props }) => (
           <h2
-            className="text-xl md:text-2xl font-serif font-light mt-8 mb-3"
+            className="font-display text-xl md:text-2xl font-bold text-editorial-text mt-8 mb-3 leading-tight"
             {...props}
           />
         ),
         h3: ({ node, ...props }) => (
           <h3
-            className="text-lg md:text-xl font-serif font-light mt-6 mb-2"
+            className="font-display text-lg md:text-xl font-bold text-editorial-text mt-6 mb-2"
             {...props}
           />
         ),
         p: ({ node, ...props }) => (
-          <p className="mb-6 leading-relaxed font-light" {...props} />
+          <p
+            className="mb-6 leading-[1.85] text-editorial-muted text-base md:text-[1.1rem] font-body font-normal"
+            {...props}
+          />
         ),
         img: ({ node, ...props }) => (
-          <figure className="my-4 mx-1">
-            <img
-              {...props}
-              className="max-w-full h-auto rounded-md"
-              alt={props.alt || "image"}
-            />
-            {props.alt && (
-              <figcaption className="text-xs text-gray-600 text-center mt-2 italic font-sans">
-                {props.alt}
-              </figcaption>
-            )}
-          </figure>
+          <img
+            {...props}
+            className="max-w-full h-auto my-6"
+            alt={props.alt || ""}
+          />
         ),
         a: (props) => (
           <a
             {...props}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-700 border-b border-gray-300 hover:border-gray-700 transition-colors"
+            className="text-editorial-text border-b border-editorial-divider hover:border-editorial-text transition-colors"
           >
             {props.children}
           </a>
         ),
         strong: ({ node, ...props }) => (
-          <strong className="font-bold" {...props} />
+          <strong className="font-semibold text-editorial-text" {...props} />
         ),
-        em: ({ node, ...props }) => <em className="italic" {...props} />,
+        em: ({ node, ...props }) => (
+          <em className="italic text-editorial-muted" {...props} />
+        ),
         ul: ({ node, ...props }) => (
-          <ul className="list-disc pl-6 mb-6" {...props} />
+          <ul className="list-disc pl-6 mb-6 space-y-2 text-editorial-muted font-body" {...props} />
         ),
-        li: ({ node, ...props }) => <li className="mb-2" {...props} />,
+        ol: ({ node, ...props }) => (
+          <ol className="list-decimal pl-6 mb-6 space-y-2 text-editorial-muted font-body" {...props} />
+        ),
+        li: ({ node, ...props }) => (
+          <li className="leading-relaxed font-body" {...props} />
+        ),
         blockquote: ({ node, ...props }) => (
           <blockquote
-            className="border-l-2 border-gray-400 pl-4 my-6 italic text-gray-600 font-light"
+            className="border-l-2 border-available pl-6 my-8 font-body italic text-xl text-editorial-text"
+            {...props}
+          />
+        ),
+        hr: ({ node, ...props }) => (
+          <hr className="border-editorial-divider my-10" {...props} />
+        ),
+        code: ({ node, ...props }) => (
+          <code
+            className="bg-editorial-divider text-editorial-text text-sm px-1.5 py-0.5 font-mono"
+            {...props}
+          />
+        ),
+        pre: ({ node, ...props }) => (
+          <pre
+            className="bg-editorial-divider text-editorial-text text-sm p-5 my-6 overflow-x-auto font-mono leading-relaxed"
             {...props}
           />
         ),

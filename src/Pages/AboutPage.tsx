@@ -1,9 +1,10 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Vishal_Resume from "../assets/Vishal_Resume.pdf";
+import { CustomMarkdownReader } from "../components/CustomMarkdownReader";
 
 // Load all About chapter files eagerly
-const aboutFiles = import.meta.glob("/src/Posts/About/*.d", {
+const aboutFiles = import.meta.glob("/src/Posts/About/*.md", {
   eager: true,
   query: "?raw",
   import: "default",
@@ -43,7 +44,7 @@ const getExcerpt = (content: string, maxChars = 300): string => {
 
 const chapters: Chapter[] = Object.entries(aboutFiles)
   .map(([path, raw]) => {
-    const slug = path.match(/\/([^/]+)\.d$/)?.[1] ?? path;
+    const slug = path.match(/\/([^/]+)\.md$/)?.[1] ?? path;
     const { data, content } = parseFrontmatter(raw as string);
     return {
       slug,
@@ -109,13 +110,25 @@ const AboutPage: React.FC = () => {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.95] mb-8 max-w-4xl">
-              {latestChapter.title}
-            </h1>
+            <Link
+              to={`/archive/${latestChapter.slug}`}
+              className="group block"
+            >
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.95] mb-8 max-w-4xl group-hover:opacity-75 transition-opacity">
+                {latestChapter.title}
+              </h1>
+            </Link>
 
-            <p className="text-base md:text-lg text-editorial-muted leading-relaxed max-w-2xl">
-              {getExcerpt(latestChapter.content)}
-            </p>
+            <div className="max-w-2xl text-base md:text-lg">
+              <CustomMarkdownReader content={getExcerpt(latestChapter.content)} />
+            </div>
+
+            <Link
+              to={`/archive/${latestChapter.slug}`}
+              className="inline-block mt-4 text-[10px] uppercase tracking-[0.22em] text-available hover:opacity-70 transition-opacity"
+            >
+              Read more →
+            </Link>
 
             <div className="h-px bg-editorial-divider mt-12" />
           </section>
@@ -135,17 +148,18 @@ const AboutPage: React.FC = () => {
             ) : (
               <div className="space-y-0">
                 {chapters.map((ch) => (
-                  <div
+                  <Link
                     key={ch.slug}
-                    className="py-4 border-b border-editorial-divider"
+                    to={`/archive/${ch.slug}`}
+                    className="block py-4 border-b border-editorial-divider group"
                   >
                     <div className="text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-1">
                       {String(ch.sno).padStart(2, "0")}
                     </div>
-                    <p className="text-base md:text-lg font-display font-bold text-editorial-text leading-tight">
+                    <p className="text-base md:text-lg font-display font-bold text-editorial-text leading-tight group-hover:opacity-70 transition-opacity">
                       {ch.title}
                     </p>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}

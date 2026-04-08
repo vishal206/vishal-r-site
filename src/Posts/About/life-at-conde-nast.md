@@ -1,11 +1,12 @@
 ---
 title: "Life at Conde Nast"
 sno: "1"
+date: "30 Jan 2026"
 ---
 
 It was 2023, Me being in a new city, Bengaluru, nearing the end of the startup I was working on. Starting to apply for full time role during a time when top companies were pausing interviews. Got a call from Conde Nast for an interview for which I was shortlisted months back. Gave my 3 rounds of interview, this must be the coolest and most casual interview I gave. Conde Nast came into my life when I needed it exactly.
 
-Joined my first big step in my career. A great team, where everyone had huge knowledge of the data & business of Conde. I was hired to pull this data from the analytics platform, Qlik, and build more interactive and customizable websites with **React JS**. 
+Joined my first big step in my career. A great team, where everyone had huge knowledge of the data & business of Conde. I was hired to pull this data from the analytics platform, Qlik, and build more interactive and customizable websites with **React JS**.
 
 It was challenging, as my team lacked front-end knowledge and fewer documentation on Qlik. I started reading every documentation of and on Qlik. Built my first POC, which also proved to the team that this is possible. On the way, I discovered **TailwindCSS**, which I think I will be using for the rest of my life 😂.
 

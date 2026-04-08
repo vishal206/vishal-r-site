@@ -220,6 +220,47 @@ export const getDevLogs = (): string[] => {
     .filter(Boolean);
 };
 
+// ── About Chapters ──────────────────────────────────────────────────────────
+
+const chapterFiles = import.meta.glob("/src/Posts/About/*.md", {
+  eager: true,
+  as: "raw",
+});
+
+export type ChapterMeta = {
+  slug: string;
+  title: string;
+  sno: number;
+  [key: string]: any;
+};
+
+export type Chapter = {
+  slug: string;
+  frontmatter: ChapterMeta;
+  content: string;
+};
+
+export const getAvailableChapters = (): string[] =>
+  Object.keys(chapterFiles)
+    .map((path) => path.match(/\/([^/]+)\.md$/)?.[1] ?? "")
+    .filter(Boolean);
+
+export const loadChapterFile = async (slug: string): Promise<Chapter | null> => {
+  try {
+    const filePath = Object.keys(chapterFiles).find((p) => p.endsWith(`/${slug}.md`));
+    if (!filePath) return null;
+    const { data, content } = parseFrontmatter(chapterFiles[filePath] as string);
+    return {
+      slug,
+      frontmatter: { slug, title: data.title ?? "Untitled", sno: parseInt(data.sno ?? "0", 10), ...data },
+      content,
+    };
+  } catch (err) {
+    console.error(`Error loading chapter ${slug}:`, err);
+    return null;
+  }
+};
+
 /**
  * Loads a specific devlog by project and slug
  */
