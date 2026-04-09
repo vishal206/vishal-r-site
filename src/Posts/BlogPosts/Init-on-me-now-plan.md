@@ -2,6 +2,7 @@
 title: "Init on ME NOW PLAN"
 date: "4 Jan 2026"
 isTech: true
+tags: "Devlog"
 ---
 
 Have you ever tried to be productive? Have you ever tried to set up a calendar to schedule your tasks, activities, habits, or even the time you’re going to take a bath?

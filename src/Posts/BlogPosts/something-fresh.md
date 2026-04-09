@@ -2,6 +2,7 @@
 title: "Something Fresh"
 date: "07 Oct 2025"
 isTech: true
+tags: "Devlog"
 ---
 
 Recently, I’ve been working with a friend of mine on building a lifestyle brand that currently focuses on clothing, skincare, and related food habits.

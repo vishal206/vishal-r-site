@@ -2,6 +2,7 @@
 title: "Start Ember: How a Drawing Goal Turned Into an App"
 date: "05 Apr 2026"
 isTech: true
+tags: "Devlog"
 ---
 
 This year, I decided to split my resolutions into quarters, one single goal per quarter. For the first quarter, I chose something I'd always wanted to try: learning to draw characters. The plan was simple. Ten minutes every day. That's it.
