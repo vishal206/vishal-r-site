@@ -4,10 +4,20 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Tue, 07 Apr 2026 01:56:50 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 08 Apr 2026 04:44:39 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Tue, 07 Apr 2026 01:56:50 GMT</pubDate>
+        <pubDate>Wed, 08 Apr 2026 04:44:39 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[Start Ember: How a Drawing Goal Turned Into an App]]></title>
+            <description><![CDATA[
+This year, I decided to split my resolutions into quarters, one single goal per quarter. For the first quarter, I chose something I'd always wanted to try: learning to draw characters. The plan was simple. Ten minutes every day. That's it.
+The first few days went well. Then, as these things go, it ...]]></description>
+            <link>https://vishalr.dev/blog/start-ember</link>
+            <guid isPermaLink="false">https://vishalr.dev/blog/start-ember</guid>
+            <category><![CDATA[Blog]]></category>
+            <pubDate>Sat, 04 Apr 2026 18:30:00 GMT</pubDate>
+        </item>
         <item>
             <title><![CDATA[My First Hotwheel Trade]]></title>
             <description><![CDATA[
@@ -53,6 +63,16 @@ As per my trip goals for this year, I went to Chennai to celebrate Pongal. This 
             <pubDate>Sat, 17 Jan 2026 18:30:00 GMT</pubDate>
         </item>
         <item>
+            <title><![CDATA[Init on ME NOW PLAN]]></title>
+            <description><![CDATA[
+Have you ever tried to be productive? Have you ever tried to set up a calendar to schedule your tasks, activities, habits, or even the time you’re going to take a bath?
+It works fine for a day, or even a week, but there comes a point where you mess up one activity, and like a cute little domino, yo...]]></description>
+            <link>https://vishalr.dev/blog/Init-on-me-now-plan</link>
+            <guid isPermaLink="false">https://vishalr.dev/blog/Init-on-me-now-plan</guid>
+            <category><![CDATA[Blog]]></category>
+            <pubDate>Sat, 03 Jan 2026 18:30:00 GMT</pubDate>
+        </item>
+        <item>
             <title><![CDATA[Open Source India 2025]]></title>
             <description><![CDATA[
 Konnichiwa Readers!
@@ -75,6 +95,18 @@ Recently I have updated my morning routine to something that I'm proud of, so he
             <guid isPermaLink="false">https://vishalr.dev/blog/Proof-That-Even-I-Can-Stick-to-a-Routine</guid>
             <category><![CDATA[Blog]]></category>
             <pubDate>Fri, 14 Nov 2025 18:30:00 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Something Fresh]]></title>
+            <description><![CDATA[
+Recently, I’ve been working with a friend of mine on building a lifestyle brand that currently focuses on clothing, skincare, and related food habits.
+
+Started working on the skincare POC,  
+where we first understand the user’s skin. For the POC, we fetch a user’s image and share it with an LLM to ...]]></description>
+            <link>https://vishalr.dev/blog/something-fresh</link>
+            <guid isPermaLink="false">https://vishalr.dev/blog/something-fresh</guid>
+            <category><![CDATA[Blog]]></category>
+            <pubDate>Mon, 06 Oct 2025 18:30:00 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[Agentic AI Hackathon by google cloud]]></title>
