@@ -7,7 +7,7 @@ const DRIVE_FORCE = 0.12;
 const FORWARD_DRAG = 0.92;
 const LATERAL_GRIP = 0.55;
 const MAX_SPEED = 40;
-const STOP_DIST = 52;
+const STOP_DIST = 100;
 
 // ── Skid trail ────────────────────────────────────────────────────────────────
 const TRAIL_SPACING = 4; // min px between sampled points
