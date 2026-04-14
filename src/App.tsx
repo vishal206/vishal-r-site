@@ -53,7 +53,7 @@ const App = () => {
       (posts) => {
         setBlogs(posts);
         if (posts.length > 0) setFeaturedPost(posts[0]);
-      }
+      },
     );
 
     const fetchWeekNotes = async () => {
@@ -70,12 +70,12 @@ const App = () => {
           } as WeekNoteMeta;
         });
         const fetched = (await Promise.all(promises)).filter(
-          Boolean
+          Boolean,
         ) as WeekNoteMeta[];
         setWeekNotes(
           fetched.sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-          )
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          ),
         );
       } catch (err) {
         console.error(err);
@@ -87,12 +87,11 @@ const App = () => {
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
       <div className="px-6 md:px-12 py-6 max-w-screen-xl mx-auto">
-
         {/* ── Header ── */}
         <header className="flex items-center justify-between pb-6 border-b border-editorial-divider">
           <Link
             to="/"
-            className="text-3xl md:text-5xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
+            className="text-xl md:text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
           >
             Vishal R
           </Link>
@@ -142,7 +141,6 @@ const App = () => {
 
         {/* ── Main 2 : 1 Split ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
-
           {/* Left — 01 / Blogs */}
           <div className="md:col-span-2 md:border-r border-editorial-divider md:pr-12 py-8">
             <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
@@ -151,7 +149,7 @@ const App = () => {
             <div className="h-px bg-editorial-divider" />
 
             <div className="grid grid-cols-1 md:grid-cols-2">
-              {blogs.slice(0, 6).map((post, i) => (
+              {blogs.slice(1, 7).map((post, i) => (
                 <div
                   key={post.slug}
                   className={[
@@ -255,7 +253,6 @@ const App = () => {
             </button>
           </div>
         </footer>
-
       </div>
     </div>
   );
