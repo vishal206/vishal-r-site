@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import CarIcon from "./CarIcon";
 
 // ── Physics ───────────────────────────────────────────────────────────────────
 const STEER_RATE = 0.14;
@@ -9,15 +10,15 @@ const MAX_SPEED = 40;
 const STOP_DIST = 52;
 
 // ── Skid trail ────────────────────────────────────────────────────────────────
-const TRAIL_SPACING = 4;    // min px between sampled points
-const TRAIL_MAX_W   = 4;    // peak width of the stroke (px)
-const TRAIL_RAMP_UP   = 0.7;
+const TRAIL_SPACING = 4; // min px between sampled points
+const TRAIL_MAX_W = 4; // peak width of the stroke (px)
+const TRAIL_RAMP_UP = 0.7;
 const TRAIL_RAMP_DOWN = 0.5;
-const TRAIL_DECAY   = 0.04; // faster fade
+const TRAIL_DECAY = 0.04; // faster fade
 const TRAIL_MIN_PTS = 3;
-const TRAIL_MAX_PTS = 14;   // cap — seal & restart trail when exceeded
+const TRAIL_MAX_PTS = 14; // cap — seal & restart trail when exceeded
 const SKID_TURN_RATE = 0.055; // only sharp turns — filters out gentle steering
-const SKID_MIN_SPEED = 2.0;   // must be moving at pace too
+const SKID_MIN_SPEED = 2.0; // must be moving at pace too
 
 // ── Smoke / burnout ───────────────────────────────────────────────────────────
 const BURNOUT_SPEED_OUT = 1.0;
@@ -347,11 +348,21 @@ const CursorCar = () => {
             spawnCloud(rearX, rearY, hx, hy, lx, ly, true);
           // One-shot fixed drag streak stamped backwards — NOT a live trail
           const stamp = (wx: number, wy: number) => {
-            const t: SkidTrail = { pts: [], alpha: 0.88, active: false, lastX: wx, lastY: wy };
+            const t: SkidTrail = {
+              pts: [],
+              alpha: 0.88,
+              active: false,
+              lastX: wx,
+              lastY: wy,
+            };
             const steps = 8;
             for (let i = steps; i >= 0; i--) {
               const frac = i / steps;
-              t.pts.push({ x: wx - hx * frac * 18, y: wy - hy * frac * 18, w: TRAIL_MAX_W * Math.sin(frac * Math.PI) });
+              t.pts.push({
+                x: wx - hx * frac * 18,
+                y: wy - hy * frac * 18,
+                w: TRAIL_MAX_W * Math.sin(frac * Math.PI),
+              });
             }
             if (t.pts.length >= TRAIL_MIN_PTS) finishedRef.current.push(t);
           };
@@ -365,7 +376,9 @@ const CursorCar = () => {
         }
 
         // ── Skid trail — only sharp turns + circle drift ─────────────────
-        const doSkid = inCircleDrift || (turnRate > SKID_TURN_RATE && speed > SKID_MIN_SPEED);
+        const doSkid =
+          inCircleDrift ||
+          (turnRate > SKID_TURN_RATE && speed > SKID_MIN_SPEED);
 
         if (doSkid) {
           s.trailW = inCircleDrift
@@ -373,19 +386,43 @@ const CursorCar = () => {
             : Math.min(TRAIL_MAX_W, s.trailW + TRAIL_RAMP_UP);
 
           if (!leftTrailRef.current) {
-            leftTrailRef.current  = { pts: [{ x: wlX, y: wlY, w: 0 }], alpha: 0.88, active: true, lastX: wlX, lastY: wlY };
-            rightTrailRef.current = { pts: [{ x: wrX, y: wrY, w: 0 }], alpha: 0.88, active: true, lastX: wrX, lastY: wrY };
+            leftTrailRef.current = {
+              pts: [{ x: wlX, y: wlY, w: 0 }],
+              alpha: 0.88,
+              active: true,
+              lastX: wlX,
+              lastY: wlY,
+            };
+            rightTrailRef.current = {
+              pts: [{ x: wrX, y: wrY, w: 0 }],
+              alpha: 0.88,
+              active: true,
+              lastX: wrX,
+              lastY: wrY,
+            };
           }
 
-          appendPoint(leftTrailRef.current,  wlX, wlY, s.trailW);
+          appendPoint(leftTrailRef.current, wlX, wlY, s.trailW);
           appendPoint(rightTrailRef.current!, wrX, wrY, s.trailW);
 
           // Cap length — seal and restart so circle marks stay short
           if (leftTrailRef.current.pts.length >= TRAIL_MAX_PTS) {
-            sealTrail(leftTrailRef.current,  hx, hy, s.trailW);
+            sealTrail(leftTrailRef.current, hx, hy, s.trailW);
             sealTrail(rightTrailRef.current!, hx, hy, s.trailW);
-            leftTrailRef.current  = { pts: [{ x: wlX, y: wlY, w: s.trailW }], alpha: 0.88, active: true, lastX: wlX, lastY: wlY };
-            rightTrailRef.current = { pts: [{ x: wrX, y: wrY, w: s.trailW }], alpha: 0.88, active: true, lastX: wrX, lastY: wrY };
+            leftTrailRef.current = {
+              pts: [{ x: wlX, y: wlY, w: s.trailW }],
+              alpha: 0.88,
+              active: true,
+              lastX: wlX,
+              lastY: wlY,
+            };
+            rightTrailRef.current = {
+              pts: [{ x: wrX, y: wrY, w: s.trailW }],
+              alpha: 0.88,
+              active: true,
+              lastX: wrX,
+              lastY: wrY,
+            };
           }
 
           // Circle drift smoke
@@ -402,9 +439,9 @@ const CursorCar = () => {
           s.trailW = Math.max(0, s.trailW - TRAIL_RAMP_DOWN);
 
           if (leftTrailRef.current) {
-            sealTrail(leftTrailRef.current,  hx, hy, s.trailW);
+            sealTrail(leftTrailRef.current, hx, hy, s.trailW);
             sealTrail(rightTrailRef.current!, hx, hy, s.trailW);
-            leftTrailRef.current  = null;
+            leftTrailRef.current = null;
             rightTrailRef.current = null;
           }
         }
@@ -414,7 +451,7 @@ const CursorCar = () => {
 
         const car = carRef.current;
         if (car)
-          car.style.transform = `translate(${s.x - 20}px, ${s.y - 12}px) rotate(${s.heading * (180 / Math.PI)}deg)`;
+          car.style.transform = `translate(${s.x - 28}px, ${s.y - 15}px) rotate(${s.heading * (180 / Math.PI)}deg)`;
       }
 
       // ── Draw ────────────────────────────────────────────────────────────
@@ -479,42 +516,7 @@ const CursorCar = () => {
           willChange: "transform",
         }}
       >
-        <svg
-          width="40"
-          height="24"
-          viewBox="0 0 40 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect x="4" y="0" width="9" height="6" rx="3" fill="#111" />
-          <rect x="27" y="0" width="9" height="6" rx="3" fill="#111" />
-          <rect x="4" y="18" width="9" height="6" rx="3" fill="#111" />
-          <rect x="27" y="18" width="9" height="6" rx="3" fill="#111" />
-          <rect x="2" y="4" width="36" height="16" rx="5" fill="#d62828" />
-          <rect x="9" y="6" width="19" height="12" rx="3" fill="#b71c1c" />
-          <rect
-            x="24"
-            y="7.5"
-            width="8"
-            height="9"
-            rx="2"
-            fill="#b3d9f2"
-            opacity="0.85"
-          />
-          <rect
-            x="8"
-            y="7.5"
-            width="6"
-            height="9"
-            rx="2"
-            fill="#b3d9f2"
-            opacity="0.55"
-          />
-          <rect x="37" y="7" width="2" height="4" rx="1" fill="#fff59d" />
-          <rect x="37" y="13" width="2" height="4" rx="1" fill="#fff59d" />
-          <rect x="1" y="7" width="2" height="4" rx="1" fill="#ff1744" />
-          <rect x="1" y="13" width="2" height="4" rx="1" fill="#ff1744" />
-        </svg>
+        <CarIcon />
       </div>
     </>
   );
