@@ -1,6 +1,6 @@
 ---
 title: "Start Ember: How a Drawing Goal Turned Into an App"
-date: "05 Apr 2026"
+date: "10 Apr 2026"
 isTech: true
 tags: "Devlog"
 ---

@@ -41,7 +41,7 @@ const generateRSSFeed = async () => {
 
       items.push({
         title: frontmatter.title,
-        url: `${baseUrl}/blog/${slug}`,
+        url: `${baseUrl}/archive/${slug}`,
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
         date: new Date(frontmatter.date),
         categories: ["Blog"],
@@ -70,7 +70,7 @@ const generateRSSFeed = async () => {
 
       items.push({
         title: frontmatter.title,
-        url: `${baseUrl}/weeknote/${slug}`,
+        url: `${baseUrl}/archive/${slug}`,
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
         date: new Date(frontmatter.date),
         categories: ["WeekNote"],
@@ -99,7 +99,7 @@ const generateRSSFeed = async () => {
 
       items.push({
         title: frontmatter.title,
-        url: `${baseUrl}/devlog/${slug}`,
+        url: `${baseUrl}/archive/${slug}`,
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
         date: new Date(frontmatter.date),
         categories: ["Devlog"],

@@ -4,27 +4,27 @@
         <description><![CDATA[Tech Blogs and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Wed, 08 Apr 2026 04:44:39 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 12 Apr 2026 15:32:43 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/techrss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 08 Apr 2026 04:44:39 GMT</pubDate>
+        <pubDate>Sun, 12 Apr 2026 15:32:43 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
         <item>
             <title><![CDATA[Start Ember: How a Drawing Goal Turned Into an App]]></title>
             <description><![CDATA[
 This year, I decided to split my resolutions into quarters, one single goal per quarter. For the first quarter, I chose something I'd always wanted to try: learning to draw characters. The plan was simple. Ten minutes every day. That's it.
 The first few days went well. Then, as these things go, it ...]]></description>
-            <link>https://vishalr.dev/blog/start-ember</link>
-            <guid isPermaLink="false">https://vishalr.dev/blog/start-ember</guid>
+            <link>https://vishalr.dev/archive/start-ember</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/start-ember</guid>
             <category><![CDATA[Blog]]></category>
-            <pubDate>Sat, 04 Apr 2026 18:30:00 GMT</pubDate>
+            <pubDate>Thu, 09 Apr 2026 18:30:00 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[Init on ME NOW PLAN]]></title>
             <description><![CDATA[
 Have you ever tried to be productive? Have you ever tried to set up a calendar to schedule your tasks, activities, habits, or even the time you’re going to take a bath?
 It works fine for a day, or even a week, but there comes a point where you mess up one activity, and like a cute little domino, yo...]]></description>
-            <link>https://vishalr.dev/blog/Init-on-me-now-plan</link>
-            <guid isPermaLink="false">https://vishalr.dev/blog/Init-on-me-now-plan</guid>
+            <link>https://vishalr.dev/archive/Init-on-me-now-plan</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/Init-on-me-now-plan</guid>
             <category><![CDATA[Blog]]></category>
             <pubDate>Sat, 03 Jan 2026 18:30:00 GMT</pubDate>
         </item>
@@ -36,8 +36,8 @@ Konnichiwa Readers!
 Last month, I attended an event I found through my regular magazine, **Open Source For You**.  
 If you like holding a physical magazine that talks about tech, especially the soft side of tech changes, I recommend this one.  
 _Also because I don’t think we have another option in...]]></description>
-            <link>https://vishalr.dev/blog/Open-Source-India-2025</link>
-            <guid isPermaLink="false">https://vishalr.dev/blog/Open-Source-India-2025</guid>
+            <link>https://vishalr.dev/archive/Open-Source-India-2025</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/Open-Source-India-2025</guid>
             <category><![CDATA[Blog]]></category>
             <pubDate>Sat, 06 Dec 2025 18:30:00 GMT</pubDate>
         </item>
@@ -47,8 +47,8 @@ _Also because I don’t think we have another option in...]]></description>
 Recently I have updated my morning routine to something that I'm proud of, so here I'm to boost it.
 
 1. First thing (after all the essentials), I do a leetcode question every day. This takes me roughly around 45 mins. Yes I'm a bit above noob at this space. Why this habit? Recently I realized I'm b...]]></description>
-            <link>https://vishalr.dev/blog/Proof-That-Even-I-Can-Stick-to-a-Routine</link>
-            <guid isPermaLink="false">https://vishalr.dev/blog/Proof-That-Even-I-Can-Stick-to-a-Routine</guid>
+            <link>https://vishalr.dev/archive/Proof-That-Even-I-Can-Stick-to-a-Routine</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/Proof-That-Even-I-Can-Stick-to-a-Routine</guid>
             <category><![CDATA[Blog]]></category>
             <pubDate>Fri, 14 Nov 2025 18:30:00 GMT</pubDate>
         </item>
@@ -59,8 +59,8 @@ Recently, I’ve been working with a friend of mine on building a lifestyle bran
 
 Started working on the skincare POC,  
 where we first understand the user’s skin. For the POC, we fetch a user’s image and share it with an LLM to ...]]></description>
-            <link>https://vishalr.dev/blog/something-fresh</link>
-            <guid isPermaLink="false">https://vishalr.dev/blog/something-fresh</guid>
+            <link>https://vishalr.dev/archive/something-fresh</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/something-fresh</guid>
             <category><![CDATA[Blog]]></category>
             <pubDate>Mon, 06 Oct 2025 18:30:00 GMT</pubDate>
         </item>
@@ -70,8 +70,8 @@ where we first understand the user’s skin. For the POC, we fetch a user’s im
 # 🗓️ The Day:
 
 On the day of **26 July 2025, 09:30 AM** started a 30-hour hackathon. My first full-night hackathon I pulled. Around **700 teams** were shortlisted out of supposedly **3000 teams** who submitted their idea. Yes, they made a **Guinness World Record** with the maximum number of hackat...]]></description>
-            <link>https://vishalr.dev/blog/aa-hackathon</link>
-            <guid isPermaLink="false">https://vishalr.dev/blog/aa-hackathon</guid>
+            <link>https://vishalr.dev/archive/aa-hackathon</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/aa-hackathon</guid>
             <category><![CDATA[Blog]]></category>
             <pubDate>Sun, 27 Jul 2025 18:30:00 GMT</pubDate>
         </item>
@@ -88,8 +88,8 @@ I’m richer than I was in school, but I’m not happier.
 
 So what do I think gives happiness?
 Good health — Freedom — Strong Re...]]></description>
-            <link>https://vishalr.dev/blog/time-money-life</link>
-            <guid isPermaLink="false">https://vishalr.dev/blog/time-money-life</guid>
+            <link>https://vishalr.dev/archive/time-money-life</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/time-money-life</guid>
             <category><![CDATA[Blog]]></category>
             <pubDate>Sun, 13 Jul 2025 18:30:00 GMT</pubDate>
         </item>
