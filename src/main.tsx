@@ -6,10 +6,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import BlogReader from "./components/BlogReader.tsx";
 import ArchivePage from "./Pages/ArchivePage.tsx";
 import AboutPage from "./Pages/AboutPage.tsx";
+import CursorCar from "./components/CursorCar.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
+      <CursorCar />
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/archive" element={<ArchivePage />} />
