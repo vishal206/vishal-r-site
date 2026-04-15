@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import MovieDisk from "./components/MovieDisk";
 import {
   BlogPostMeta,
   WeekNoteMeta,
@@ -169,10 +170,56 @@ const App = () => {
           </div>
         </div>
 
-        {/* ── 02 / Archive ── */}
+        {/* ── 02 / Movie  |  03 / Book ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-editorial-divider">
+          {/* Left — 02 / Movie */}
+          <div className="md:border-r border-editorial-divider md:pr-12 py-8">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
+              02 / Movie
+            </div>
+            <div className="h-px bg-editorial-divider" />
+
+            <div className="flex flex-row items-end justify-center gap-8 md:gap-12 pt-10 pb-4">
+              {blogs.filter((p) => p.tags === "Movie").slice(0, 2).map((post, i) => (
+                <MovieDisk key={post.slug} post={post} tilt={i === 0 ? -6 : 5} />
+              ))}
+            </div>
+          </div>
+
+          {/* Right — 03 / Book */}
+          <div className="border-t border-editorial-divider md:border-t-0 md:pl-12 py-8">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
+              03 / Book
+            </div>
+            <div className="h-px bg-editorial-divider" />
+
+            <div className="flex flex-col gap-0">
+              {blogs.filter((p) => p.tags === "Book").map((post) => (
+                <div key={post.slug} className="py-5">
+                  <Link to={`/archive/${post.slug}`} className="group block">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-available">
+                        Book
+                      </span>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-editorial-label">
+                        {formatDateShort(post.date)}
+                      </span>
+                    </div>
+                    <h3 className="text-base md:text-lg font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
+                      {post.title}
+                    </h3>
+                  </Link>
+                  <div className="h-px bg-editorial-divider mt-5" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── 04 / Archive ── */}
         <section className="border-t border-editorial-divider py-8">
           <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-            02 / Archive
+            04 / Archive
           </div>
           <div className="h-px bg-editorial-divider" />
 
