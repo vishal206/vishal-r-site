@@ -116,50 +116,41 @@ const App = () => {
           </div>
         </header>
 
-        {/* ── Featured ── */}
-        {featuredPost && (
-          <section className="py-8 md:py-14">
-            <div className="flex items-center gap-4 mb-6 md:mb-8">
-              <span className="text-[10px] uppercase tracking-[0.22em] text-available whitespace-nowrap">
-                Featured {featuredPost.tags || "Essay"}
-              </span>
-              <div className="w-12 h-px bg-editorial-divider shrink-0" />
-              <span className="text-[10px] uppercase tracking-[0.22em] text-editorial-label whitespace-nowrap hidden sm:block">
-                {formatDateLabel(featuredPost.date)}
-              </span>
-            </div>
-
-            <Link to={`/archive/${featuredPost.slug}`} className="group block">
-              <h2 className="text-4xl md:text-7xl lg:text-8xl font-display font-black text-editorial-text leading-[0.92] mb-6 group-hover:opacity-75 transition-opacity">
-                {featuredPost.title}
-              </h2>
-            </Link>
-
-            <div className="h-px bg-editorial-divider mt-10" />
-          </section>
-        )}
-
-        {/* ── Main 2 : 1 Split ── */}
+        {/* ── Featured + Blogs side by side (desktop) ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
-          {/* Left — 01 / Blogs */}
-          <div className="md:col-span-2 md:border-r border-editorial-divider md:pr-12 py-8">
+          {/* Left — Featured */}
+          {featuredPost && (
+            <div className="md:col-span-2 md:border-r border-editorial-divider md:pr-12 py-8 md:py-14">
+              <div className="flex items-center gap-4 mb-6 md:mb-8">
+                <span className="text-[10px] uppercase tracking-[0.22em] text-available whitespace-nowrap">
+                  Featured {featuredPost.tags || "Essay"}
+                </span>
+                <div className="w-12 h-px bg-editorial-divider shrink-0" />
+                <span className="text-[10px] uppercase tracking-[0.22em] text-editorial-label whitespace-nowrap hidden sm:block">
+                  {formatDateLabel(featuredPost.date)}
+                </span>
+              </div>
+
+              <Link to={`/archive/${featuredPost.slug}`} className="group block">
+                <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.92] mb-6 group-hover:opacity-75 transition-opacity">
+                  {featuredPost.title}
+                </h2>
+              </Link>
+            </div>
+          )}
+
+          {/* Right — 01 / Blogs (3 posts) */}
+          <div className={`md:col-span-1 py-8 md:py-14 border-t border-editorial-divider md:border-t-0 md:pl-12${!featuredPost ? " md:col-start-3" : ""}`}>
             <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
               01 / Blogs
             </div>
             <div className="h-px bg-editorial-divider" />
 
-            <div className="grid grid-cols-1 md:grid-cols-2">
-              {blogs.slice(1, 7).map((post, i) => (
-                <div
-                  key={post.slug}
-                  className={[
-                    "py-6",
-                    i % 2 === 0 ? "md:pr-8" : "md:pl-8",
-                    i >= 4 ? "hidden md:block" : "",
-                  ].join(" ")}
-                >
+            <div>
+              {blogs.slice(1, 4).map((post) => (
+                <div key={post.slug} className="py-5">
                   <Link to={`/archive/${post.slug}`} className="group block">
-                    <div className="flex justify-between items-center mb-3">
+                    <div className="flex justify-between items-center mb-2">
                       <span className="text-[10px] uppercase tracking-[0.2em] text-available">
                         {post.tags || "Essay"}
                       </span>
@@ -167,71 +158,73 @@ const App = () => {
                         {formatDateShort(post.date)}
                       </span>
                     </div>
-                    <h3 className="text-lg md:text-xl font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
+                    <h3 className="text-base md:text-lg font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
                       {post.title}
                     </h3>
                   </Link>
-                  <div className="h-px bg-editorial-divider mt-6" />
+                  <div className="h-px bg-editorial-divider mt-5" />
                 </div>
               ))}
             </div>
           </div>
+        </div>
 
-          {/* Right — 02 / Archive */}
-          <div className="md:col-span-1 py-8 border-t border-editorial-divider md:border-t-0 md:pl-12">
-            <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-              02 / Archive
-            </div>
-            <div className="h-px bg-editorial-divider" />
+        {/* ── 02 / Archive ── */}
+        <section className="border-t border-editorial-divider py-8">
+          <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
+            02 / Archive
+          </div>
+          <div className="h-px bg-editorial-divider" />
 
-            <div>
-              {weekNotes.slice(0, 4).map((wn) => (
-                <div key={wn.slug} className="py-5">
-                  <Link to={`/archive/${wn.slug}`} className="group block">
-                    <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-2">
-                      <span>{formatDateLabel(wn.date)}</span>
-                      {wn.weeknoteCount && (
-                        <>
-                          <span>·</span>
-                          <span>Week #{wn.weeknoteCount}</span>
-                        </>
-                      )}
-                    </div>
-                    <h4 className="text-base font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
-                      {wn.title}
-                    </h4>
-                  </Link>
-                </div>
-              ))}
-            </div>
-
-            {/* Social links */}
-            <div className="mt-8">
-              <div className="h-px bg-editorial-divider mb-6" />
-              <div className="space-y-3">
-                <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.18em]">
-                  <span className="text-editorial-label">Twitter / X</span>
-                  <a
-                    href="https://x.com/vishal_r_dev"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-editorial-text hover:text-editorial-label transition-colors"
-                  >
-                    @Vishal_R_Dev
-                  </a>
-                </div>
-                <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.18em]">
-                  <span className="text-editorial-label">Github</span>
-                  <a
-                    href="https://github.com/vishal206"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-editorial-text hover:text-editorial-label transition-colors"
-                  >
-                    /Vishal206
-                  </a>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-0">
+            {weekNotes.slice(0, 4).map((wn, i) => (
+              <div
+                key={wn.slug}
+                className={["py-5", i < 3 ? "md:pr-8 md:border-r border-editorial-divider md:mr-8" : ""].join(" ")}
+              >
+                <Link to={`/archive/${wn.slug}`} className="group block">
+                  <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-2">
+                    <span>{formatDateLabel(wn.date)}</span>
+                    {wn.weeknoteCount && (
+                      <>
+                        <span>·</span>
+                        <span>Week #{wn.weeknoteCount}</span>
+                      </>
+                    )}
+                  </div>
+                  <h4 className="text-base font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
+                    {wn.title}
+                  </h4>
+                </Link>
               </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Social links */}
+        <div className="border-t border-editorial-divider py-6">
+          <div className="flex gap-8 text-[10px] uppercase tracking-[0.18em]">
+            <div className="flex justify-between items-center gap-3">
+              <span className="text-editorial-label">Twitter / X</span>
+              <a
+                href="https://x.com/vishal_r_dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-editorial-text hover:text-editorial-label transition-colors"
+              >
+                @Vishal_R_Dev
+              </a>
+            </div>
+            <div className="flex justify-between items-center gap-3">
+              <span className="text-editorial-label">Github</span>
+              <a
+                href="https://github.com/vishal206"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-editorial-text hover:text-editorial-label transition-colors"
+              >
+                /Vishal206
+              </a>
             </div>
           </div>
         </div>
