@@ -7,6 +7,7 @@ import {
   loadWeekNoteFile,
 } from "../Utils/markdownLoader";
 import { fetchBlogPosts } from "../Utils/functions";
+import MovieDisk from "../components/MovieDisk";
 
 type FilterType = "all" | "weeklylogs" | string;
 
@@ -216,12 +217,29 @@ const ArchivePage: React.FC = () => {
             </div>
           </aside>
 
-          {/* Right — entry list */}
+          {/* Right — entry list / disk view */}
           <main className="flex-1 md:pl-12">
             {loading ? (
               <div className="text-editorial-label text-[11px] uppercase tracking-widest py-6">
                 Loading...
               </div>
+            ) : filter === "Movie" ? (
+              /* ── Disk view for Movie filter ── */
+              blogs.filter((p) => p.tags === "Movie").length === 0 ? (
+                <div className="text-editorial-label text-sm py-6">No movies found.</div>
+              ) : (
+                <div className="flex flex-wrap gap-10 md:gap-16 pt-10 pb-6 items-end">
+                  {blogs
+                    .filter((p) => p.tags === "Movie")
+                    .map((post, i) => (
+                      <MovieDisk
+                        key={post.slug}
+                        post={post}
+                        tilt={i % 2 === 0 ? -5 : 4}
+                      />
+                    ))}
+                </div>
+              )
             ) : filteredEntries.length === 0 ? (
               <div className="text-editorial-label text-sm py-6">
                 No entries found.
@@ -246,7 +264,6 @@ const ArchivePage: React.FC = () => {
                           {entry.type === "weeknote"
                             ? `Weekly Log · Week #${entry.weeknoteCount}`
                             : entry.tags || "Essay"}
-                          {/* Date inline on mobile */}
                           <span className="md:hidden text-editorial-label ml-2">
                             · {formatDate(entry.date)}
                           </span>
@@ -275,7 +292,6 @@ const ArchivePage: React.FC = () => {
                       ← Prev
                     </button>
 
-                    {/* Desktop: numbered buttons */}
                     <div className="hidden md:flex items-center gap-1">
                       {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                         (p) => (
@@ -294,15 +310,12 @@ const ArchivePage: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Mobile: page X of Y */}
                     <span className="md:hidden text-[10px] uppercase tracking-[0.2em] text-editorial-label">
                       {String(page).padStart(2, "0")} / {String(totalPages).padStart(2, "0")}
                     </span>
 
                     <button
-                      onClick={() =>
-                        setPage((p) => Math.min(totalPages, p + 1))
-                      }
+                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
                       className="text-[10px] uppercase tracking-[0.2em] text-editorial-label hover:text-editorial-text transition-colors disabled:opacity-30 cursor-pointer disabled:cursor-default"
                     >
