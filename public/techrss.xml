@@ -4,9 +4,9 @@
         <description><![CDATA[Tech Blogs and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sun, 12 Apr 2026 15:32:43 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 19 Apr 2026 16:23:40 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/techrss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Sun, 12 Apr 2026 15:32:43 GMT</pubDate>
+        <pubDate>Sun, 19 Apr 2026 16:23:40 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
         <item>
             <title><![CDATA[Start Ember: How a Drawing Goal Turned Into an App]]></title>

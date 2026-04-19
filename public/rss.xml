@@ -4,10 +4,21 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sun, 12 Apr 2026 15:32:43 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 19 Apr 2026 16:23:40 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Sun, 12 Apr 2026 15:32:43 GMT</pubDate>
+        <pubDate>Sun, 19 Apr 2026 16:23:40 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[Will We Ever Get Used To This?]]></title>
+            <description><![CDATA[
+Yo!
+
+This week, I witnessed a mass layoff. My team members were removed. My friends were removed. The whole day went by refreshing my inbox, wondering if I was next, pinging everyone on leave to check if they were among them. The person I’d lunch with, the person who got teased for being a workahol...]]></description>
+            <link>https://vishalr.dev/archive/29-Will-We-Ever-Get-Used-To-This</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/29-Will-We-Ever-Get-Used-To-This</guid>
+            <category><![CDATA[WeekNote]]></category>
+            <pubDate>Sat, 18 Apr 2026 18:30:00 GMT</pubDate>
+        </item>
         <item>
             <title><![CDATA[First App Launch]]></title>
             <description><![CDATA[
