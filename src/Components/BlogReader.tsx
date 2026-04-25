@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { logEvent } from "firebase/analytics";
-import { analytics } from "../firebase";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   loadMarkdownFile,
@@ -39,12 +37,6 @@ interface Entry {
 const loadEntry = async (slug: string): Promise<Entry | null> => {
   const blog = await loadMarkdownFile(slug);
   if (blog) {
-    logEvent(analytics, "blog_page_view", {
-      page_title: blog.frontmatter.title,
-      page_location: window.location.href,
-      content_type: "blog_post",
-      content_id: slug,
-    });
     return {
       slug,
       title: blog.frontmatter.title,
@@ -58,12 +50,6 @@ const loadEntry = async (slug: string): Promise<Entry | null> => {
 
   const wn = await loadWeekNoteFile(slug);
   if (wn) {
-    logEvent(analytics, "weeknote_page_view", {
-      page_title: wn.frontmatter.title,
-      page_location: window.location.href,
-      content_type: "week_note",
-      content_id: slug,
-    });
     return {
       slug,
       title: wn.frontmatter.title,

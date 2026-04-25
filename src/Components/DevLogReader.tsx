@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { loadDevLogFile, DevLog } from "../Utils/markdownLoader";
-import { logEvent } from "firebase/analytics";
-import { analytics } from "../firebase";
 import { CustomMarkdownReader } from "./CustomMarkdownReader";
 
 const DevLogReader: React.FC = () => {
@@ -26,14 +24,6 @@ const DevLogReader: React.FC = () => {
           throw new Error("Failed to load devlog");
         }
         setDevLog(loadedDevLog);
-
-        // Track devlog views
-        logEvent(analytics, "devlog_page_view", {
-          page_title: loadedDevLog.frontmatter.title,
-          page_location: window.location.href,
-          content_type: "devlog",
-          content_id: `${slug}`,
-        });
       } catch (err) {
         setError("Failed to load devlog");
         console.error(err);
