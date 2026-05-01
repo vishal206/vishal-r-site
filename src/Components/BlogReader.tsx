@@ -15,7 +15,11 @@ const formatDate = (dateStr: string): string => {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr.toUpperCase();
     return d
-      .toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+      .toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
       .toUpperCase();
   } catch {
     return dateStr.toUpperCase();
@@ -31,7 +35,34 @@ interface Entry {
   content: string;
   banner?: string;
   sortKey: string; // ISO date string or "0000-{sno}" for chapters
+  isContextTable?: boolean;
 }
+
+interface TocHeading {
+  level: number;
+  text: string;
+  id: string;
+}
+
+const extractHeadings = (content: string): TocHeading[] => {
+  return content
+    .split("\n")
+    .filter((line) => /^#{1,3}\s/.test(line))
+    .map((line) => {
+      const match = line.match(/^(#{1,3})\s+(.+)$/);
+      if (!match) return null;
+      const text = match[2].trim();
+      return {
+        level: match[1].length,
+        text,
+        id: text
+          .toLowerCase()
+          .replace(/[^\w\s]/g, "")
+          .replace(/\s+/g, "-"),
+      };
+    })
+    .filter(Boolean) as TocHeading[];
+};
 
 // Try each source in order; return first match
 const loadEntry = async (slug: string): Promise<Entry | null> => {
@@ -45,6 +76,9 @@ const loadEntry = async (slug: string): Promise<Entry | null> => {
       content: blog.content,
       banner: blog.frontmatter.banner,
       sortKey: blog.frontmatter.date,
+      isContextTable:
+        blog.frontmatter.isContextTable === "true" ||
+        blog.frontmatter.isContextTable === true,
     };
   }
 
@@ -148,7 +182,9 @@ const BlogReader = () => {
   const navigate = useNavigate();
 
   const [entry, setEntry] = useState<Entry | null>(null);
-  const [sidebar, setSidebar] = useState<{ slug: string; title: string; meta: string }[]>([]);
+  const [sidebar, setSidebar] = useState<
+    { slug: string; title: string; meta: string }[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -174,7 +210,9 @@ const BlogReader = () => {
   if (loading)
     return (
       <div className="min-h-screen bg-editorial-bg flex items-center justify-center">
-        <p className="text-editorial-label text-[11px] uppercase tracking-widest">Loading…</p>
+        <p className="text-editorial-label text-[11px] uppercase tracking-widest">
+          Loading…
+        </p>
       </div>
     );
 
@@ -188,7 +226,6 @@ const BlogReader = () => {
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
       <div className="px-6 md:px-12 py-6 max-w-screen-xl mx-auto">
-
         {/* ── Header ── */}
         <header className="flex items-center justify-between pb-6 border-b border-editorial-divider">
           <Link
@@ -247,7 +284,6 @@ const BlogReader = () => {
 
         {/* ── Body ── */}
         <div className="flex flex-col md:flex-row gap-0">
-
           {/* Sidebar */}
           {sidebar.length > 1 && (
             <aside className="hidden md:block w-52 shrink-0 border-r border-editorial-divider pr-8 pt-12">
@@ -272,7 +308,10 @@ const BlogReader = () => {
                           </p>
                         </>
                       ) : (
-                        <Link to={`/archive/${item.slug}`} className="block group">
+                        <Link
+                          to={`/archive/${item.slug}`}
+                          className="block group"
+                        >
                           <div className="text-[9px] uppercase tracking-[0.18em] text-editorial-label mb-1 line-clamp-1">
                             {item.meta}
                           </div>
@@ -289,7 +328,7 @@ const BlogReader = () => {
           )}
 
           {/* Content */}
-          <article className="flex-1 md:pl-12 pt-10 md:pt-12 max-w-2xl">
+          <article className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl">
             <CustomMarkdownReader content={entry.content} />
             <div className="mt-16 pt-8 border-t border-editorial-divider">
               <button
@@ -300,8 +339,54 @@ const BlogReader = () => {
               </button>
             </div>
           </article>
-        </div>
 
+          {/* Context Table (right sidebar) */}
+          {entry.isContextTable &&
+            (() => {
+              const headings = extractHeadings(entry.content);
+              if (headings.length === 0) return null;
+
+              // Build hierarchical numbers: 1, 2 for h1; 1.1, 1.2 for h2; 1.1.1 for h3
+              const counters = [0, 0, 0];
+              const numbered = headings.map((h) => {
+                const idx = h.level - 1;
+                counters[idx]++;
+                for (let i = idx + 1; i < 3; i++) counters[i] = 0;
+                const number = counters.slice(0, idx + 1).join(".");
+                return { ...h, number };
+              });
+
+              return (
+                <aside className="hidden xl:block w-52 shrink-0 pl-8 pt-12">
+                  <div className="sticky top-8">
+                    <div className="text-[9px] uppercase tracking-[0.22em] text-editorial-label mb-5">
+                      On This Page
+                    </div>
+                    <nav className="flex flex-col gap-1">
+                      {numbered.map((h, i) => (
+                        <a
+                          key={i}
+                          href={`#${h.id}`}
+                          className={`flex gap-2 py-1 text-editorial-label hover:text-editorial-text transition-colors leading-snug ${
+                            h.level === 1
+                              ? "text-[11px] font-semibold pl-0"
+                              : h.level === 2
+                                ? "text-[10px] pl-2"
+                                : "text-[9px] pl-4 opacity-80"
+                          }`}
+                        >
+                          <span className="shrink-0 text-editorial-label opacity-50">
+                            {h.number}
+                          </span>
+                          <span>{h.text}</span>
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                </aside>
+              );
+            })()}
+        </div>
       </div>
     </div>
   );
