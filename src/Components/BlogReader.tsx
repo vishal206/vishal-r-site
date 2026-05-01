@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { setExclusionRect } from "../Utils/exclusionZone";
 import {
   loadMarkdownFile,
   loadWeekNoteFile,
@@ -187,6 +188,7 @@ const BlogReader = () => {
   >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const articleRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!slug) return;
@@ -206,6 +208,23 @@ const BlogReader = () => {
       setSidebar(getWindow(all, slug));
     });
   }, [slug]);
+
+  useEffect(() => {
+    const el = articleRef.current;
+    if (!el) return;
+    const update = () => setExclusionRect(el.getBoundingClientRect());
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("scroll", update);
+    };
+  }, [entry]);
+
+  // Clear exclusion zone when leaving the page entirely
+  useEffect(() => () => setExclusionRect(null), []);
 
   if (loading)
     return (
@@ -328,7 +347,7 @@ const BlogReader = () => {
           )}
 
           {/* Content */}
-          <article className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl">
+          <article ref={articleRef} className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl">
             <CustomMarkdownReader content={entry.content} />
             <div className="mt-16 pt-8 border-t border-editorial-divider">
               <button
