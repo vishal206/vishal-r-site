@@ -89,7 +89,7 @@ const AboutPage: React.FC = () => {
         <header className="flex items-center justify-between pb-6 border-b border-editorial-divider">
           <Link
             to="/"
-            className="text-3xl md:text-5xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
+            className="text-xl md:text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
           >
             Vishal R
           </Link>
