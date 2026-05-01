@@ -39,9 +39,15 @@ The 0.75 dashed line on the charts represents a standard production retrieval th
 
 ## Prose Queries
 
+<img src="/assets/prose-chunk.png" alt="Prose cosine scores" />
+
 All three strategies are competitive here, with similarity scores between 0.63 and 0.77. Fixed improved dramatically compared to the 512-token version (which scored 0.38-0.47) because smaller chunks now target specific policy sentences instead of blending three paragraphs together.
 
 Hierarchical edges ahead on Q2 and Q3, retrieving targeted sentences like "Unused PTO does not expire immediately at ye..." The 64-token child chunks are small enough to isolate individual policy statements.
+
+<figure style="float: right; margin: 0 0 0 1rem; text-align: center;">
+  <img src="/assets/prose-chunk-bar.png" alt="Prose cosine scores comparison" width="350"/>
+</figure>
 
 Semantic stays consistent throughout, retrieving focused sentences with similarity scores just below or at the 0.75 threshold.
 
@@ -49,9 +55,15 @@ Fixed still lags on Q1 (0.63) because the 128-token chunk retrieved the section 
 
 ## FAQ Queries
 
+<img src="/assets/faq-chunk.png" alt="FAQ cosine scores" />
+
 Even with reduced token size, Fixed scores 0.49–0.53 on FAQ queries. It improved from the 0.36–0.45 range at 512 tokens, but it's still nowhere near the 0.75 threshold. The chunk preview tells you why: Fixed retrieved "use flexible scheduling as long as deliverables..." for both the dress code query and the expense report query — two completely different questions retrieving the same wrong chunk. Cross-section contamination persists even at 128 tokens because token boundaries still don't respect Q&A pair boundaries.
 
 Hierarchical improved too from 0.41–0.48 to 0.50–0.60, but still can't crack the threshold. The 64-token child chunks straddle Q&A pairs. A single FAQ answer is often 40–70 tokens, meaning a 64-token child chunk captures one answer and the beginning of the next question, blending their embeddings.
+
+<figure style="float: right; margin: 0 0 0 1rem; text-align: center;">
+  <img src="/assets/faq-chunk-bar.png" alt="FAQ cosine scores comparison" width="350"/>
+</figure>
 
 Semantic: 0.91, 0.93, 0.91. Every single query above 0.75, every chunk preview shows the exact Q&A pair. "Q: How do I submit an expense report?" was retrieved for the expense report query. "Q: Who should I contact for IT support?" was retrieved for the IT support query. Precision that token-based strategies simply cannot achieve, regardless of parameter tuning.
 
@@ -59,9 +71,15 @@ The reason is structural: semantic chunking preserves Q&A pairs as atomic units 
 
 ## Table Queries
 
+<img src="/assets/table-chunk.png" alt="Table cosine scores" />
+
 Every strategy stays below the 0.75 threshold. Among all the findings in this experiment, the table results are the most instructive.
 
 Semantic leads: it correctly retrieved "Dental Care Standard | $2,000 annual dental ma..." for the dental query and "Vision Focus Plan | $400 annual vision allowan..." for the vision query. But similarity scores of 0.62–0.69 mean a production confidence filter would reject these retrievals and trigger fallback responses, even though the answer is present.
+
+<figure style="float: right; margin: 0 0 0 1rem; text-align: center;">
+  <img src="/assets/table-chunk-bar.png" alt="Table cosine scores comparison" width="350"/>
+</figure>
 
 Fixed improved at 128 tokens, scoring 0.50–0.56 compared to 0.36–0.41 at 512, but it's still retrieving "Plus PPO | $1,000,000 annual medical maximum" for the dental coverage query. That's a different row in the same table. Better than retrieving dress code content, but still the wrong answer.
 

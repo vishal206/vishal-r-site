@@ -65,11 +65,18 @@ export const CustomMarkdownReader = ({ content }: MarkdownReaderProps) => {
           />
         ),
         img: ({ node, ...props }) => (
-          <img
-            {...props}
-            className="max-w-full h-auto my-6"
-            alt={props.alt || ""}
-          />
+          <figure className="my-6">
+            <img
+              {...props}
+              className="max-w-full h-auto"
+              alt={props.alt || ""}
+            />
+            {props.alt && (
+              <figcaption className="mt-2 text-[8px] text-editorial-label">
+                {props.alt}
+              </figcaption>
+            )}
+          </figure>
         ),
         a: (props) => (
           <a
