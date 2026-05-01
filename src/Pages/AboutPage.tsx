@@ -84,9 +84,8 @@ const AboutPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-      <div className="px-6 md:px-12 py-6 max-w-screen-xl mx-auto">
         {/* ── Header ── */}
-        <header className="flex items-center justify-between pb-6 border-b border-editorial-divider">
+        <header className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-editorial-divider">
           <Link
             to="/"
             className="text-xl md:text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
@@ -110,6 +109,7 @@ const AboutPage: React.FC = () => {
             Developer. Writer. Builder.
           </div>
         </header>
+      <div className="px-6 md:px-12 pb-6 max-w-screen-xl mx-auto">
 
         {/* ── Narrative Hero — latest chapter ── */}
         {latestChapter && (
