@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import CarIcon from "./CarIcon";
+import { getExclusionRect, clampOutsideRect } from "../Utils/exclusionZone";
 
 // ── Physics ───────────────────────────────────────────────────────────────────
 const STEER_RATE = 0.14;
@@ -283,8 +284,12 @@ const CursorCar = () => {
       const m = mouseRef.current;
 
       if (initRef.current) {
-        const dx = m.x - s.x,
-          dy = m.y - s.y;
+        const excl = getExclusionRect();
+        const target = excl
+          ? clampOutsideRect(m.x, m.y, excl)
+          : { x: m.x, y: m.y };
+        const dx = target.x - s.x,
+          dy = target.y - s.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         s.heading = lerpAngleRad(s.heading, Math.atan2(dy, dx), STEER_RATE);
@@ -331,6 +336,26 @@ const CursorCar = () => {
         s.vy = fwdVel * hy + latVel * ly;
         s.x += s.vx;
         s.y += s.vy;
+
+        // Hard-wall: push car out of content zone and kill inward velocity
+        if (excl) {
+          const inside =
+            s.x > excl.left &&
+            s.x < excl.right &&
+            s.y > excl.top &&
+            s.y < excl.bottom;
+          if (inside) {
+            const dL = s.x - excl.left;
+            const dR = excl.right - s.x;
+            const dT = s.y - excl.top;
+            const dB = excl.bottom - s.y;
+            const minD = Math.min(dL, dR, dT, dB);
+            if (minD === dL) { s.x = excl.left - 1; s.vx = Math.min(s.vx, 0); }
+            else if (minD === dR) { s.x = excl.right + 1; s.vx = Math.max(s.vx, 0); }
+            else if (minD === dT) { s.y = excl.top - 1; s.vy = Math.min(s.vy, 0); }
+            else { s.y = excl.bottom + 1; s.vy = Math.max(s.vy, 0); }
+          }
+        }
 
         const speed = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
 

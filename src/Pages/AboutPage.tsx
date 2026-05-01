@@ -17,7 +17,9 @@ interface Chapter {
   content: string;
 }
 
-const parseFrontmatter = (raw: string): { data: Record<string, string>; content: string } => {
+const parseFrontmatter = (
+  raw: string,
+): { data: Record<string, string>; content: string } => {
   const match = raw.match(/^---\s*([\s\S]*?)\s*---/);
   if (!match) return { data: {}, content: raw };
   const content = raw.replace(/^---\s*[\s\S]*?\s*---/, "").trim();
@@ -26,7 +28,10 @@ const parseFrontmatter = (raw: string): { data: Record<string, string>; content:
     const idx = line.indexOf(":");
     if (idx === -1) return;
     const key = line.slice(0, idx).trim();
-    const val = line.slice(idx + 1).trim().replace(/^["']|["']$/g, "");
+    const val = line
+      .slice(idx + 1)
+      .trim()
+      .replace(/^["']|["']$/g, "");
     if (key) data[key] = val;
   });
   return { data, content };
@@ -39,7 +44,9 @@ const getExcerpt = (content: string, maxChars = 300): string => {
     .replace(/\*([^*]+)\*/g, "$1")
     .replace(/`[^`]+`/g, "")
     .trim();
-  return plain.length > maxChars ? plain.slice(0, maxChars).trimEnd() + "…" : plain;
+  return plain.length > maxChars
+    ? plain.slice(0, maxChars).trimEnd() + "…"
+    : plain;
 };
 
 const chapters: Chapter[] = Object.entries(aboutFiles)
@@ -59,9 +66,17 @@ const chapters: Chapter[] = Object.entries(aboutFiles)
 const latestChapter = chapters[chapters.length - 1] ?? null;
 
 const TECH_STACK = [
-  "React JS", "TailwindCSS", "Langchain", "OpenAI",
-  "Node JS", "Python", "Qlik Sense", "RAG Systems",
-  "LLM Orchestration", "Vite", "Firebase",
+  "React JS",
+  "TailwindCSS",
+  "Langchain",
+  "OpenAI",
+  "Node JS",
+  "Python",
+  "Qlik Sense",
+  "RAG Systems",
+  "LLM Orchestration",
+  "Vite",
+  "Firebase",
 ];
 
 const AboutPage: React.FC = () => {
@@ -70,7 +85,6 @@ const AboutPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
       <div className="px-6 md:px-12 py-6 max-w-screen-xl mx-auto">
-
         {/* ── Header ── */}
         <header className="flex items-center justify-between pb-6 border-b border-editorial-divider">
           <Link
@@ -110,17 +124,16 @@ const AboutPage: React.FC = () => {
               </span>
             </div>
 
-            <Link
-              to={`/archive/${latestChapter.slug}`}
-              className="group block"
-            >
+            <Link to={`/archive/${latestChapter.slug}`} className="group block">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.95] mb-8 max-w-4xl group-hover:opacity-75 transition-opacity">
                 {latestChapter.title}
               </h1>
             </Link>
 
             <div className="max-w-2xl text-base md:text-lg">
-              <CustomMarkdownReader content={getExcerpt(latestChapter.content)} />
+              <CustomMarkdownReader
+                content={getExcerpt(latestChapter.content)}
+              />
             </div>
 
             <Link
@@ -136,7 +149,6 @@ const AboutPage: React.FC = () => {
 
         {/* ── Three Columns ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0 pb-12">
-
           {/* 01 / Chapters of Life */}
           <div className="md:border-r border-editorial-divider md:pr-10 py-8 border-b md:border-b-0">
             <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-6">
@@ -274,15 +286,20 @@ const AboutPage: React.FC = () => {
         {/* ── Footer ── */}
         <footer className="border-t border-editorial-divider py-6 flex justify-end">
           <div className="flex gap-8 text-[10px] uppercase tracking-[0.18em] text-editorial-label">
-            <a href="/rss.xml" className="hover:text-editorial-text transition-colors">
+            <a
+              href="/rss.xml"
+              className="hover:text-editorial-text transition-colors"
+            >
               RSS Feed
             </a>
-            <Link to="/about" className="hover:text-editorial-text transition-colors">
-              Contact
+            <Link
+              to="/"
+              className="hover:text-editorial-text transition-colors"
+            >
+              Home
             </Link>
           </div>
         </footer>
-
       </div>
     </div>
   );
