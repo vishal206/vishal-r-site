@@ -10,8 +10,8 @@ import {
   getAvailableChapters,
 } from "../Utils/markdownLoader";
 import { CustomMarkdownReader } from "./CustomMarkdownReader";
-import { useViewCount } from "../hooks/useViewCount";
-import { useLikeCount } from "../hooks/useLikeCount";
+import { usePostEngagement } from "../hooks/usePostEngagement";
+import { PostEngagement } from "./PostEngagement";
 
 const formatDate = (dateStr: string): string => {
   try {
@@ -191,8 +191,7 @@ const BlogReader = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const articleRef = useRef<HTMLElement>(null);
-  const viewCount = useViewCount(slug);
-  const { likeCount, liked, toggleLike } = useLikeCount(slug);
+  const engagement = usePostEngagement(slug);
 
   useEffect(() => {
     if (!slug) return;
@@ -294,54 +293,7 @@ const BlogReader = () => {
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.92]">
             {entry.title}
           </h1>
-          {viewCount !== null && (
-            <div className="flex items-center gap-5 mt-5">
-              <div className="flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-editorial-label"
-                >
-                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                <span className="text-[11px] uppercase tracking-[0.18em] text-editorial-label">
-                  {viewCount.toLocaleString()}
-                </span>
-              </div>
-              <button
-                onClick={toggleLike}
-                className="flex items-center gap-2 group cursor-pointer"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill={liked ? "currentColor" : "none"}
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className={`transition-colors ${liked ? "text-red-400" : "text-editorial-label group-hover:text-red-400"}`}
-                >
-                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                </svg>
-                {likeCount > 0 && (
-                  <span className={`text-[11px] uppercase tracking-[0.18em] transition-colors ${liked ? "text-red-400" : "text-editorial-label group-hover:text-red-400"}`}>
-                    {likeCount.toLocaleString()}
-                  </span>
-                )}
-              </button>
-            </div>
-          )}
+          <PostEngagement {...engagement} variant="compact" />
         </div>
 
         {/* ── Banner ── */}
@@ -401,7 +353,8 @@ const BlogReader = () => {
           {/* Content */}
           <article ref={articleRef} className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl">
             <CustomMarkdownReader content={entry.content} />
-            <div className="mt-16 pt-8 border-t border-editorial-divider">
+            <PostEngagement {...engagement} variant="full" />
+            <div className="mt-8">
               <button
                 onClick={() => navigate(-1)}
                 className="text-[10px] uppercase tracking-[0.22em] text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
