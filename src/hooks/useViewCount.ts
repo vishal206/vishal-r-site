@@ -17,7 +17,7 @@ export function useViewCount(slug: string | undefined): number | null {
   useEffect(() => {
     if (!slug) return;
 
-    const ref = doc(db, 'postViews', slug);
+    const ref = doc(db, 'postImpressions', slug);
     const visitorKey = `viewed_${slug}_${getVisitorId()}`;
 
     if (!localStorage.getItem(visitorKey)) {
