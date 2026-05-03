@@ -12,6 +12,8 @@ import {
 import { CustomMarkdownReader } from "./CustomMarkdownReader";
 import { usePostEngagement } from "../hooks/usePostEngagement";
 import { PostEngagement } from "./PostEngagement";
+import { useComments } from "../hooks/useComments";
+import { PostComments } from "./PostComments";
 
 const formatDate = (dateStr: string): string => {
   try {
@@ -192,6 +194,7 @@ const BlogReader = () => {
   const [error, setError] = useState<string | null>(null);
   const articleRef = useRef<HTMLElement>(null);
   const engagement = usePostEngagement(slug);
+  const { comments, submitting, submitComment } = useComments(slug);
 
   useEffect(() => {
     if (!slug) return;
@@ -354,6 +357,7 @@ const BlogReader = () => {
           <article ref={articleRef} className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl">
             <CustomMarkdownReader content={entry.content} />
             <PostEngagement {...engagement} variant="full" />
+            <PostComments comments={comments} submitting={submitting} onSubmit={submitComment} />
             <div className="mt-8">
               <button
                 onClick={() => navigate(-1)}
