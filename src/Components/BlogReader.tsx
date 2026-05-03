@@ -10,6 +10,7 @@ import {
   getAvailableChapters,
 } from "../Utils/markdownLoader";
 import { CustomMarkdownReader } from "./CustomMarkdownReader";
+import { useViewCount } from "../hooks/useViewCount";
 
 const formatDate = (dateStr: string): string => {
   try {
@@ -189,6 +190,7 @@ const BlogReader = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const articleRef = useRef<HTMLElement>(null);
+  const viewCount = useViewCount(slug);
 
   useEffect(() => {
     if (!slug) return;
@@ -290,6 +292,28 @@ const BlogReader = () => {
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.92]">
             {entry.title}
           </h1>
+          {viewCount !== null && (
+            <div className="flex items-center gap-2 mt-5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-editorial-label"
+              >
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              <span className="text-[11px] uppercase tracking-[0.18em] text-editorial-label">
+                {viewCount.toLocaleString()}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* ── Banner ── */}
