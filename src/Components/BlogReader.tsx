@@ -10,6 +10,8 @@ import {
   getAvailableChapters,
 } from "../Utils/markdownLoader";
 import { CustomMarkdownReader } from "./CustomMarkdownReader";
+import { usePostEngagement } from "../hooks/usePostEngagement";
+import { PostEngagement } from "./PostEngagement";
 
 const formatDate = (dateStr: string): string => {
   try {
@@ -189,6 +191,7 @@ const BlogReader = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const articleRef = useRef<HTMLElement>(null);
+  const engagement = usePostEngagement(slug);
 
   useEffect(() => {
     if (!slug) return;
@@ -290,6 +293,7 @@ const BlogReader = () => {
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.92]">
             {entry.title}
           </h1>
+          <PostEngagement {...engagement} variant="compact" />
         </div>
 
         {/* ── Banner ── */}
@@ -349,7 +353,8 @@ const BlogReader = () => {
           {/* Content */}
           <article ref={articleRef} className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl">
             <CustomMarkdownReader content={entry.content} />
-            <div className="mt-16 pt-8 border-t border-editorial-divider">
+            <PostEngagement {...engagement} variant="full" />
+            <div className="mt-8">
               <button
                 onClick={() => navigate(-1)}
                 className="text-[10px] uppercase tracking-[0.22em] text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
