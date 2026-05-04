@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import MovieDisk from "./components/MovieDisk";
 import {
@@ -8,6 +8,30 @@ import {
   loadWeekNoteFile,
 } from "./Utils/markdownLoader";
 import { fetchBlogPosts } from "./Utils/functions";
+import { usePostImpressions, PostCounts as PostCountsType } from "./hooks/usePostImpressions";
+
+const PostCounts = ({ counts }: { counts: PostCountsType }) => (
+  <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.18em] text-editorial-label">
+    <span className="flex items-center gap-1.5">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" />
+      </svg>
+      {counts.viewCount.toLocaleString()}
+    </span>
+    <span className="flex items-center gap-1.5">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+      </svg>
+      {counts.likeCount.toLocaleString()}
+    </span>
+    <span className="flex items-center gap-1.5">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+      {counts.commentCount.toLocaleString()}
+    </span>
+  </div>
+);
 
 const formatDateLabel = (dateStr: string): string => {
   try {
@@ -46,6 +70,15 @@ const App = () => {
   const [weekNotes, setWeekNotes] = useState<WeekNoteMeta[]>([]);
   const [featuredPost, setFeaturedPost] = useState<BlogPostMeta | null>(null);
   const navigate = useNavigate();
+
+  const heroPosts = useMemo(() => {
+    const nonMedia = blogs.filter((p) => p.tags !== "Movie" && p.tags !== "Book");
+    return featuredPost
+      ? [featuredPost, ...nonMedia.slice(1, 4)]
+      : nonMedia.slice(0, 4);
+  }, [blogs, featuredPost]);
+
+  const impressions = usePostImpressions(heroPosts.map((p) => p.slug));
 
   useEffect(() => {
     fetchBlogPosts(
@@ -138,6 +171,10 @@ const App = () => {
                   {featuredPost.title}
                 </h2>
               </Link>
+
+              {impressions[featuredPost.slug] != null && (
+                <PostCounts counts={impressions[featuredPost.slug]} />
+              )}
             </div>
           )}
 
@@ -164,6 +201,11 @@ const App = () => {
                       {post.title}
                     </h3>
                   </Link>
+                  {impressions[post.slug] != null && (
+                    <div className="mt-2">
+                      <PostCounts counts={impressions[post.slug]} />
+                    </div>
+                  )}
                   <div className="h-px bg-editorial-divider mt-5" />
                 </div>
               ))}

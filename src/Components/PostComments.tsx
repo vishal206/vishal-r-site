@@ -9,19 +9,34 @@ interface Props {
 
 const formatDate = (date: Date | null): string => {
   if (!date) return "";
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 };
 
 const PencilIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24"
-    fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="11"
+    height="11"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
   </svg>
 );
 
 export const PostComments = ({ comments, submitting, onSubmit }: Props) => {
   const [text, setText] = useState("");
-  const [name, setName] = useState(() => localStorage.getItem("commentName") || "");
+  const [name, setName] = useState(
+    () => localStorage.getItem("commentName") || "",
+  );
   const [editingName, setEditingName] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -53,13 +68,7 @@ export const PostComments = ({ comments, submitting, onSubmit }: Props) => {
   };
 
   return (
-    <div className="mt-12 pt-8 border-t border-editorial-divider">
-      <div className="text-[9px] uppercase tracking-[0.22em] text-editorial-label mb-8">
-        {comments.length > 0
-          ? `${comments.length} ${comments.length === 1 ? "Comment" : "Comments"}`
-          : "Comments"}
-      </div>
-
+    <div className="mt-8">
       {/* Comment list */}
       {comments.length > 0 && (
         <div className="flex flex-col gap-6 mb-10">
@@ -75,7 +84,9 @@ export const PostComments = ({ comments, submitting, onSubmit }: Props) => {
                   </span>
                 )}
               </div>
-              <p className="text-sm text-editorial-text leading-relaxed font-body">{c.text}</p>
+              <p className="text-sm text-editorial-text leading-relaxed font-body">
+                {c.text}
+              </p>
             </div>
           ))}
         </div>
