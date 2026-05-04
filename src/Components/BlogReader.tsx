@@ -296,7 +296,7 @@ const BlogReader = () => {
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.92]">
             {entry.title}
           </h1>
-          <PostEngagement {...engagement} variant="compact" />
+          <PostEngagement {...engagement} commentCount={comments.length} variant="compact" />
         </div>
 
         {/* ── Banner ── */}
@@ -356,7 +356,7 @@ const BlogReader = () => {
           {/* Content */}
           <article ref={articleRef} className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl">
             <CustomMarkdownReader content={entry.content} />
-            <PostEngagement {...engagement} variant="full" />
+            <PostEngagement {...engagement} commentCount={comments.length} variant="full" />
             <PostComments comments={comments} submitting={submitting} onSubmit={submitComment} />
             <div className="mt-8">
               <button
