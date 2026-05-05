@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   collection, addDoc, onSnapshot,
-  orderBy, query, serverTimestamp,
+  orderBy, query, serverTimestamp, doc, setDoc, increment,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 
@@ -41,6 +41,7 @@ export function useComments(slug: string | undefined) {
       text: text.trim(),
       createdAt: serverTimestamp(),
     });
+    await setDoc(doc(db, 'postImpressions', slug), { commentCount: increment(1) }, { merge: true });
     setSubmitting(false);
   };
 
