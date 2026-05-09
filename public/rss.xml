@@ -4,9 +4,9 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Mon, 04 May 2026 10:24:02 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 05 May 2026 06:03:40 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Mon, 04 May 2026 10:24:02 GMT</pubDate>
+        <pubDate>Tue, 05 May 2026 06:03:40 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
         <item>
             <title><![CDATA[The chunking showdown: Fixed vs Semantic vs Hierarchical]]></title>
@@ -19,6 +19,18 @@ When I built my first RAG pipeline, I picked 512 tokens with a 50-token overlap 
             <guid isPermaLink="false">https://vishalr.dev/archive/The-chunking-showdown</guid>
             <category><![CDATA[Blog]]></category>
             <pubDate>Thu, 30 Apr 2026 18:30:00 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[My First Marathon]]></title>
+            <description><![CDATA[
+Yo!🙋
+For World Book Day, Sadhana gifted me Watchmen, while I got her Martyr! by Kaveh Akbar. A good trade.
+
+Sunday was special. I ran my first marathon, thanks to Ritik dragging me into it. Yes, people had opinions about whether 4.2 km counts as a marathon. But for someone who has never crossed a ...]]></description>
+            <link>https://vishalr.dev/archive/30-My-First-Marathon</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/30-My-First-Marathon</guid>
+            <category><![CDATA[WeekNote]]></category>
+            <pubDate>Sat, 25 Apr 2026 18:30:00 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[Will We Ever Get Used To This?]]></title>
