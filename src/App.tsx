@@ -8,24 +8,55 @@ import {
   loadWeekNoteFile,
 } from "./Utils/markdownLoader";
 import { fetchBlogPosts } from "./Utils/functions";
-import { usePostImpressions, PostCounts as PostCountsType } from "./hooks/usePostImpressions";
+import {
+  usePostImpressions,
+  PostCounts as PostCountsType,
+} from "./hooks/usePostImpressions";
 
 const PostCounts = ({ counts }: { counts: PostCountsType }) => (
   <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.18em] text-editorial-label">
     <span className="flex items-center gap-1.5">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" />
+      <svg
+        width="11"
+        height="11"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+        <circle cx="12" cy="12" r="3" />
       </svg>
       {counts.viewCount.toLocaleString()}
     </span>
     <span className="flex items-center gap-1.5">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="11"
+        height="11"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
       </svg>
       {counts.likeCount.toLocaleString()}
     </span>
     <span className="flex items-center gap-1.5">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="11"
+        height="11"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
       {counts.commentCount.toLocaleString()}
@@ -72,7 +103,9 @@ const App = () => {
   const navigate = useNavigate();
 
   const heroPosts = useMemo(() => {
-    const nonMedia = blogs.filter((p) => p.tags !== "Movie" && p.tags !== "Book");
+    const nonMedia = blogs.filter(
+      (p) => p.tags !== "Movie" && p.tags !== "Book",
+    );
     return featuredPost
       ? [featuredPost, ...nonMedia.slice(1, 4)]
       : nonMedia.slice(0, 4);
@@ -86,7 +119,9 @@ const App = () => {
       () => {},
       (posts) => {
         setBlogs(posts);
-        const nonMediaPosts = posts.filter((p) => p.tags !== "Movie" && p.tags !== "Book");
+        const nonMediaPosts = posts.filter(
+          (p) => p.tags !== "Movie" && p.tags !== "Book",
+        );
         if (nonMediaPosts.length > 0) setFeaturedPost(nonMediaPosts[0]);
       },
     );
@@ -121,36 +156,35 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-        {/* ── Header ── */}
-        <header className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-editorial-divider">
-          <Link
-            to="/"
-            className="text-xl md:text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
+      {/* ── Header ── */}
+      <header className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-editorial-divider">
+        <Link
+          to="/"
+          className="text-xl md:text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
+        >
+          Vishal R
+        </Link>
+
+        <nav className="flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
+          <button
+            onClick={() => navigate("/archive")}
+            className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
           >
-            Vishal R
-          </Link>
+            Blog
+          </button>
+          <button
+            onClick={() => navigate("/about")}
+            className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
+          >
+            About
+          </button>
+        </nav>
 
-          <nav className="flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
-            <button
-              onClick={() => navigate("/archive")}
-              className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
-            >
-              Blog
-            </button>
-            <button
-              onClick={() => navigate("/about")}
-              className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
-            >
-              About
-            </button>
-          </nav>
-
-          <div className="text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right hidden md:block">
-            Developer. Writer. Builder.
-          </div>
-        </header>
+        <div className="text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right hidden md:block">
+          Developer. Writer. Builder.
+        </div>
+      </header>
       <div className="px-6 md:px-12 pb-6 max-w-screen-xl mx-auto">
-
         {/* ── Featured + Blogs side by side (desktop) ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
           {/* Left — Featured */}
@@ -166,11 +200,20 @@ const App = () => {
                 </span>
               </div>
 
-              <Link to={`/archive/${featuredPost.slug}`} className="group block">
-                <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.92] mb-6 group-hover:opacity-75 transition-opacity">
+              <Link
+                to={`/archive/${featuredPost.slug}`}
+                className="group block"
+              >
+                <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[1.05] mb-6 group-hover:opacity-75 transition-opacity">
                   {featuredPost.title}
                 </h2>
               </Link>
+
+              {featuredPost.description && (
+                <p className="text-sm md:text-lg text-editorial-label font-body leading-relaxed mb-5 max-w-xl">
+                  {featuredPost.description}
+                </p>
+              )}
 
               {impressions[featuredPost.slug] != null && (
                 <PostCounts counts={impressions[featuredPost.slug]} />
@@ -179,36 +222,41 @@ const App = () => {
           )}
 
           {/* Right — 01 / Blogs (3 posts) */}
-          <div className={`md:col-span-1 py-8 md:py-14 border-t border-editorial-divider md:border-t-0 md:pl-12${!featuredPost ? " md:col-start-3" : ""}`}>
+          <div
+            className={`md:col-span-1 py-8 md:py-14 border-t border-editorial-divider md:border-t-0 md:pl-12${!featuredPost ? " md:col-start-3" : ""}`}
+          >
             <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
               01 / Blogs
             </div>
             <div className="h-px bg-editorial-divider" />
 
             <div>
-              {blogs.filter((p) => p.tags !== "Movie" && p.tags !== "Book").slice(1, 4).map((post) => (
-                <div key={post.slug} className="py-5">
-                  <Link to={`/archive/${post.slug}`} className="group block">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-available">
-                        {post.tags || "Essay"}
-                      </span>
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-editorial-label">
-                        {formatDateShort(post.date)}
-                      </span>
-                    </div>
-                    <h3 className="text-base md:text-lg font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
-                      {post.title}
-                    </h3>
-                  </Link>
-                  {impressions[post.slug] != null && (
-                    <div className="mt-2">
-                      <PostCounts counts={impressions[post.slug]} />
-                    </div>
-                  )}
-                  <div className="h-px bg-editorial-divider mt-5" />
-                </div>
-              ))}
+              {blogs
+                .filter((p) => p.tags !== "Movie" && p.tags !== "Book")
+                .slice(1, 4)
+                .map((post) => (
+                  <div key={post.slug} className="py-5">
+                    <Link to={`/archive/${post.slug}`} className="group block">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-[10px] uppercase tracking-[0.2em] text-available">
+                          {post.tags || "Essay"}
+                        </span>
+                        <span className="text-[10px] uppercase tracking-[0.2em] text-editorial-label">
+                          {formatDateShort(post.date)}
+                        </span>
+                      </div>
+                      <h3 className="text-base md:text-lg font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
+                        {post.title}
+                      </h3>
+                    </Link>
+                    {impressions[post.slug] != null && (
+                      <div className="mt-2">
+                        <PostCounts counts={impressions[post.slug]} />
+                      </div>
+                    )}
+                    <div className="h-px bg-editorial-divider mt-5" />
+                  </div>
+                ))}
             </div>
           </div>
         </div>
@@ -223,9 +271,16 @@ const App = () => {
             <div className="h-px bg-editorial-divider" />
 
             <div className="flex flex-row items-end justify-center gap-8 md:gap-12 pt-10 pb-4">
-              {blogs.filter((p) => p.tags === "Movie").slice(0, 2).map((post, i) => (
-                <MovieDisk key={post.slug} post={post} tilt={i === 0 ? -6 : 5} />
-              ))}
+              {blogs
+                .filter((p) => p.tags === "Movie")
+                .slice(0, 2)
+                .map((post, i) => (
+                  <MovieDisk
+                    key={post.slug}
+                    post={post}
+                    tilt={i === 0 ? -6 : 5}
+                  />
+                ))}
             </div>
           </div>
 
@@ -237,24 +292,26 @@ const App = () => {
             <div className="h-px bg-editorial-divider" />
 
             <div className="flex flex-col gap-0">
-              {blogs.filter((p) => p.tags === "Book").map((post) => (
-                <div key={post.slug} className="py-5">
-                  <Link to={`/archive/${post.slug}`} className="group block">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-available">
-                        Book
-                      </span>
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-editorial-label">
-                        {formatDateShort(post.date)}
-                      </span>
-                    </div>
-                    <h3 className="text-base md:text-lg font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
-                      {post.title}
-                    </h3>
-                  </Link>
-                  <div className="h-px bg-editorial-divider mt-5" />
-                </div>
-              ))}
+              {blogs
+                .filter((p) => p.tags === "Book")
+                .map((post) => (
+                  <div key={post.slug} className="py-5">
+                    <Link to={`/archive/${post.slug}`} className="group block">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-[10px] uppercase tracking-[0.2em] text-available">
+                          Book
+                        </span>
+                        <span className="text-[10px] uppercase tracking-[0.2em] text-editorial-label">
+                          {formatDateShort(post.date)}
+                        </span>
+                      </div>
+                      <h3 className="text-base md:text-lg font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
+                        {post.title}
+                      </h3>
+                    </Link>
+                    <div className="h-px bg-editorial-divider mt-5" />
+                  </div>
+                ))}
             </div>
           </div>
         </div>
@@ -270,7 +327,12 @@ const App = () => {
             {weekNotes.slice(0, 4).map((wn, i) => (
               <div
                 key={wn.slug}
-                className={["py-5", i < 3 ? "md:pr-8 md:border-r border-editorial-divider md:mr-8" : ""].join(" ")}
+                className={[
+                  "py-5",
+                  i < 3
+                    ? "md:pr-8 md:border-r border-editorial-divider md:mr-8"
+                    : "",
+                ].join(" ")}
               >
                 <Link to={`/archive/${wn.slug}`} className="group block">
                   <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-2">
@@ -304,7 +366,12 @@ const App = () => {
                 aria-label="Twitter / X"
               >
                 {/* X (Twitter) logo */}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </a>
@@ -316,7 +383,12 @@ const App = () => {
                 aria-label="GitHub"
               >
                 {/* GitHub logo */}
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                <svg
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
                   <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" />
                 </svg>
               </a>

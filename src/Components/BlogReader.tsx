@@ -250,34 +250,33 @@ const BlogReader = () => {
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-        {/* ── Header ── */}
-        <header className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-editorial-divider">
-          <Link
-            to="/"
-            className="text-xl md:text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
+      {/* ── Header ── */}
+      <header className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-editorial-divider">
+        <Link
+          to="/"
+          className="text-xl md:text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
+        >
+          Vishal R
+        </Link>
+        <nav className="flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
+          <button
+            onClick={() => navigate("/archive")}
+            className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
           >
-            Vishal R
-          </Link>
-          <nav className="flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
-            <button
-              onClick={() => navigate("/archive")}
-              className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
-            >
-              Blog
-            </button>
-            <button
-              onClick={() => navigate("/about")}
-              className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
-            >
-              About
-            </button>
-          </nav>
-          <div className="text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right hidden md:block">
-            Developer. Writer. Builder.
-          </div>
-        </header>
+            Blog
+          </button>
+          <button
+            onClick={() => navigate("/about")}
+            className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
+          >
+            About
+          </button>
+        </nav>
+        <div className="text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right hidden md:block">
+          Developer. Writer. Builder.
+        </div>
+      </header>
       <div className="px-6 md:px-12 pb-6 max-w-screen-xl mx-auto">
-
         {/* ── Article header ── */}
         <div className="pt-10 md:pt-14 pb-8 md:pb-12 border-b border-editorial-divider">
           <div className="flex items-center gap-4 mb-8">
@@ -293,10 +292,14 @@ const BlogReader = () => {
               </>
             )}
           </div>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[0.92]">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[1.05]">
             {entry.title}
           </h1>
-          <PostEngagement {...engagement} commentCount={comments.length} variant="compact" />
+          <PostEngagement
+            {...engagement}
+            commentCount={comments.length}
+            variant="compact"
+          />
         </div>
 
         {/* ── Banner ── */}
@@ -354,10 +357,21 @@ const BlogReader = () => {
           )}
 
           {/* Content */}
-          <article ref={articleRef} className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl">
+          <article
+            ref={articleRef}
+            className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl"
+          >
             <CustomMarkdownReader content={entry.content} />
-            <PostEngagement {...engagement} commentCount={comments.length} variant="full" />
-            <PostComments comments={comments} submitting={submitting} onSubmit={submitComment} />
+            <PostEngagement
+              {...engagement}
+              commentCount={comments.length}
+              variant="full"
+            />
+            <PostComments
+              comments={comments}
+              submitting={submitting}
+              onSubmit={submitComment}
+            />
             <div className="mt-8">
               <button
                 onClick={() => navigate(-1)}

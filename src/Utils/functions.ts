@@ -35,6 +35,7 @@ export const fetchBlogPosts = async (
         date: post.frontmatter.date,
         image: image,
         tags: post.frontmatter.tags || "",
+        description: post.frontmatter.description || "",
       };
     });
 
