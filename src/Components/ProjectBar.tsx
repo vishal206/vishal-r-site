@@ -2,6 +2,30 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ProjectMeta, getAllProjectsMeta } from "../Utils/markdownLoader";
 
+let sharedAudioCtx: AudioContext | null = null;
+
+const playDockTick = () => {
+  try {
+    if (!sharedAudioCtx) {
+      sharedAudioCtx = new AudioContext();
+    }
+    const ctx = sharedAudioCtx;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(1200, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.06);
+    gain.gain.setValueAtTime(0.4, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.06);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.06);
+  } catch {
+    // AudioContext not available
+  }
+};
+
 const ProjectIcon = ({ logo, title }: { logo: string; title: string }) => {
   const isImage =
     logo && (logo.startsWith("/") || logo.startsWith("http"));
@@ -42,6 +66,7 @@ const ProjectBar = () => {
           <button
             key={project.slug}
             onClick={() => navigate(`/projects/${project.slug}`)}
+            onMouseEnter={playDockTick}
             className="group flex flex-col items-center gap-2 px-4 transition-transform duration-200 ease-out hover:-translate-y-2 focus:outline-none"
             aria-label={project.title}
           >
