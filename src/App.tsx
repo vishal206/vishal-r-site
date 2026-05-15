@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import SiteHeader from "./components/SiteHeader";
 import MovieDisk from "./components/MovieDisk";
 import ProjectBar from "./components/ProjectBar";
 import {
@@ -157,34 +158,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-      {/* ── Header ── */}
-      <header className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-editorial-divider">
-        <Link
-          to="/"
-          className="text-xl md:text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
-        >
-          Vishal R
-        </Link>
-
-        <nav className="flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
-          <button
-            onClick={() => navigate("/archive")}
-            className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
-          >
-            Blog
-          </button>
-          <button
-            onClick={() => navigate("/about")}
-            className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
-          >
-            About
-          </button>
-        </nav>
-
-        <div className="text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right hidden md:block">
-          Developer. Writer. Builder.
-        </div>
-      </header>
+      <SiteHeader />
       <div className="px-6 md:px-12 pb-6 max-w-screen-xl mx-auto">
         {/* ── Featured + Blogs side by side (desktop) ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0">

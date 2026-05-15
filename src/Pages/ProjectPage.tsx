@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import SiteHeader from "../components/SiteHeader";
 import { setExclusionRect } from "../Utils/exclusionZone";
 import {
   loadProjectReadme,
@@ -130,31 +131,9 @@ const ProjectPage = () => {
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary flex flex-col">
 
       {/* ── Desktop header ── */}
-      <header className="hidden md:flex px-12 py-6 items-center justify-between border-b border-editorial-divider shrink-0">
-        <Link
-          to="/"
-          className="text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
-        >
-          Vishal R
-        </Link>
-        <nav className="flex gap-12 text-[11px] uppercase tracking-[0.22em]">
-          <button
-            onClick={() => navigate("/archive")}
-            className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
-          >
-            Blog
-          </button>
-          <button
-            onClick={() => navigate("/about")}
-            className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
-          >
-            About
-          </button>
-        </nav>
-        <div className="text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right">
-          Developer. Writer. Builder.
-        </div>
-      </header>
+      <div className="hidden md:block shrink-0">
+        <SiteHeader />
+      </div>
 
       {/* ── Mobile header — project-specific ── */}
       <header className="md:hidden px-6 py-4 flex items-center justify-between border-b border-editorial-divider shrink-0">
@@ -346,14 +325,7 @@ const ProjectPage = () => {
 
             <CustomMarkdownReader content={displayContent} />
 
-            <div className="mt-10 pt-8 border-t border-editorial-divider">
-              <button
-                onClick={() => navigate(-1)}
-                className="text-[10px] uppercase tracking-[0.22em] text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
-              >
-                ← Back
-              </button>
-            </div>
+
           </div>
         </main>
       </div>
