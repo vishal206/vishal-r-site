@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import SiteHeader from "./SiteHeader";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { setExclusionRect } from "../Utils/exclusionZone";
@@ -186,7 +186,6 @@ const getWindow = (all: SidebarEntry[], slug: string): SidebarEntry[] => {
 
 const BlogReader = () => {
   const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
 
   const [entry, setEntry] = useState<Entry | null>(null);
   const [sidebar, setSidebar] = useState<
@@ -349,7 +348,6 @@ const BlogReader = () => {
               submitting={submitting}
               onSubmit={submitComment}
             />
-
           </article>
 
           {/* Context Table (right sidebar) */}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
 import Vishal_Resume from "../assets/Vishal_Resume.pdf";
 import { CustomMarkdownReader } from "../components/CustomMarkdownReader";
@@ -81,13 +81,10 @@ const TECH_STACK = [
 ];
 
 const AboutPage: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-        <SiteHeader activePage="about" />
+      <SiteHeader activePage="about" />
       <div className="px-6 md:px-12 pb-6 max-w-screen-xl mx-auto">
-
         {/* ── Narrative Hero — latest chapter ── */}
         {latestChapter && (
           <section className="py-10 md:py-14">

@@ -10,6 +10,10 @@ import {
   ProjectPost,
 } from "../Utils/markdownLoader";
 import { CustomMarkdownReader } from "../components/CustomMarkdownReader";
+import { usePostEngagement } from "../hooks/usePostEngagement";
+import { PostEngagement } from "../components/PostEngagement";
+import { useComments } from "../hooks/useComments";
+import { PostComments } from "../components/PostComments";
 
 const LogoBox = ({
   logo,
@@ -68,6 +72,10 @@ const ProjectPage = () => {
   const [loading, setLoading] = useState(true);
   const [overlayOpen, setOverlayOpen] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
+
+  const engagementSlug = projectSlug ? `project-${projectSlug}` : undefined;
+  const engagement = usePostEngagement(engagementSlug);
+  const { comments, submitting, submitComment } = useComments(engagementSlug);
 
   useEffect(() => {
     if (!projectSlug) return;
@@ -312,21 +320,43 @@ const ProjectPage = () => {
         {/* ── Right content ── */}
         <main ref={mainRef} className="flex-1 overflow-y-auto">
           <div className="px-6 md:px-12 pt-10 pb-20 max-w-3xl">
-            <div className="flex items-center gap-5 mb-8 pb-8 border-b border-editorial-divider">
-              <LogoBox logo={meta.logo} title={meta.title} size="lg" />
-              <div>
-                <div className="text-[10px] uppercase tracking-[0.22em] text-available mb-1">
-                  {meta.title}
+            <div className="mb-8 pb-8 border-b border-editorial-divider">
+              <div className="flex items-center gap-5">
+                <LogoBox logo={meta.logo} title={meta.title} size="lg" />
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.22em] text-available mb-1">
+                    {meta.title}
+                  </div>
+                  <h1 className="text-2xl md:text-3xl font-display font-black text-editorial-text leading-tight">
+                    {displayTitle}
+                  </h1>
                 </div>
-                <h1 className="text-2xl md:text-3xl font-display font-black text-editorial-text leading-tight">
-                  {displayTitle}
-                </h1>
               </div>
+              {!postSlug && (
+                <PostEngagement
+                  {...engagement}
+                  commentCount={comments.length}
+                  variant="compact"
+                />
+              )}
             </div>
 
             <CustomMarkdownReader content={displayContent} />
 
-
+            {!postSlug && (
+              <>
+                <PostEngagement
+                  {...engagement}
+                  commentCount={comments.length}
+                  variant="full"
+                />
+                <PostComments
+                  comments={comments}
+                  submitting={submitting}
+                  onSubmit={submitComment}
+                />
+              </>
+            )}
           </div>
         </main>
       </div>

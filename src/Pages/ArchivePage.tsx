@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
 import {
   BlogPostMeta,
@@ -45,7 +45,6 @@ const ALL_FILTERS = [
 ];
 
 const ArchivePage: React.FC = () => {
-  const navigate = useNavigate();
   const [blogs, setBlogs] = useState<BlogPostMeta[]>([]);
   const [weekNotes, setWeekNotes] = useState<WeekNoteMeta[]>([]);
   const [filter, setFilter] = useState<FilterType>("all");
@@ -59,7 +58,7 @@ const ArchivePage: React.FC = () => {
       (l) => {
         if (!l) setLoading(false);
       },
-      setBlogs
+      setBlogs,
     );
 
     const fetchWeekNotes = async () => {
@@ -75,12 +74,12 @@ const ArchivePage: React.FC = () => {
         } as WeekNoteMeta;
       });
       const fetched = (await Promise.all(promises)).filter(
-        Boolean
+        Boolean,
       ) as WeekNoteMeta[];
       setWeekNotes(
         fetched.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-        )
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        ),
       );
     };
     fetchWeekNotes();
@@ -103,7 +102,7 @@ const ArchivePage: React.FC = () => {
   }));
 
   const allEntries = [...blogEntries, ...weekNoteEntries].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 
   const getCount = (f: FilterType) => {
@@ -117,15 +116,15 @@ const ArchivePage: React.FC = () => {
     filter === "all"
       ? allEntries
       : filter === "weeklylogs"
-      ? weekNoteEntries
-      : blogEntries.filter(
-          (e) => e.tags?.toLowerCase() === filter.toLowerCase()
-        );
+        ? weekNoteEntries
+        : blogEntries.filter(
+            (e) => e.tags?.toLowerCase() === filter.toLowerCase(),
+          );
 
   const totalPages = Math.ceil(filteredEntries.length / PAGE_SIZE);
   const pagedEntries = filteredEntries.slice(
     (page - 1) * PAGE_SIZE,
-    page * PAGE_SIZE
+    page * PAGE_SIZE,
   );
 
   const handleFilterChange = (f: FilterType) => {
@@ -135,9 +134,8 @@ const ArchivePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-        <SiteHeader activePage="blog" />
+      <SiteHeader activePage="blog" />
       <div className="px-6 md:px-12 pb-6 max-w-screen-xl mx-auto">
-
         {/* ── Mobile filter chips ── */}
         <div className="flex md:hidden gap-2 overflow-x-auto py-4 -mx-6 px-6 border-b border-editorial-divider">
           {ALL_FILTERS.map(({ key, label }) => (
@@ -158,7 +156,6 @@ const ArchivePage: React.FC = () => {
 
         {/* ── Body ── */}
         <div className="flex flex-col md:flex-row mt-6 md:mt-12">
-
           {/* Left sidebar — desktop only */}
           <aside className="hidden md:block w-44 shrink-0 border-r border-editorial-divider pr-8">
             <div className="text-[9px] uppercase tracking-[0.22em] text-editorial-label mb-5">
@@ -202,7 +199,9 @@ const ArchivePage: React.FC = () => {
             ) : filter === "Movie" ? (
               /* ── Disk view for Movie filter ── */
               blogs.filter((p) => p.tags === "Movie").length === 0 ? (
-                <div className="text-editorial-label text-sm py-6">No movies found.</div>
+                <div className="text-editorial-label text-sm py-6">
+                  No movies found.
+                </div>
               ) : (
                 <div className="flex flex-wrap gap-10 md:gap-16 pt-10 pb-6 items-end">
                   {blogs
@@ -282,16 +281,19 @@ const ArchivePage: React.FC = () => {
                           >
                             {String(p).padStart(2, "0")}
                           </button>
-                        )
+                        ),
                       )}
                     </div>
 
                     <span className="md:hidden text-[10px] uppercase tracking-[0.2em] text-editorial-label">
-                      {String(page).padStart(2, "0")} / {String(totalPages).padStart(2, "0")}
+                      {String(page).padStart(2, "0")} /{" "}
+                      {String(totalPages).padStart(2, "0")}
                     </span>
 
                     <button
-                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                      onClick={() =>
+                        setPage((p) => Math.min(totalPages, p + 1))
+                      }
                       disabled={page === totalPages}
                       className="text-[10px] uppercase tracking-[0.2em] text-editorial-label hover:text-editorial-text transition-colors disabled:opacity-30 cursor-pointer disabled:cursor-default"
                     >
@@ -322,7 +324,9 @@ const SidebarItem: React.FC<{
         : "text-editorial-text hover:text-editorial-label"
     }`}
   >
-    <span className={`text-sm font-display font-bold ${active ? "italic" : ""}`}>
+    <span
+      className={`text-sm font-display font-bold ${active ? "italic" : ""}`}
+    >
       {label}
     </span>
     <span className="text-[10px] text-editorial-label font-primary font-normal tabular-nums">

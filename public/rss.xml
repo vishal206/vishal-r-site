@@ -4,23 +4,10 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Fri, 15 May 2026 08:22:24 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 15 May 2026 12:52:39 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Fri, 15 May 2026 08:22:24 GMT</pubDate>
+        <pubDate>Fri, 15 May 2026 12:52:39 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
-        <item>
-            <title><![CDATA[Two Types of Work. One Place to Track Both.]]></title>
-            <description><![CDATA[
-I wanted to learn System Design. I had the course, the material, and a clear list of what to cover. So I started. Some days I got through two topics. Some days one. Some days nothing.
-
-A month in, I had no idea where I actually stood.
-
-Not because I wasn't trying. Because I had no honest way to see...]]></description>
-            <link>https://vishalr.dev/archive/Two-Types-of-Work</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/Two-Types-of-Work</guid>
-            <category><![CDATA[Blog]]></category>
-            <pubDate>Mon, 11 May 2026 18:30:00 GMT</pubDate>
-        </item>
         <item>
             <title><![CDATA[The chunking showdown: Fixed vs Semantic vs Hierarchical]]></title>
             <description><![CDATA[
@@ -67,16 +54,6 @@ Yo!
             <guid isPermaLink="false">https://vishalr.dev/archive/28-First-app-launch</guid>
             <category><![CDATA[WeekNote]]></category>
             <pubDate>Sat, 11 Apr 2026 18:30:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Start Ember: How a Drawing Goal Turned Into an App]]></title>
-            <description><![CDATA[
-This year, I decided to split my resolutions into quarters, one single goal per quarter. For the first quarter, I chose something I'd always wanted to try: learning to draw characters. The plan was simple. Ten minutes every day. That's it.
-The first few days went well. Then, as these things go, it ...]]></description>
-            <link>https://vishalr.dev/archive/start-ember</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/start-ember</guid>
-            <category><![CDATA[Blog]]></category>
-            <pubDate>Thu, 09 Apr 2026 18:30:00 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[My First Hotwheel Trade]]></title>

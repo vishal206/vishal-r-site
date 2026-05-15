@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ProjectMeta, getAllProjectsMeta } from "../Utils/markdownLoader";
+import { useProjectStats } from "../hooks/useProjectStats";
 
 let sharedAudioCtx: AudioContext | null = null;
 
@@ -39,6 +40,7 @@ const Polaroid = ({ project, tilt, lifted, onClick, onMouseEnter, onMouseLeave }
   const isImage =
     project.logo &&
     (project.logo.startsWith("/") || project.logo.startsWith("http"));
+  const stats = useProjectStats(project.slug);
 
   return (
     <div
@@ -99,6 +101,19 @@ const Polaroid = ({ project, tilt, lifted, onClick, onMouseEnter, onMouseLeave }
             >
               {project.description}
             </p>
+          )}
+          {stats && (stats.viewCount > 0 || stats.likeCount > 0 || stats.commentCount > 0) && (
+            <div className="flex items-center gap-2 mt-1.5" style={{ fontFamily: "'Caveat', cursive" }}>
+              {stats.viewCount > 0 && (
+                <span className="text-[10px] text-[#888]">👁 {stats.viewCount}</span>
+              )}
+              {stats.likeCount > 0 && (
+                <span className="text-[10px] text-[#888]">♥ {stats.likeCount}</span>
+              )}
+              {stats.commentCount > 0 && (
+                <span className="text-[10px] text-[#888]">💬 {stats.commentCount}</span>
+              )}
+            </div>
           )}
         </div>
       </div>
