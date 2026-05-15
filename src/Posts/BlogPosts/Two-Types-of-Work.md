@@ -1,6 +1,6 @@
 ---
 title: "Two Types of Work. One Place to Track Both."
-date: "9 May 2026"
+date: "12 May 2026"
 isTech: true
 isContextTable: true
 tags: "Devlog"
@@ -29,7 +29,7 @@ A curriculum isn't a habit. Treating it like one is where progress quietly dies.
 
 A habit is about identity. You're not trying to finish drawing, you're becoming someone who draws every day. The streak isn't about the output. It's about who you are on day 30 versus day 1.
 
-> Every action you take is a vote for the type of person you wish to become. - James Clear, Atmoic Habits
+<img src="/assets/james-every-action.png" alt="Every action you take is a vote for the type of person you wish to become. - James Clear, Atmoic Habits"/>
 
 A learning track is about movement through material. There's something in front of you, a course, a book, a roadmap, and you're moving through it. The question isn't "did I show up today?" It's "where am I in this thing, and am I actually moving forward?"
 
@@ -46,6 +46,8 @@ The view is honest and minimal:
 **8 of 24 checkpoints completed.** Shows where you stand.
 
 **Last activity: 12 days ago.** This is the line that matters. If you haven't touched a track in almost two weeks, that number sits there quietly and tells you the truth.
+
+<img src="/assets/tracks-start-ember.png" alt="Screenshot of a track from Start Ember"/>
 
 # The Habit Connection
 
