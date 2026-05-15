@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import MovieDisk from "./components/MovieDisk";
+import ProjectBar from "./components/ProjectBar";
 import {
   BlogPostMeta,
   WeekNoteMeta,
@@ -260,6 +261,9 @@ const App = () => {
             </div>
           </div>
         </div>
+
+        {/* ── Projects Bar ── */}
+        <ProjectBar />
 
         {/* ── 02 / Movie  |  03 / Book ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-editorial-divider">

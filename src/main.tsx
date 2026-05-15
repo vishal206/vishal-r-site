@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import BlogReader from "./components/BlogReader.tsx";
 import ArchivePage from "./Pages/ArchivePage.tsx";
 import AboutPage from "./Pages/AboutPage.tsx";
+import ProjectPage from "./Pages/ProjectPage.tsx";
 import CursorCar from "./components/CursorCar.tsx";
 import { analytics } from "./firebase.ts";
 import { logEvent } from "firebase/analytics";
@@ -36,6 +37,11 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/archive" element={<ArchivePage />} />
         <Route path="/archive/:slug" element={<BlogReader />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/projects/:projectSlug" element={<ProjectPage />} />
+        <Route
+          path="/projects/:projectSlug/:postSlug"
+          element={<ProjectPage />}
+        />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

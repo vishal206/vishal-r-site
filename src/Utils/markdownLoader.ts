@@ -261,6 +261,93 @@ export const loadChapterFile = async (slug: string): Promise<Chapter | null> => 
   }
 };
 
+// ── Projects ─────────────────────────────────────────────────────────────────
+
+const projectFiles = import.meta.glob("/src/Posts/Projects/**/*.md", {
+  eager: true,
+  as: "raw",
+});
+
+export type ProjectMeta = {
+  slug: string;
+  title: string;
+  logo: string;
+  description?: string;
+  [key: string]: any;
+};
+
+export type ProjectPost = {
+  slug: string;
+  title: string;
+  date?: string;
+  content: string;
+  [key: string]: any;
+};
+
+export const getAvailableProjects = (): string[] => {
+  const projects = new Set<string>();
+  Object.keys(projectFiles).forEach((path) => {
+    const match = path.match(/\/Projects\/([^/]+)\//);
+    if (match) projects.add(match[1]);
+  });
+  return Array.from(projects);
+};
+
+export const loadProjectReadme = async (
+  projectSlug: string,
+): Promise<{ content: string; frontmatter: ProjectMeta } | null> => {
+  const filePath = Object.keys(projectFiles).find((p) =>
+    p.match(new RegExp(`/Projects/${projectSlug}/readme\\.md$`, "i")),
+  );
+  if (!filePath) return null;
+  const { data, content } = parseFrontmatter(projectFiles[filePath] as string);
+  return {
+    content,
+    frontmatter: {
+      slug: projectSlug,
+      title: data.title ?? projectSlug,
+      logo: data.logo ?? "",
+      ...data,
+    },
+  };
+};
+
+export const loadProjectPosts = async (
+  projectSlug: string,
+): Promise<ProjectPost[]> => {
+  const relevant = Object.keys(projectFiles).filter(
+    (p) =>
+      p.includes(`/Projects/${projectSlug}/`) &&
+      !p.match(/\/readme\.md$/i),
+  );
+  const posts: ProjectPost[] = [];
+  for (const filePath of relevant) {
+    const match = filePath.match(/\/([^/]+)\.md$/);
+    if (!match) continue;
+    const slug = match[1];
+    const { data, content } = parseFrontmatter(
+      projectFiles[filePath] as string,
+    );
+    posts.push({ slug, title: data.title ?? slug, date: data.date, content, ...data });
+  }
+  return posts.sort((a, b) => {
+    if (a.date && b.date)
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    return 0;
+  });
+};
+
+export const getAllProjectsMeta = async (): Promise<ProjectMeta[]> => {
+  const slugs = getAvailableProjects();
+  const metas = await Promise.all(
+    slugs.map(async (slug) => {
+      const readme = await loadProjectReadme(slug);
+      return readme ? readme.frontmatter : null;
+    }),
+  );
+  return metas.filter(Boolean) as ProjectMeta[];
+};
+
 /**
  * Loads a specific devlog by project and slug
  */
