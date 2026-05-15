@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import SiteHeader from "./SiteHeader";
+import ScrollToTopButton from "./ScrollToTopButton";
 import { setExclusionRect } from "../Utils/exclusionZone";
 import {
   loadMarkdownFile,
@@ -399,6 +400,7 @@ const BlogReader = () => {
             })()}
         </div>
       </div>
+      <ScrollToTopButton />
     </div>
   );
 };

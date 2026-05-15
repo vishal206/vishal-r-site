@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 import { setExclusionRect } from "../Utils/exclusionZone";
 import {
   loadProjectReadme,
@@ -329,6 +330,7 @@ const ProjectPage = () => {
           </div>
         </main>
       </div>
+      <ScrollToTopButton />
     </div>
   );
 };
