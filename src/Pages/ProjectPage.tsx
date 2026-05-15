@@ -63,6 +63,7 @@ const ProjectPage = () => {
   const [readmeContent, setReadmeContent] = useState<string>("");
   const [posts, setPosts] = useState<ProjectPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [overlayOpen, setOverlayOpen] = useState(false);
 
   useEffect(() => {
     if (!projectSlug) return;
@@ -79,6 +80,11 @@ const ProjectPage = () => {
       setLoading(false);
     });
   }, [projectSlug]);
+
+  // Close overlay on navigation
+  useEffect(() => {
+    setOverlayOpen(false);
+  }, [postSlug]);
 
   if (loading)
     return (
@@ -104,15 +110,16 @@ const ProjectPage = () => {
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary flex flex-col">
-      {/* ── Header ── */}
-      <header className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-editorial-divider shrink-0">
+
+      {/* ── Desktop header ── */}
+      <header className="hidden md:flex px-12 py-6 items-center justify-between border-b border-editorial-divider shrink-0">
         <Link
           to="/"
-          className="text-xl md:text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
+          className="text-2xl font-display font-black text-editorial-text hover:opacity-80 transition-opacity leading-none"
         >
           Vishal R
         </Link>
-        <nav className="flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
+        <nav className="flex gap-12 text-[11px] uppercase tracking-[0.22em]">
           <button
             onClick={() => navigate("/archive")}
             className="text-editorial-label hover:text-editorial-text transition-colors cursor-pointer"
@@ -126,16 +133,116 @@ const ProjectPage = () => {
             About
           </button>
         </nav>
-        <div className="text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right hidden md:block">
+        <div className="text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right">
           Developer. Writer. Builder.
         </div>
       </header>
 
+      {/* ── Mobile header — project-specific ── */}
+      <header className="md:hidden px-6 py-4 flex items-center justify-between border-b border-editorial-divider shrink-0">
+        <div className="flex items-center gap-3 min-w-0">
+          <button
+            onClick={() => navigate("/")}
+            className="text-editorial-label hover:text-editorial-text transition-colors shrink-0"
+            aria-label="Back to home"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <LogoBox logo={meta.logo} title={meta.title} size="sm" />
+          <span className="text-sm font-display font-bold text-editorial-text truncate">
+            {meta.title}
+          </span>
+        </div>
+
+        {posts.length > 0 && (
+          <button
+            onClick={() => setOverlayOpen(true)}
+            className="flex items-center gap-2 text-[9px] uppercase tracking-[0.2em] text-editorial-label hover:text-editorial-text transition-colors shrink-0 ml-3"
+          >
+            Posts
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        )}
+      </header>
+
+      {/* ── Mobile fullscreen overlay ── */}
+      {overlayOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-editorial-bg flex flex-col">
+          {/* Overlay header */}
+          <div className="px-6 py-4 flex items-center justify-between border-b border-editorial-divider">
+            <div className="flex items-center gap-3">
+              <LogoBox logo={meta.logo} title={meta.title} size="sm" />
+              <span className="text-sm font-display font-bold text-editorial-text">
+                {meta.title}
+              </span>
+            </div>
+            <button
+              onClick={() => setOverlayOpen(false)}
+              className="text-editorial-label hover:text-editorial-text transition-colors"
+              aria-label="Close"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Overlay nav list */}
+          <div className="flex-1 overflow-y-auto px-6 py-4">
+            {/* Overview */}
+            <div
+              className={`py-4 border-b border-editorial-divider transition-opacity ${!postSlug ? "opacity-100" : "opacity-50"}`}
+            >
+              <button
+                onClick={() => navigate(`/projects/${projectSlug}`)}
+                className="block w-full text-left"
+              >
+                <div className="text-[9px] uppercase tracking-[0.2em] text-editorial-label mb-1">Overview</div>
+                <p className="text-base font-display font-bold text-editorial-text">README</p>
+              </button>
+            </div>
+
+            {/* Posts */}
+            {posts.map((post) => {
+              const isActive = post.slug === postSlug;
+              return (
+                <div
+                  key={post.slug}
+                  className={`py-4 border-b border-editorial-divider last:border-0 transition-opacity ${isActive ? "opacity-100" : "opacity-50"}`}
+                >
+                  <Link
+                    to={`/projects/${projectSlug}/${post.slug}`}
+                    className="block"
+                  >
+                    {isActive && (
+                      <div className="text-[9px] uppercase tracking-[0.18em] text-available mb-1">
+                        Reading
+                      </div>
+                    )}
+                    <p className="text-base font-display font-bold text-editorial-text leading-snug">
+                      {post.title}
+                    </p>
+                    {post.date && (
+                      <p className="text-[9px] uppercase tracking-[0.15em] text-editorial-label mt-1">
+                        {formatDate(post.date)}
+                      </p>
+                    )}
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* ── Body ── */}
       <div className="flex flex-1 overflow-hidden">
-        {/* ── Left sidebar ── */}
+        {/* ── Left sidebar (desktop only) ── */}
         <aside className="hidden md:flex w-60 shrink-0 border-r border-editorial-divider flex-col overflow-y-auto">
-          {/* Project identity */}
           <div className="p-6 border-b border-editorial-divider">
             <button
               onClick={() => navigate("/")}
@@ -151,7 +258,6 @@ const ProjectPage = () => {
             </div>
           </div>
 
-          {/* Overview link */}
           <div className="px-6 pt-5">
             <button
               onClick={() => navigate(`/projects/${projectSlug}`)}
@@ -165,7 +271,6 @@ const ProjectPage = () => {
             </button>
           </div>
 
-          {/* Posts list */}
           {posts.length > 0 && (
             <div className="px-6 pt-5 pb-8">
               <div className="text-[9px] uppercase tracking-[0.2em] text-editorial-label mb-3">
@@ -209,7 +314,6 @@ const ProjectPage = () => {
         {/* ── Right content ── */}
         <main className="flex-1 overflow-y-auto">
           <div className="px-6 md:px-12 pt-10 pb-20 max-w-3xl">
-            {/* Content header */}
             <div className="flex items-center gap-5 mb-8 pb-8 border-b border-editorial-divider">
               <LogoBox logo={meta.logo} title={meta.title} size="lg" />
               <div>
