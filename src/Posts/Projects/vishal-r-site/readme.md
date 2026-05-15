@@ -2,6 +2,7 @@
 title: "vishal-r-site"
 logo: "/v_logo.svg"
 description: "My personal portfolio and blog site built with React, Vite, and Tailwind CSS."
+featured: true
 ---
 
 ## About

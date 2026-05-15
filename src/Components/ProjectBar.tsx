@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ProjectMeta, getAllProjectsMeta } from "../Utils/markdownLoader";
 
 let sharedAudioCtx: AudioContext | null = null;
 
-const playDockTick = () => {
+const playTick = () => {
   try {
-    if (!sharedAudioCtx) {
-      sharedAudioCtx = new AudioContext();
-    }
+    if (!sharedAudioCtx) sharedAudioCtx = new AudioContext();
     const ctx = sharedAudioCtx;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -26,19 +24,88 @@ const playDockTick = () => {
   }
 };
 
-const ProjectIcon = ({ logo, title }: { logo: string; title: string }) => {
+const TILTS = [-6, 4, -3, 7, -5, 2, -8, 5];
+
+type PolaroidProps = {
+  project: ProjectMeta;
+  tilt: number;
+  lifted: boolean;
+  onClick: () => void;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+};
+
+const Polaroid = ({ project, tilt, lifted, onClick, onMouseEnter, onMouseLeave }: PolaroidProps) => {
   const isImage =
-    logo && (logo.startsWith("/") || logo.startsWith("http"));
+    project.logo &&
+    (project.logo.startsWith("/") || project.logo.startsWith("http"));
+
   return (
-    <div className="w-16 h-16 rounded-2xl bg-[#1e1e1e] border border-editorial-divider flex items-center justify-center overflow-hidden group-hover:border-available/20 transition-colors shrink-0">
-      {isImage ? (
-        <img
-          src={logo}
-          alt={title}
-          className="w-full h-full object-cover rounded-2xl"
-        />
-      ) : (
-        <span className="text-3xl select-none">{logo || "📦"}</span>
+    <div
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      style={{
+        transform: lifted
+          ? "rotate(0deg) translateY(-20px) scale(1.07)"
+          : `rotate(${tilt}deg)`,
+        transition: "transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        zIndex: lifted ? 10 : 1,
+        scrollSnapAlign: "center",
+      }}
+      className="relative cursor-pointer shrink-0"
+    >
+      {/* Shadow */}
+      <div
+        className="absolute inset-0 rounded-sm pointer-events-none"
+        style={{
+          boxShadow: lifted
+            ? "0 24px 48px rgba(0,0,0,0.7), 0 8px 16px rgba(0,0,0,0.5)"
+            : "0 8px 24px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4)",
+          transition: "box-shadow 0.28s ease",
+        }}
+      />
+
+      {/* Polaroid frame */}
+      <div className="relative w-32 md:w-40 bg-[#f0ece4] p-2 md:p-2.5 pb-0">
+        {/* Photo */}
+        <div className="w-full aspect-square bg-[#111] flex items-center justify-center overflow-hidden">
+          {isImage ? (
+            <img
+              src={project.logo}
+              alt={project.title}
+              className="w-full h-full object-cover"
+              draggable={false}
+            />
+          ) : (
+            <span className="text-4xl md:text-5xl select-none">
+              {project.logo || "📦"}
+            </span>
+          )}
+        </div>
+
+        {/* Caption */}
+        <div className="py-2 md:py-3 px-1 min-h-[56px] md:min-h-[64px]">
+          <p
+            className="text-[13px] md:text-[15px] font-semibold text-[#1a1a1a] leading-tight mb-0.5"
+            style={{ fontFamily: "'Caveat', cursive" }}
+          >
+            {project.title}
+          </p>
+          {project.description && (
+            <p
+              className="text-[10px] md:text-[11px] text-[#666] leading-snug line-clamp-2"
+              style={{ fontFamily: "'Caveat', cursive" }}
+            >
+              {project.description}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile selected dot */}
+      {lifted && (
+        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-available" />
       )}
     </div>
   );
@@ -46,11 +113,76 @@ const ProjectIcon = ({ logo, title }: { logo: string; title: string }) => {
 
 const ProjectBar = () => {
   const [projects, setProjects] = useState<ProjectMeta[]>([]);
+  const [selectedIdx, setSelectedIdx] = useState(0);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const navigate = useNavigate();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const lastTickedIdx = useRef(-1);
 
   useEffect(() => {
+    // Always default to first project — no featured logic
     getAllProjectsMeta().then(setProjects);
   }, []);
+
+  // Center-padding on mobile so first and last cards can reach center
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const update = () => {
+      if (window.innerWidth < 768) {
+        const pad = `${container.offsetWidth / 2 - 64}px`;
+        container.style.paddingLeft = pad;
+        container.style.paddingRight = pad;
+      } else {
+        container.style.paddingLeft = "";
+        container.style.paddingRight = "";
+      }
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [projects]);
+
+  // Scroll-driven focus on mobile
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    let rafId: number;
+
+    const onScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const center = container.scrollLeft + container.offsetWidth / 2;
+        let closestIdx = 0;
+        let closestDist = Infinity;
+        Array.from(container.children).forEach((el, i) => {
+          const child = el as HTMLElement;
+          const cardCenter = child.offsetLeft + child.offsetWidth / 2;
+          const dist = Math.abs(cardCenter - center);
+          if (dist < closestDist) {
+            closestDist = dist;
+            closestIdx = i;
+          }
+        });
+        setSelectedIdx((prev) => {
+          if (prev !== closestIdx) {
+            if (lastTickedIdx.current !== closestIdx) {
+              lastTickedIdx.current = closestIdx;
+              playTick();
+            }
+            return closestIdx;
+          }
+          return prev;
+        });
+      });
+    };
+
+    container.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      container.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, [projects]);
 
   if (projects.length === 0) return null;
 
@@ -59,23 +191,38 @@ const ProjectBar = () => {
       <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
         Projects
       </div>
-      <div className="h-px bg-editorial-divider mb-8" />
+      <div className="h-px bg-editorial-divider mb-12" />
 
-      <div className="w-full flex justify-center bg-[#161616] border border-editorial-divider rounded-2xl px-8 py-4">
-        {projects.map((project) => (
-          <button
-            key={project.slug}
-            onClick={() => navigate(`/projects/${project.slug}`)}
-            onMouseEnter={playDockTick}
-            className="group flex flex-col items-center gap-2 px-4 transition-transform duration-200 ease-out hover:-translate-y-2 focus:outline-none"
-            aria-label={project.title}
-          >
-            <ProjectIcon logo={project.logo} title={project.title} />
-            <span className="text-[9px] uppercase tracking-[0.12em] text-editorial-label group-hover:text-editorial-text transition-colors text-center leading-tight whitespace-nowrap">
-              {project.title}
-            </span>
-          </button>
-        ))}
+      <div
+        ref={scrollRef}
+        className="flex items-end gap-5 md:gap-10 md:flex-wrap md:justify-center pt-8 pb-8 md:pb-6 md:px-0 overflow-x-auto md:overflow-visible"
+        style={{
+          scrollbarWidth: "none",
+          scrollSnapType: "x mandatory",
+          WebkitOverflowScrolling: "touch",
+        } as React.CSSProperties}
+      >
+        {projects.map((project, i) => {
+          // On desktop: hovered card wins; fall back to selected when nothing hovered
+          // On mobile: selected (scroll-driven) always wins
+          const lifted =
+            hoveredIdx !== null ? hoveredIdx === i : selectedIdx === i;
+
+          return (
+            <Polaroid
+              key={project.slug}
+              project={project}
+              tilt={TILTS[i % TILTS.length]}
+              lifted={lifted}
+              onClick={() => navigate(`/projects/${project.slug}`)}
+              onMouseEnter={() => {
+                if (hoveredIdx !== i) playTick();
+                setHoveredIdx(i);
+              }}
+              onMouseLeave={() => setHoveredIdx(null)}
+            />
+          );
+        })}
       </div>
     </section>
   );
