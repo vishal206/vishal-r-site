@@ -37,26 +37,20 @@ const ProjectBar = () => {
       </div>
       <div className="h-px bg-editorial-divider mb-8" />
 
-      <div className="w-full flex justify-center">
-        <div className="flex items-end gap-2 px-5 py-4 bg-[#161616] border border-editorial-divider rounded-2xl">
-          {projects.map((project) => (
-            <button
-              key={project.slug}
-              onClick={() => navigate(`/projects/${project.slug}`)}
-              className="group relative flex flex-col items-center gap-2 px-2 transition-transform duration-200 ease-out hover:-translate-y-2 focus:outline-none"
-              aria-label={project.title}
-            >
-              {/* Tooltip on hover */}
-              <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[#2a2a2a] border border-editorial-divider text-editorial-text text-[9px] uppercase tracking-[0.15em] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none">
-                {project.title}
-              </span>
-              <ProjectIcon logo={project.logo} title={project.title} />
-              <span className="text-[9px] uppercase tracking-[0.12em] text-editorial-label group-hover:text-editorial-text transition-colors w-[72px] text-center leading-tight truncate">
-                {project.title}
-              </span>
-            </button>
-          ))}
-        </div>
+      <div className="w-full flex justify-center bg-[#161616] border border-editorial-divider rounded-2xl px-8 py-4">
+        {projects.map((project) => (
+          <button
+            key={project.slug}
+            onClick={() => navigate(`/projects/${project.slug}`)}
+            className="group flex flex-col items-center gap-2 px-4 transition-transform duration-200 ease-out hover:-translate-y-2 focus:outline-none"
+            aria-label={project.title}
+          >
+            <ProjectIcon logo={project.logo} title={project.title} />
+            <span className="text-[9px] uppercase tracking-[0.12em] text-editorial-label group-hover:text-editorial-text transition-colors text-center leading-tight whitespace-nowrap">
+              {project.title}
+            </span>
+          </button>
+        ))}
       </div>
     </section>
   );

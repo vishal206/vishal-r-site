@@ -19,17 +19,25 @@ const blogPostFiles = import.meta.glob("/src/Posts/BlogPosts/*.md", {
   as: "raw",
 });
 
+const projectFiles = import.meta.glob("/src/Posts/Projects/**/*.md", {
+  eager: true,
+  as: "raw",
+});
+
 /**
- * Gets all available blog posts
+ * Gets all available blog posts, including non-readme posts inside project folders
  */
 export const getAvailablePosts = (): string[] => {
-  return Object.keys(blogPostFiles)
-    .map((path) => {
-      // Extract slug from path (e.g., '/src/Posts/BlogPosts/my-first-post.md' -> 'my-first-post')
-      const match = path.match(/\/([^/]+)\.md$/);
-      return match ? match[1] : "";
-    })
+  const blogSlugs = Object.keys(blogPostFiles)
+    .map((path) => path.match(/\/([^/]+)\.md$/)?.[1] ?? "")
     .filter(Boolean);
+
+  const projectPostSlugs = Object.keys(projectFiles)
+    .filter((path) => !path.match(/\/readme\.md$/i))
+    .map((path) => path.match(/\/([^/]+)\.md$/)?.[1] ?? "")
+    .filter(Boolean);
+
+  return [...blogSlugs, ...projectPostSlugs];
 };
 
 /**
@@ -79,23 +87,35 @@ export const loadMarkdownFile = async (
   slug: string,
 ): Promise<BlogPost | null> => {
   try {
-    // Find the file path that matches the slug
-    const filePath = Object.keys(blogPostFiles).find((path) =>
+    // Check BlogPosts first, then fall back to project post files
+    let filePath = Object.keys(blogPostFiles).find((path) =>
       path.includes(`/${slug}.md`),
     );
+    let rawContent: string;
 
-    if (!filePath) {
-      console.error(`No file found for slug: ${slug}`);
-      return null;
+    if (filePath) {
+      rawContent = blogPostFiles[filePath] as string;
+    } else {
+      const projectPath = Object.keys(projectFiles).find(
+        (path) =>
+          path.includes(`/${slug}.md`) && !path.match(/\/readme\.md$/i),
+      );
+      if (!projectPath) {
+        console.error(`No file found for slug: ${slug}`);
+        return null;
+      }
+      filePath = projectPath;
+      rawContent = projectFiles[projectPath] as string;
     }
 
-    // Get the raw content
-    const rawContent = blogPostFiles[filePath] as string;
-
-    // Parse frontmatter with our custom parser instead of gray-matter
     const { data, content } = parseFrontmatter(rawContent);
 
-    // Ensure the frontmatter has the required properties
+    // Auto-inject project field when loaded from a project folder
+    const projectMatch = filePath.match(/\/Projects\/([^/]+)\//);
+    if (projectMatch && !data.project) {
+      data.project = projectMatch[1];
+    }
+
     const frontmatter: BlogPostMeta = {
       slug,
       title: data.title || "Untitled",
@@ -103,11 +123,7 @@ export const loadMarkdownFile = async (
       ...data,
     };
 
-    return {
-      slug,
-      frontmatter,
-      content,
-    };
+    return { slug, frontmatter, content };
   } catch (err) {
     console.error(`Error loading markdown file ${slug}:`, err);
     return null;
@@ -262,11 +278,6 @@ export const loadChapterFile = async (slug: string): Promise<Chapter | null> => 
 };
 
 // ── Projects ─────────────────────────────────────────────────────────────────
-
-const projectFiles = import.meta.glob("/src/Posts/Projects/**/*.md", {
-  eager: true,
-  as: "raw",
-});
 
 export type ProjectMeta = {
   slug: string;

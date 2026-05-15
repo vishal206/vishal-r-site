@@ -17,8 +17,7 @@ const LogoBox = ({
   title: string;
   size?: "sm" | "md" | "lg";
 }) => {
-  const isImage =
-    logo && (logo.startsWith("/") || logo.startsWith("http"));
+  const isImage = logo && (logo.startsWith("/") || logo.startsWith("http"));
   const sizeClasses = {
     sm: "w-9 h-9 rounded-xl text-lg",
     md: "w-12 h-12 rounded-xl text-2xl",
@@ -98,7 +97,7 @@ const ProjectPage = () => {
     );
 
   const activePost = postSlug
-    ? posts.find((p) => p.slug === postSlug) ?? null
+    ? (posts.find((p) => p.slug === postSlug) ?? null)
     : null;
   const displayContent = activePost ? activePost.content : readmeContent;
   const displayTitle = activePost ? activePost.title : meta.title;
@@ -142,7 +141,7 @@ const ProjectPage = () => {
               onClick={() => navigate("/")}
               className="text-[9px] uppercase tracking-[0.2em] text-editorial-label hover:text-editorial-text transition-colors block mb-5 text-left"
             >
-              ← Projects
+              ← Home
             </button>
             <div className="flex items-center gap-3">
               <LogoBox logo={meta.logo} title={meta.title} size="sm" />
@@ -152,20 +151,17 @@ const ProjectPage = () => {
             </div>
           </div>
 
-          {/* README link */}
+          {/* Overview link */}
           <div className="px-6 pt-5">
-            <div className="text-[9px] uppercase tracking-[0.2em] text-editorial-label mb-3">
-              Overview
-            </div>
             <button
               onClick={() => navigate(`/projects/${projectSlug}`)}
-              className={`block w-full text-left py-2 text-sm font-display font-bold transition-opacity ${
+              className={`block w-full text-left py-2 text-[9px] uppercase cursor-pointer tracking-[0.2em] transition-opacity ${
                 !postSlug
                   ? "text-editorial-text opacity-100"
                   : "text-editorial-label opacity-50 hover:opacity-100"
               }`}
             >
-              README
+              Overview
             </button>
           </div>
 
@@ -182,9 +178,7 @@ const ProjectPage = () => {
                   <div
                     key={post.slug}
                     className={`py-4 border-b border-editorial-divider last:border-0 transition-opacity ${
-                      isActive
-                        ? "opacity-100"
-                        : "opacity-50 hover:opacity-100"
+                      isActive ? "opacity-100" : "opacity-50 hover:opacity-100"
                     }`}
                   >
                     <Link
