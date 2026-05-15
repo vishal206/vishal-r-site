@@ -265,12 +265,12 @@ const App = () => {
         {/* ── Projects Bar ── */}
         <ProjectBar />
 
-        {/* ── 02 / Movie  |  03 / Book ── */}
+        {/* ── 03 / Movie  |  04 / Book ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-editorial-divider">
-          {/* Left — 02 / Movie */}
+          {/* Left — 03 / Movie */}
           <div className="md:border-r border-editorial-divider md:pr-12 py-8">
             <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-              02 / Movie
+              03 / Movie
             </div>
             <div className="h-px bg-editorial-divider" />
 
@@ -288,10 +288,10 @@ const App = () => {
             </div>
           </div>
 
-          {/* Right — 03 / Book */}
+          {/* Right — 04 / Book */}
           <div className="border-t border-editorial-divider md:border-t-0 md:pl-12 py-8">
             <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-              03 / Book
+              04 / Book
             </div>
             <div className="h-px bg-editorial-divider" />
 
@@ -320,10 +320,10 @@ const App = () => {
           </div>
         </div>
 
-        {/* ── 04 / Archive ── */}
+        {/* ── 05 / Archive ── */}
         <section className="border-t border-editorial-divider py-8">
           <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-            04 / Archive
+            05 / Archive
           </div>
           <div className="h-px bg-editorial-divider" />
 

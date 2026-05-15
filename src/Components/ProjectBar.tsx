@@ -189,7 +189,7 @@ const ProjectBar = () => {
   return (
     <section className="border-t border-editorial-divider py-8">
       <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-        Projects
+        02 / Projects
       </div>
       <div className="h-px bg-editorial-divider mb-12" />
 

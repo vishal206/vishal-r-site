@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { setExclusionRect } from "../Utils/exclusionZone";
 import {
   loadProjectReadme,
   loadProjectPosts,
@@ -64,6 +65,7 @@ const ProjectPage = () => {
   const [posts, setPosts] = useState<ProjectPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [overlayOpen, setOverlayOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!projectSlug) return;
@@ -85,6 +87,22 @@ const ProjectPage = () => {
   useEffect(() => {
     setOverlayOpen(false);
   }, [postSlug]);
+
+  useEffect(() => {
+    const el = mainRef.current;
+    if (!el) return;
+    const update = () => setExclusionRect(el.getBoundingClientRect());
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("scroll", update);
+    };
+  }, [loading]);
+
+  useEffect(() => () => setExclusionRect(null), []);
 
   if (loading)
     return (
@@ -312,7 +330,7 @@ const ProjectPage = () => {
         </aside>
 
         {/* ── Right content ── */}
-        <main className="flex-1 overflow-y-auto">
+        <main ref={mainRef} className="flex-1 overflow-y-auto">
           <div className="px-6 md:px-12 pt-10 pb-20 max-w-3xl">
             <div className="flex items-center gap-5 mb-8 pb-8 border-b border-editorial-divider">
               <LogoBox logo={meta.logo} title={meta.title} size="lg" />

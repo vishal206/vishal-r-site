@@ -130,6 +130,33 @@ export const CustomMarkdownReader = ({ content }: MarkdownReaderProps) => {
             {...props}
           />
         ),
+        table: ({ node, ...props }) => (
+          <div className="overflow-x-auto my-6">
+            <table
+              className="w-full text-sm border-collapse border border-editorial-divider"
+              {...props}
+            />
+          </div>
+        ),
+        thead: ({ node, ...props }) => (
+          <thead className="bg-editorial-divider" {...props} />
+        ),
+        tbody: ({ node, ...props }) => <tbody {...props} />,
+        tr: ({ node, ...props }) => (
+          <tr className="border-b border-editorial-divider" {...props} />
+        ),
+        th: ({ node, ...props }) => (
+          <th
+            className="px-4 py-2 text-left text-[11px] uppercase tracking-widest text-editorial-text font-semibold border-r border-editorial-divider last:border-r-0"
+            {...props}
+          />
+        ),
+        td: ({ node, ...props }) => (
+          <td
+            className="px-4 py-2 text-editorial-muted border-r border-editorial-divider last:border-r-0"
+            {...props}
+          />
+        ),
       }}
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw]}
