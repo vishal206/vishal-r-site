@@ -4,10 +4,36 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Fri, 15 May 2026 12:52:39 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 20 May 2026 01:43:55 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Fri, 15 May 2026 12:52:39 GMT</pubDate>
+        <pubDate>Wed, 20 May 2026 01:43:55 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[Native Temple fest]]></title>
+            <description><![CDATA[
+Yo! 🙋
+So there I was in my native, Devakottai, Tamil Nadu.
+
+img src="/assets/native-temple.png" alt="" style="float: right; width: 35%; max-width: 300px; min-width: 140px; shape-outside: url('/assets/native-temple.png'); shape-margin: 0.75rem; shape-image-threshold: 0.1;" /
+
+Our temple has a wee...]]></description>
+            <link>https://vishalr.dev/archive/32-Native-Temple-fest</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/32-Native-Temple-fest</guid>
+            <category><![CDATA[WeekNote]]></category>
+            <pubDate>Sat, 09 May 2026 18:30:00 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Hailstorm in church st]]></title>
+            <description><![CDATA[
+Yo! 🙋
+Got my marathon picture. Good lord, I did not pay for that thing.
+
+On the 29th, Bengaluru got hit with a heavy hailstorm. I was in office when it started. Coming out of a meeting room, I stopped. The sky outside had gone completely grey, visibility was near zero, and water was streaming in f...]]></description>
+            <link>https://vishalr.dev/archive/31-hailstorm-in-church-street</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/31-hailstorm-in-church-street</guid>
+            <category><![CDATA[WeekNote]]></category>
+            <pubDate>Sat, 02 May 2026 18:30:00 GMT</pubDate>
+        </item>
         <item>
             <title><![CDATA[The chunking showdown: Fixed vs Semantic vs Hierarchical]]></title>
             <description><![CDATA[
