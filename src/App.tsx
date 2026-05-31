@@ -105,12 +105,9 @@ const App = () => {
   const navigate = useNavigate();
 
   const heroPosts = useMemo(() => {
-    const nonMedia = blogs.filter(
-      (p) => p.tags !== "Movie" && p.tags !== "Book",
-    );
     return featuredPost
-      ? [featuredPost, ...nonMedia.slice(1, 4)]
-      : nonMedia.slice(0, 4);
+      ? [featuredPost, ...blogs.slice(1, 4)]
+      : blogs.slice(0, 4);
   }, [blogs, featuredPost]);
 
   const impressions = usePostImpressions(heroPosts.map((p) => p.slug));
@@ -121,10 +118,7 @@ const App = () => {
       () => {},
       (posts) => {
         setBlogs(posts);
-        const nonMediaPosts = posts.filter(
-          (p) => p.tags !== "Movie" && p.tags !== "Book",
-        );
-        if (nonMediaPosts.length > 0) setFeaturedPost(nonMediaPosts[0]);
+        if (posts.length > 0) setFeaturedPost(posts[0]);
       },
     );
 
@@ -175,24 +169,49 @@ const App = () => {
                 </span>
               </div>
 
-              <Link
-                to={`/archive/${featuredPost.slug}`}
-                className="group block"
-              >
-                <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[1.05] mb-6 group-hover:opacity-75 transition-opacity">
-                  {featuredPost.title}
-                </h2>
-              </Link>
+              <div className="relative md:flex md:flex-row md:items-start md:gap-8">
+                {/* Image / Disk — top-right corner on mobile, inline on desktop */}
+                {featuredPost.tags === "Movie" ? (
+                  <div className="absolute top-0 right-0 md:relative md:order-2 md:flex md:justify-end shrink-0">
+                    <MovieDisk post={featuredPost} tilt={-4} diskClassName="w-28 h-28 md:w-72 md:h-72 lg:w-80 lg:h-80" />
+                  </div>
+                ) : featuredPost.image ? (
+                  <Link
+                    to={`/archive/${featuredPost.slug}`}
+                    className="absolute top-0 right-0 md:relative md:order-2 group shrink-0 w-28 md:w-56 lg:w-72"
+                  >
+                    <div className="aspect-square md:aspect-3/2 w-full overflow-hidden rounded-xl">
+                      <img
+                        src={featuredPost.image}
+                        alt={featuredPost.title}
+                        className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                  </Link>
+                ) : null}
 
-              {featuredPost.description && (
-                <p className="text-sm md:text-lg text-editorial-label font-body leading-relaxed mb-5 max-w-xl">
-                  {featuredPost.description}
-                </p>
-              )}
+                {/* Text content */}
+                <div className={`flex-1 min-w-0 md:order-1 ${featuredPost.image || featuredPost.tags === "Movie" ? "pr-32 md:pr-0" : ""}`}>
+                  <Link
+                    to={`/archive/${featuredPost.slug}`}
+                    className="group block"
+                  >
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-editorial-text leading-[1.05] mb-6 group-hover:opacity-75 transition-opacity">
+                      {featuredPost.title}
+                    </h2>
+                  </Link>
 
-              {impressions[featuredPost.slug] != null && (
-                <PostCounts counts={impressions[featuredPost.slug]} />
-              )}
+                  {featuredPost.description && (
+                    <p className="text-sm md:text-lg text-editorial-label font-body leading-relaxed mb-5 max-w-xl">
+                      {featuredPost.description}
+                    </p>
+                  )}
+
+                  {impressions[featuredPost.slug] != null && (
+                    <PostCounts counts={impressions[featuredPost.slug]} />
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
@@ -207,7 +226,6 @@ const App = () => {
 
             <div>
               {blogs
-                .filter((p) => p.tags !== "Movie" && p.tags !== "Book")
                 .slice(1, 4)
                 .map((post) => (
                   <div key={post.slug} className="py-5">

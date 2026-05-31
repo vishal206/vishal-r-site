@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import SiteHeader from "./SiteHeader";
+import MovieDisk from "./MovieDisk";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { setExclusionRect } from "../Utils/exclusionZone";
 import {
@@ -41,6 +42,7 @@ interface Entry {
   sublabel: string;
   content: string;
   banner?: string;
+  image?: string;
   sortKey: string; // ISO date string or "0000-{sno}" for chapters
   isContextTable?: boolean;
 }
@@ -82,6 +84,7 @@ const loadEntry = async (slug: string): Promise<Entry | null> => {
       sublabel: formatDate(blog.frontmatter.date),
       content: blog.content,
       banner: blog.frontmatter.banner,
+      image: blog.frontmatter.image,
       sortKey: blog.frontmatter.date,
       isContextTable:
         blog.frontmatter.isContextTable === "true" ||
@@ -268,9 +271,21 @@ const BlogReader = () => {
               </>
             )}
           </div>
+
+          {entry.label === "Movie" && entry.image && (
+            <div className="flex justify-start mb-6">
+              <MovieDisk
+                post={{ slug: entry.slug, title: entry.title, date: entry.sortKey, image: entry.image }}
+                tilt={-5}
+                diskClassName="w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72"
+              />
+            </div>
+          )}
+
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[1.05]">
             {entry.title}
           </h1>
+
           <PostEngagement
             {...engagement}
             commentCount={comments.length}

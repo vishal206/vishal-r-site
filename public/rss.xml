@@ -4,10 +4,21 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Fri, 22 May 2026 19:11:47 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 31 May 2026 13:21:09 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Fri, 22 May 2026 19:11:47 GMT</pubDate>
+        <pubDate>Sun, 31 May 2026 13:21:09 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[Kamome Diner]]></title>
+            <description><![CDATA[
+Irasshaimase 🙋‍♂️!
+
+Kamome Diner is a slow, quiet, funny ( makes you smile kinda ) movie that is the definition of a slice of life. About the story, wait, there is no story; this movie is a pure slice of life that revolves around a diner. A Japanese diner located in Finland. The 1h 42m goes throug...]]></description>
+            <link>https://vishalr.dev/archive/Kamome-Diner</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/Kamome-Diner</guid>
+            <category><![CDATA[Blog]]></category>
+            <pubDate>Sat, 30 May 2026 18:30:00 GMT</pubDate>
+        </item>
         <item>
             <title><![CDATA[Native Temple fest]]></title>
             <description><![CDATA[

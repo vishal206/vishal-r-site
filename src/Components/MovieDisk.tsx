@@ -11,9 +11,10 @@ const RIM_INNER = 96; // % — inner edge of the rim (lower = wider rim)
 type Props = {
   post: BlogPostMeta;
   tilt?: number;
+  diskClassName?: string;
 };
 
-const MovieDisk = ({ post, tilt = 0 }: Props) => {
+const MovieDisk = ({ post, tilt = 0, diskClassName = "w-36 h-36 md:w-44 md:h-44 lg:w-52 lg:h-52" }: Props) => {
   const hubInset = `${(100 - HUB_SIZE) / 2}%`;
   const spindleOffset = `${(100 - SPINDLE_SIZE) / 2}%`;
   const rimMask = `radial-gradient(circle at 50% 50%, transparent ${RIM_INNER}%, black ${RIM_INNER + 0.5}%, black 100%)`;
@@ -25,7 +26,7 @@ const MovieDisk = ({ post, tilt = 0 }: Props) => {
       style={{ transform: `rotate(${tilt}deg)` }}
     >
       {/* ── Disk ── */}
-      <div className="relative w-36 h-36 md:w-44 md:h-44 lg:w-52 lg:h-52 rounded-full select-none">
+      <div className={`relative ${diskClassName} rounded-full select-none`}>
         {/* Base: silver disc */}
         <div
           className="absolute inset-0 rounded-full"
