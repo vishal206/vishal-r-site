@@ -29,3 +29,6 @@ dist-ssr
 .env.production
 
 functions/serviceAccount.json
+
+# Firebase CLI cache
+.firebase/
