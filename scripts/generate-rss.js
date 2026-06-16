@@ -2,6 +2,20 @@ import RSS from "rss";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { marked } from "marked";
+
+const toRssHtml = (markdown, baseUrl) => {
+  const html = marked(markdown);
+  return html
+    // Make all relative image src URLs absolute
+    .replace(/src="\/([^"]+)"/g, `src="${baseUrl}/$1"`)
+    // Replace float styles (won't work in RSS readers) with centered block
+    .replace(
+      /<img([^>]*?)style="[^"]*float[^"]*"([^>]*?)>/g,
+      (_, before, after) =>
+        `<img${before}${after} style="display:block;margin:1em auto;max-width:100%;">`
+    );
+};
 
 const generateRSSFeed = async () => {
   const baseUrl = "https://vishalr.dev";
@@ -43,6 +57,7 @@ const generateRSSFeed = async () => {
         title: frontmatter.title,
         url: `${baseUrl}/archive/${slug}`,
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
+        content,
         date: new Date(frontmatter.date),
         categories: ["Blog"],
         isTech: frontmatter?.isTech,
@@ -72,6 +87,7 @@ const generateRSSFeed = async () => {
         title: frontmatter.title,
         url: `${baseUrl}/archive/${slug}`,
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
+        content,
         date: new Date(frontmatter.date),
         categories: ["WeekNote"],
         isTech: frontmatter?.isTech,
@@ -101,6 +117,7 @@ const generateRSSFeed = async () => {
         title: frontmatter.title,
         url: `${baseUrl}/archive/${slug}`,
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
+        content,
         date: new Date(frontmatter.date),
         categories: ["Devlog"],
         isTech: frontmatter?.isTech,
@@ -112,23 +129,17 @@ const generateRSSFeed = async () => {
   items
     .sort((a, b) => b.date.getTime() - a.date.getTime())
     .forEach((item) => {
-      if (item.isTech)
-        techFeed.item({
-          title: item.title,
-          url: item.url,
-          description: item.description,
-          date: item.date,
-          categories: item.categories,
-          guid: item.url,
-        });
-      feed.item({
+      const entry = {
         title: item.title,
         url: item.url,
         description: item.description,
         date: item.date,
         categories: item.categories,
         guid: item.url,
-      });
+        custom_elements: [{ "content:encoded": { _cdata: toRssHtml(item.content, baseUrl) } }],
+      };
+      if (item.isTech) techFeed.item(entry);
+      feed.item(entry);
     });
 
   // Ensure public directory exists
