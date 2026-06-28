@@ -102,7 +102,8 @@ const metaFor = (data, content, urlPath) => {
   const title = data.title ? `${data.title} · Vishal R` : "Vishal R";
   const description = data.description || excerpt(content) || "Blogs, WeekNotes, and DevLogs from Vishal R";
   const url = `${baseUrl}${urlPath}`;
-  return { title, description, url, image: data.image || data.banner };
+  // Posts without their own image fall back to the branded logo card.
+  return { title, description, url, image: data.image || data.banner || "/og-default.png" };
 };
 
 const injectHead = (html, meta) => {
@@ -122,9 +123,14 @@ const injectHead = (html, meta) => {
     .filter(Boolean)
     .join("\n    ");
 
-  // Drop the static <title> from index.html, then inject ours before </head>.
+  // Strip the shell's <title> and the home-page OG/description tags, then inject
+  // this page's own — otherwise posts would inherit the home title/image.
   return html
     .replace(/<title>[\s\S]*?<\/title>/i, "")
+    .replace(/\s*<meta\s+name="description"[^>]*>/gi, "")
+    .replace(/\s*<meta\s+property="og:[^"]*"[^>]*>/gi, "")
+    .replace(/\s*<meta\s+name="twitter:[^"]*"[^>]*>/gi, "")
+    .replace(/\s*<!--\s*Open Graph[^>]*-->/gi, "")
     .replace(/<\/head>/i, `    ${tags}\n  </head>`);
 };
 

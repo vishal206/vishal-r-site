@@ -11,7 +11,9 @@
       "Bash(curl -sI https://jatan.space/rss/)",
       "Bash(curl -s https://jatan.space/rss/)",
       "Bash(curl -s https://jatan.space/its-craters-all-the-way-down/)",
-      "Bash(grep -oiE '<title>[^<]*</title>|<meta property=\"og:[a-z]+\" content=\"[^\"]{0,60}|<div id=\"root\"|<article|kg-card')"
+      "Bash(grep -oiE '<title>[^<]*</title>|<meta property=\"og:[a-z]+\" content=\"[^\"]{0,60}|<div id=\"root\"|<article|kg-card')",
+      "Bash(node scripts/generate-og.js)",
+      "Bash(awk '{print $5, \"bytes\"}')"
     ]
   }
 }

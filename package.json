@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && npm run generate-rss && vite build && npm run prerender",
     "generate-rss": "node scripts/generate-rss.js",
+    "generate-og": "node scripts/generate-og.js",
     "prerender": "node scripts/prerender.js",
     "lint": "eslint .",
     "preview": "vite preview"
