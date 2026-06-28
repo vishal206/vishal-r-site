@@ -61,7 +61,7 @@ const BlogsBox: React.FC = () => {
                     className="group block transition-all h-full"
                   >
                     {/* Square image container */}
-                    <div className="aspect-3/2 w-full overflow-hidden">
+                    <div className="aspect-[9/16] w-full overflow-hidden">
                       {post.image ? (
                         <div className="w-full h-full overflow-hidden rounded-xl">
                           <img

@@ -8,7 +8,23 @@ import {
   WeekNoteMeta,
   getAvailableWeekNotes,
   loadWeekNoteFile,
+  loadMarkdownFile,
 } from "./Utils/markdownLoader";
+
+const stripMarkdown = (md: string): string =>
+  md
+    .replace(/!\[.*?\]\(.*?\)/g, "")
+    .replace(/\[([^\]]+)\]\(.*?\)/g, "$1")
+    .replace(/#{1,6}\s+/g, "")
+    .replace(/(\*\*|__)(.+?)\1/g, "$2")
+    .replace(/(\*|_)(.+?)\1/g, "$2")
+    .replace(/^>\s*/gm, "")
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/`[^`]+`/g, "")
+    .replace(/^-{3,}$/gm, "")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 import { fetchBlogPosts } from "./Utils/functions";
 import {
   usePostImpressions,
@@ -102,6 +118,7 @@ const App = () => {
   const [blogs, setBlogs] = useState<BlogPostMeta[]>([]);
   const [weekNotes, setWeekNotes] = useState<WeekNoteMeta[]>([]);
   const [featuredPost, setFeaturedPost] = useState<BlogPostMeta | null>(null);
+  const [featuredContent, setFeaturedContent] = useState<string>("");
   const navigate = useNavigate();
 
   const heroPosts = useMemo(() => {
@@ -111,6 +128,13 @@ const App = () => {
   }, [blogs, featuredPost]);
 
   const impressions = usePostImpressions(heroPosts.map((p) => p.slug));
+
+  useEffect(() => {
+    if (!featuredPost) return;
+    loadMarkdownFile(featuredPost.slug).then((post) => {
+      if (post) setFeaturedContent(stripMarkdown(post.content));
+    });
+  }, [featuredPost?.slug]);
 
   useEffect(() => {
     fetchBlogPosts(
@@ -158,7 +182,15 @@ const App = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
           {/* Left — Featured */}
           {featuredPost && (
-            <div className="md:col-span-2 md:border-r border-editorial-divider md:pr-12 py-8 md:py-14">
+            <div className="md:col-span-2 md:border-r border-editorial-divider py-8 md:py-0 md:relative md:overflow-hidden">
+              {/* On desktop this layer is absolute so the cell contributes no
+                  intrinsic height — the right column drives the row height and
+                  this fills it exactly, clipping any overflowing body text.
+                  The whole layer is one Link so the entire area is clickable. */}
+              <Link
+                to={`/archive/${featuredPost.slug}`}
+                className="group md:absolute md:inset-0 md:pr-12 md:py-14 flex flex-col"
+              >
               <div className="flex items-center gap-4 mb-6 md:mb-8">
                 <span className="text-[10px] uppercase tracking-[0.22em] text-available whitespace-nowrap">
                   Featured {featuredPost.tags || "Essay"}
@@ -169,49 +201,52 @@ const App = () => {
                 </span>
               </div>
 
-              <div className="relative md:flex md:flex-row md:items-start md:gap-8">
+              <div className="relative md:flex md:flex-row md:items-stretch md:gap-8 flex-1 min-h-0">
                 {/* Image / Disk — top-right corner on mobile, inline on desktop */}
                 {featuredPost.tags === "Movie" ? (
                   <div className="absolute top-0 right-0 md:relative md:order-2 md:flex md:justify-end shrink-0">
                     <MovieDisk post={featuredPost} tilt={-4} diskClassName="w-28 h-28 md:w-72 md:h-72 lg:w-80 lg:h-80" />
                   </div>
                 ) : featuredPost.image ? (
-                  <Link
-                    to={`/archive/${featuredPost.slug}`}
-                    className="absolute top-0 right-0 md:relative md:order-2 group shrink-0 w-28 md:w-56 lg:w-72"
-                  >
-                    <div className="aspect-square md:aspect-3/2 w-full overflow-hidden rounded-xl">
+                  <div className="float-right ml-5 mb-3 md:float-none md:ml-0 md:mb-0 md:relative md:order-2 shrink-0 w-24 md:w-auto">
+                    <div className="aspect-square w-full md:w-auto md:h-full md:aspect-[9/16] overflow-hidden rounded-xl">
                       <img
                         src={featuredPost.image}
                         alt={featuredPost.title}
                         className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
-                  </Link>
+                  </div>
                 ) : null}
 
                 {/* Text content */}
-                <div className={`flex-1 min-w-0 md:order-1 ${featuredPost.image || featuredPost.tags === "Movie" ? "pr-32 md:pr-0" : ""}`}>
-                  <Link
-                    to={`/archive/${featuredPost.slug}`}
-                    className="group block"
-                  >
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-editorial-text leading-[1.05] mb-6 group-hover:opacity-75 transition-opacity">
-                      {featuredPost.title}
-                    </h2>
-                  </Link>
+                <div className="flex-1 min-w-0 md:order-1 md:flex md:flex-col md:min-h-0">
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-editorial-text leading-[1.05] mb-5 group-hover:opacity-75 transition-opacity">
+                    {featuredPost.title}
+                  </h2>
 
-                  {featuredPost.description && (
-                    <p className="text-sm md:text-lg text-editorial-label font-body leading-relaxed mb-5 max-w-xl">
-                      {featuredPost.description}
+                  {/* Body preview — fills remaining space and fades out.
+                      Mobile uses overflow-clip (not hidden) so it does NOT
+                      create a BFC and the text wraps around the floated image. */}
+                  <div className="relative max-h-56 overflow-clip md:max-h-none md:overflow-hidden md:flex-1 md:min-h-0">
+                    <p className="text-sm md:text-base text-editorial-label font-body leading-relaxed whitespace-pre-line">
+                      {featuredContent}
                     </p>
-                  )}
+                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-editorial-bg to-transparent pointer-events-none" />
+                  </div>
 
-                  {impressions[featuredPost.slug] != null && (
-                    <PostCounts counts={impressions[featuredPost.slug]} />
-                  )}
+                  {/* Bottom row */}
+                  <div className="flex items-center justify-between pt-4 clear-both md:clear-none">
+                    {impressions[featuredPost.slug] != null ? (
+                      <PostCounts counts={impressions[featuredPost.slug]} />
+                    ) : <span />}
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-available group-hover:opacity-70 transition-opacity">
+                      Read full →
+                    </span>
+                  </div>
                 </div>
               </div>
+              </Link>
             </div>
           )}
 

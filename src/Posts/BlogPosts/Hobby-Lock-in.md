@@ -5,7 +5,6 @@ tags: "Life"
 image: "/assets/hobbies.jpg"
 banner: "/assets/hobbies.jpg"
 publishRss: true
-description: "A slow, quiet Japanese film set in Finland — and somehow, that's all it needs. My thoughts on Kamome Diner, a movie with no plot and all the heart."
 ---
 
 Do you feel the want of getting into all the hobbies out there? If yes, we are in the same boat. I had a huge list of hobby bucket list that never saw the light of day. I decided to lock on to one hobby of type Physical, Creative, and Intellectual.

@@ -282,9 +282,19 @@ const BlogReader = () => {
             </div>
           )}
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[1.05]">
-            {entry.title}
-          </h1>
+          {/* Title with a small square thumbnail on the right */}
+          <div className="flex items-start gap-5 md:gap-8">
+            <h1 className="flex-1 min-w-0 text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[1.05]">
+              {entry.title}
+            </h1>
+            {entry.image && entry.label !== "Movie" && (
+              <img
+                src={entry.image}
+                alt={entry.title}
+                className="shrink-0 w-20 h-20 md:w-28 md:h-28 object-cover rounded-xl"
+              />
+            )}
+          </div>
 
           <PostEngagement
             {...engagement}
@@ -292,15 +302,6 @@ const BlogReader = () => {
             variant="compact"
           />
         </div>
-
-        {/* ── Banner ── */}
-        {entry.banner && (
-          <img
-            src={entry.banner}
-            alt={entry.title}
-            className="w-full max-h-[480px] object-cover"
-          />
-        )}
 
         {/* ── Body ── */}
         <div className="flex flex-col md:flex-row gap-0">
