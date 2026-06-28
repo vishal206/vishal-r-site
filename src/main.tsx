@@ -19,15 +19,19 @@ function PageViewTracker() {
       isFirst.current = false;
       return; // Firebase auto-fires page_view on initial load
     }
-    logEvent(analytics, "page_view", {
-      page_path: location.pathname + location.search,
-      page_location: window.location.href,
-    });
+    if (analytics) {
+      logEvent(analytics, "page_view", {
+        page_path: location.pathname + location.search,
+        page_location: window.location.href,
+      });
+    }
   }, [location]);
   return null;
 }
 
-createRoot(document.getElementById("root")!).render(
+const container = document.getElementById("root")!;
+
+const tree = (
   <StrictMode>
     <BrowserRouter>
       <PageViewTracker />
@@ -44,5 +48,29 @@ createRoot(document.getElementById("root")!).render(
         />
       </Routes>
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 );
+
+// Paths the SPA knows how to render. Used to avoid wiping prerendered content in
+// reader/extracted contexts (see below).
+const KNOWN_ROUTE =
+  /^\/(?:archive(?:\/[^/]+)?|about|projects\/[^/]+(?:\/[^/]+)?)?\/?$/;
+
+// Prerendered pages already contain the article markup, which the browser paints
+// before this script runs (great for perceived speed, SEO and RSS readers). We
+// mount with createRoot rather than hydrateRoot: the prerendered HTML is a DOM
+// snapshot, not renderToString output, so it lacks hydration boundary markers.
+// Content pages (BlogReader, ArchivePage) render synchronously and identically,
+// so React's first commit matches the painted pixels — no flash, no warnings.
+//
+// Guard: some RSS readers (e.g. FeedFlow) load our prerendered HTML into a webview
+// whose URL is NOT the article's route (often about:blank). If we mounted there,
+// React Router would match no route, render nothing, and createRoot would wipe the
+// prerendered article to a blank screen. So when the page was prerendered AND the
+// current path isn't a real app route, leave the static content untouched.
+const isPrerendered = container.hasChildNodes();
+if (isPrerendered && !KNOWN_ROUTE.test(window.location.pathname)) {
+  // Reader/extracted context — keep the static prerendered article as-is.
+} else {
+  createRoot(container).render(tree);
+}

@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
 import {
-  BlogPostMeta,
   WeekNoteMeta,
   getAvailableWeekNotes,
-  loadWeekNoteFile,
+  loadWeekNoteFileSync,
 } from "../Utils/markdownLoader";
-import { fetchBlogPosts } from "../Utils/functions";
+import { getBlogPostsSync } from "../Utils/functions";
 import MovieDisk from "../components/MovieDisk";
 
 type FilterType = "all" | "weeklylogs" | string;
@@ -45,45 +44,33 @@ const ALL_FILTERS = [
 ];
 
 const ArchivePage: React.FC = () => {
-  const [blogs, setBlogs] = useState<BlogPostMeta[]>([]);
-  const [weekNotes, setWeekNotes] = useState<WeekNoteMeta[]>([]);
+  // Eager-bundled markdown → resolve synchronously so the prerendered HTML and
+  // the client's first render match (clean hydration, no loading flash).
+  const blogs = useMemo(() => getBlogPostsSync(), []);
+  const weekNotes = useMemo<WeekNoteMeta[]>(
+    () =>
+      getAvailableWeekNotes()
+        .map((slug) => {
+          const wn = loadWeekNoteFileSync(slug);
+          if (!wn) return null;
+          return {
+            slug,
+            title: wn.frontmatter.title,
+            date: wn.frontmatter.date,
+            weeknoteCount: wn.frontmatter.weeknoteCount,
+          } as WeekNoteMeta;
+        })
+        .filter((w) => w !== null)
+        .sort(
+          (a, b) =>
+            new Date((b as WeekNoteMeta).date).getTime() -
+            new Date((a as WeekNoteMeta).date).getTime(),
+        ) as WeekNoteMeta[],
+    [],
+  );
   const [filter, setFilter] = useState<FilterType>("all");
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
   const PAGE_SIZE = 10;
-
-  useEffect(() => {
-    fetchBlogPosts(
-      () => {},
-      (l) => {
-        if (!l) setLoading(false);
-      },
-      setBlogs,
-    );
-
-    const fetchWeekNotes = async () => {
-      const slugs = getAvailableWeekNotes();
-      const promises = slugs.map(async (slug) => {
-        const wn = await loadWeekNoteFile(slug);
-        if (!wn) return null;
-        return {
-          slug,
-          title: wn.frontmatter.title,
-          date: wn.frontmatter.date,
-          weeknoteCount: wn.frontmatter.weeknoteCount,
-        } as WeekNoteMeta;
-      });
-      const fetched = (await Promise.all(promises)).filter(
-        Boolean,
-      ) as WeekNoteMeta[];
-      setWeekNotes(
-        fetched.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        ),
-      );
-    };
-    fetchWeekNotes();
-  }, []);
 
   const blogEntries: UnifiedEntry[] = blogs.map((b) => ({
     slug: b.slug,
@@ -192,11 +179,7 @@ const ArchivePage: React.FC = () => {
 
           {/* Right — entry list / disk view */}
           <main className="flex-1 md:pl-12">
-            {loading ? (
-              <div className="text-editorial-label text-[11px] uppercase tracking-widest py-6">
-                Loading...
-              </div>
-            ) : filter === "Movie" ? (
+            {filter === "Movie" ? (
               /* ── Disk view for Movie filter ── */
               blogs.filter((p) => p.tags === "Movie").length === 0 ? (
                 <div className="text-editorial-label text-sm py-6">

@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
+import { getAnalytics, type Analytics } from 'firebase/analytics';
 import { getFirestore } from 'firebase/firestore';
+import { IS_PRERENDER } from './Utils/env';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,5 +14,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+
+// Skip analytics during prerender (headless build) so bot renders don't fire
+// page_view events. getAnalytics is also unavailable outside a browser.
+export const analytics: Analytics | null = IS_PRERENDER
+  ? null
+  : getAnalytics(app);
 export const db = getFirestore(app);

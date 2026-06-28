@@ -4,6 +4,7 @@ import {
   orderBy, query, serverTimestamp, doc, setDoc, increment,
 } from 'firebase/firestore';
 import { db } from '../firebase';
+import { IS_PRERENDER } from '../Utils/env';
 
 export interface Comment {
   id: string;
@@ -17,7 +18,7 @@ export function useComments(slug: string | undefined) {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!slug) return;
+    if (!slug || IS_PRERENDER) return;
     const q = query(
       collection(db, 'postImpressions', slug, 'comments'),
       orderBy('createdAt', 'asc'),

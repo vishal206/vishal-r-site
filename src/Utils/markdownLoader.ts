@@ -81,11 +81,10 @@ const parseFrontmatter = (
 };
 
 /**
- * Loads a markdown file and parses its frontmatter and content
+ * Synchronously loads a markdown file. The glob above is `eager`, so all files
+ * are already in memory — no async needed. Used for first-paint/SSR-style render.
  */
-export const loadMarkdownFile = async (
-  slug: string,
-): Promise<BlogPost | null> => {
+export const loadMarkdownFileSync = (slug: string): BlogPost | null => {
   try {
     // Check BlogPosts first, then fall back to project post files
     let filePath = Object.keys(blogPostFiles).find((path) =>
@@ -130,6 +129,11 @@ export const loadMarkdownFile = async (
   }
 };
 
+/** Async wrapper kept for existing callers. */
+export const loadMarkdownFile = async (
+  slug: string,
+): Promise<BlogPost | null> => loadMarkdownFileSync(slug);
+
 // Add WeekNotes support
 const weekNotesFiles = import.meta.glob("/src/Posts/WeekNotes/*.md", {
   eager: true,
@@ -165,9 +169,7 @@ export const getAvailableWeekNotes = (): string[] => {
 /**
  * Loads a specific week note by slug
  */
-export const loadWeekNoteFile = async (
-  slug: string,
-): Promise<WeekNote | null> => {
+export const loadWeekNoteFileSync = (slug: string): WeekNote | null => {
   try {
     const filePath = `/src/Posts/WeekNotes/${slug}.md`;
     const fileContent = weekNotesFiles[filePath];
@@ -189,6 +191,11 @@ export const loadWeekNoteFile = async (
     return null;
   }
 };
+
+/** Async wrapper kept for existing callers. */
+export const loadWeekNoteFile = async (
+  slug: string,
+): Promise<WeekNote | null> => loadWeekNoteFileSync(slug);
 
 // Add DevLogs support
 const devLogFiles = import.meta.glob("/src/Posts/DevLogs/**/*.md", {
@@ -261,7 +268,7 @@ export const getAvailableChapters = (): string[] =>
     .map((path) => path.match(/\/([^/]+)\.md$/)?.[1] ?? "")
     .filter(Boolean);
 
-export const loadChapterFile = async (slug: string): Promise<Chapter | null> => {
+export const loadChapterFileSync = (slug: string): Chapter | null => {
   try {
     const filePath = Object.keys(chapterFiles).find((p) => p.endsWith(`/${slug}.md`));
     if (!filePath) return null;
@@ -276,6 +283,10 @@ export const loadChapterFile = async (slug: string): Promise<Chapter | null> => 
     return null;
   }
 };
+
+/** Async wrapper kept for existing callers. */
+export const loadChapterFile = async (slug: string): Promise<Chapter | null> =>
+  loadChapterFileSync(slug);
 
 // ── Projects ─────────────────────────────────────────────────────────────────
 

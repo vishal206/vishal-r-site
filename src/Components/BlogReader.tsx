@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import SiteHeader from "./SiteHeader";
 import MovieDisk from "./MovieDisk";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { setExclusionRect } from "../Utils/exclusionZone";
 import {
-  loadMarkdownFile,
-  loadWeekNoteFile,
-  loadChapterFile,
+  loadMarkdownFileSync,
+  loadWeekNoteFileSync,
+  loadChapterFileSync,
   getAvailablePosts,
   getAvailableWeekNotes,
   getAvailableChapters,
@@ -74,8 +74,8 @@ const extractHeadings = (content: string): TocHeading[] => {
 };
 
 // Try each source in order; return first match
-const loadEntry = async (slug: string): Promise<Entry | null> => {
-  const blog = await loadMarkdownFile(slug);
+const loadEntry = (slug: string): Entry | null => {
+  const blog = loadMarkdownFileSync(slug);
   if (blog) {
     return {
       slug,
@@ -92,7 +92,7 @@ const loadEntry = async (slug: string): Promise<Entry | null> => {
     };
   }
 
-  const wn = await loadWeekNoteFile(slug);
+  const wn = loadWeekNoteFileSync(slug);
   if (wn) {
     return {
       slug,
@@ -104,7 +104,7 @@ const loadEntry = async (slug: string): Promise<Entry | null> => {
     };
   }
 
-  const ch = await loadChapterFile(slug);
+  const ch = loadChapterFileSync(slug);
   if (ch) {
     return {
       slug,
@@ -127,18 +127,16 @@ interface SidebarEntry {
 }
 
 // Build unified list sorted newest-first by date
-const buildUnifiedList = async (): Promise<SidebarEntry[]> => {
+const buildUnifiedList = (): SidebarEntry[] => {
   const [blogSlugs, wnSlugs, chSlugs] = [
     getAvailablePosts(),
     getAvailableWeekNotes(),
     getAvailableChapters(),
   ];
 
-  const [blogs, weeknotes, chapters] = await Promise.all([
-    Promise.all(blogSlugs.map((s) => loadMarkdownFile(s))),
-    Promise.all(wnSlugs.map((s) => loadWeekNoteFile(s))),
-    Promise.all(chSlugs.map((s) => loadChapterFile(s))),
-  ]);
+  const blogs = blogSlugs.map((s) => loadMarkdownFileSync(s));
+  const weeknotes = wnSlugs.map((s) => loadWeekNoteFileSync(s));
+  const chapters = chSlugs.map((s) => loadChapterFileSync(s));
 
   const items: SidebarEntry[] = [];
 
@@ -190,34 +188,21 @@ const getWindow = (all: SidebarEntry[], slug: string): SidebarEntry[] => {
 const BlogReader = () => {
   const { slug } = useParams<{ slug: string }>();
 
-  const [entry, setEntry] = useState<Entry | null>(null);
-  const [sidebar, setSidebar] = useState<
-    { slug: string; title: string; meta: string }[]
-  >([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Markdown is eager-bundled (see markdownLoader), so the entry and sidebar are
+  // resolved synchronously on the first render. This means the prerendered HTML
+  // and the client's first render are identical — hydration matches with no
+  // loading flash, and SPA navigation between posts is instant.
+  const { entry, sidebar } = useMemo(() => {
+    if (!slug) return { entry: null, sidebar: [] as SidebarEntry[] };
+    return {
+      entry: loadEntry(slug),
+      sidebar: getWindow(buildUnifiedList(), slug),
+    };
+  }, [slug]);
+  const error = slug && !entry ? "Entry not found" : null;
   const articleRef = useRef<HTMLElement>(null);
   const engagement = usePostEngagement(slug);
   const { comments, submitting, submitComment } = useComments(slug);
-
-  useEffect(() => {
-    if (!slug) return;
-    setLoading(true);
-    setEntry(null);
-
-    loadEntry(slug).then((e) => {
-      if (!e) setError("Entry not found");
-      else setEntry(e);
-      setLoading(false);
-    });
-  }, [slug]);
-
-  useEffect(() => {
-    if (!slug) return;
-    buildUnifiedList().then((all) => {
-      setSidebar(getWindow(all, slug));
-    });
-  }, [slug]);
 
   useEffect(() => {
     const el = articleRef.current;
@@ -235,15 +220,6 @@ const BlogReader = () => {
 
   // Clear exclusion zone when leaving the page entirely
   useEffect(() => () => setExclusionRect(null), []);
-
-  if (loading)
-    return (
-      <div className="min-h-screen bg-editorial-bg flex items-center justify-center">
-        <p className="text-editorial-label text-[11px] uppercase tracking-widest">
-          Loading…
-        </p>
-      </div>
-    );
 
   if (error || !entry)
     return (
