@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { doc, setDoc, increment, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
+import { IS_PRERENDER } from '../Utils/env';
 
 function getVisitorId(): string {
   let id = localStorage.getItem('visitorId');
@@ -24,14 +25,15 @@ export function usePostEngagement(slug: string | undefined): PostEngagementData 
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
-    if (!slug) return;
+    if (!slug || IS_PRERENDER) return;
 
     const ref = doc(db, 'postImpressions', slug);
     const visitorId = getVisitorId();
 
-    // Increment view count once per visitor per post
+    // Increment view count once per visitor per post (never during prerender —
+    // a headless build render must not count as a real view)
     const viewedKey = `viewed_${slug}_${visitorId}`;
-    if (!localStorage.getItem(viewedKey)) {
+    if (!IS_PRERENDER && !localStorage.getItem(viewedKey)) {
       localStorage.setItem(viewedKey, '1');
       setDoc(ref, { viewCount: increment(1), lastViewed: serverTimestamp() }, { merge: true });
     }

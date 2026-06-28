@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node scratch_verify.mjs)",
+      "Bash(sed -i '' 's#\\\\[\"/\",\"/archive\",\"/about\"\\\\]#[\"/\",\"/archive\",\"/about\",\"/archive/Hobby-Lock-in\",\"/archive/36-First-Baddy-club-experience\"]#' scratch_verify2.mjs)",
+      "Bash(node scratch_verify2.mjs)",
+      "Bash(grep -oE '<div id=\"root\">.{0,25}' dist/index.html)",
+      "Bash(npx eslint *)",
+      "Bash(echo \"=== exit $? ===\")",
+      "Bash(grep -oE '<title>[^<]*</title>|<div id=\"root\">.{0,30}')",
+      "Bash(curl -sI https://jatan.space/rss/)",
+      "Bash(curl -s https://jatan.space/rss/)",
+      "Bash(curl -s https://jatan.space/its-craters-all-the-way-down/)",
+      "Bash(grep -oiE '<title>[^<]*</title>|<meta property=\"og:[a-z]+\" content=\"[^\"]{0,60}|<div id=\"root\"|<article|kg-card')"
+    ]
+  }
+}

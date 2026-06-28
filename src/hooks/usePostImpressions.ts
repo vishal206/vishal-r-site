@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, query, where, documentId, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
+import { IS_PRERENDER } from '../Utils/env';
 
 export interface PostCounts {
   viewCount: number;
@@ -12,7 +13,7 @@ export function usePostImpressions(slugs: string[]): Record<string, PostCounts> 
   const [counts, setCounts] = useState<Record<string, PostCounts>>({});
 
   useEffect(() => {
-    if (slugs.length === 0) return;
+    if (slugs.length === 0 || IS_PRERENDER) return;
 
     const q = query(
       collection(db, 'postImpressions'),
