@@ -13,7 +13,18 @@
       "Bash(curl -s https://jatan.space/its-craters-all-the-way-down/)",
       "Bash(grep -oiE '<title>[^<]*</title>|<meta property=\"og:[a-z]+\" content=\"[^\"]{0,60}|<div id=\"root\"|<article|kg-card')",
       "Bash(node scripts/generate-og.js)",
-      "Bash(awk '{print $5, \"bytes\"}')"
+      "Bash(awk '{print $5, \"bytes\"}')",
+      "Bash(echo \"TSC_EXIT=$?\")",
+      "Bash(node /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a9234b72-8dd0-4af3-a8f1-4ff4c529d2dc/scratchpad/shot.mjs)",
+      "Bash(node ./_shot.mjs)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(echo \"lint exit=$?\")",
+      "Bash(echo \"TSC=$?\")",
+      "Bash(echo \"ESLINT=$?\")",
+      "Bash(perl -0pi -e 's/\\\\n\\\\s*aspectRatio: \"1 \\\\/ 1\\\\.5\",//g' src/components/Book.tsx)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(cat)",
+      "Bash(echo \"EXIT=$?\")"
     ]
   }
 }

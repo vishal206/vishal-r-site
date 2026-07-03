@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-type ActivePage = "blog" | "about";
+type ActivePage = "blog" | "books" | "about";
 
 interface SiteHeaderProps {
   activePage?: ActivePage;
@@ -19,20 +19,20 @@ const SiteHeader = ({ activePage }: SiteHeaderProps) => {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-editorial-bg border-b border-editorial-divider flex items-center justify-between px-6 md:px-12 transition-all duration-300 ${
+      className={`sticky top-0 z-50 bg-editorial-bg border-b border-editorial-divider grid grid-cols-3 items-center px-6 md:px-12 transition-all duration-300 ${
         scrolled ? "py-3" : "py-6"
       }`}
     >
       <Link
         to="/"
-        className={`font-display font-black text-editorial-text hover:opacity-80 transition-all duration-300 leading-none ${
+        className={`justify-self-start font-display font-black text-editorial-text hover:opacity-80 transition-all duration-300 leading-none ${
           scrolled ? "text-lg md:text-xl" : "text-xl md:text-2xl"
         }`}
       >
         Vishal R
       </Link>
 
-      <nav className="flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
+      <nav className="justify-self-center flex gap-5 md:gap-12 text-[10px] md:text-[11px] uppercase tracking-[0.22em]">
         <button
           onClick={() => navigate("/archive")}
           className={`transition-colors cursor-pointer ${
@@ -42,6 +42,16 @@ const SiteHeader = ({ activePage }: SiteHeaderProps) => {
           }`}
         >
           Blog
+        </button>
+        <button
+          onClick={() => navigate("/books")}
+          className={`transition-colors cursor-pointer ${
+            activePage === "books"
+              ? "text-editorial-text border-b border-editorial-text pb-0.5"
+              : "text-editorial-label hover:text-editorial-text"
+          }`}
+        >
+          Books
         </button>
         <button
           onClick={() => navigate("/about")}
@@ -55,7 +65,7 @@ const SiteHeader = ({ activePage }: SiteHeaderProps) => {
         </button>
       </nav>
 
-      <div className="text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right hidden md:block">
+      <div className="justify-self-end text-[10px] uppercase tracking-[0.18em] text-editorial-label text-right hidden md:block">
         Developer. Writer. Builder.
       </div>
     </header>

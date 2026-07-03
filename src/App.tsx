@@ -9,7 +9,9 @@ import {
   getAvailableWeekNotes,
   loadWeekNoteFile,
   loadMarkdownFile,
+  getBooksSync,
 } from "./Utils/markdownLoader";
+import BookCover from "./components/BookCover";
 
 const stripMarkdown = (md: string): string =>
   md
@@ -119,6 +121,7 @@ const App = () => {
   const [weekNotes, setWeekNotes] = useState<WeekNoteMeta[]>([]);
   const [featuredPost, setFeaturedPost] = useState<BlogPostMeta | null>(null);
   const [featuredContent, setFeaturedContent] = useState<string>("");
+  const books = useMemo(() => getBooksSync(), []);
   const navigate = useNavigate();
 
   const heroPosts = useMemo(() => {
@@ -317,32 +320,40 @@ const App = () => {
 
           {/* Right — 04 / Book */}
           <div className="border-t border-editorial-divider md:border-t-0 md:pl-12 py-8">
-            <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-              04 / Book
+            <div className="flex items-center justify-between mb-5">
+              <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label">
+                04 / Book
+              </div>
+              <Link
+                to="/books"
+                className="text-[10px] uppercase tracking-[0.2em] text-available hover:opacity-70 transition-opacity"
+              >
+                All books →
+              </Link>
             </div>
             <div className="h-px bg-editorial-divider" />
 
-            <div className="flex flex-col gap-0">
-              {blogs
-                .filter((p) => p.tags === "Book")
-                .map((post) => (
-                  <div key={post.slug} className="py-5">
-                    <Link to={`/archive/${post.slug}`} className="group block">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-[10px] uppercase tracking-[0.2em] text-available">
-                          Book
-                        </span>
-                        <span className="text-[10px] uppercase tracking-[0.2em] text-editorial-label">
-                          {formatDateShort(post.date)}
-                        </span>
-                      </div>
-                      <h3 className="text-base md:text-lg font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
-                        {post.title}
-                      </h3>
-                    </Link>
-                    <div className="h-px bg-editorial-divider mt-5" />
+            <div className="flex flex-wrap gap-x-8 gap-y-8 pt-10 pb-2 items-start">
+              {books.slice(0, 3).map((book) => (
+                <Link
+                  key={book.slug}
+                  to="/books"
+                  className="group w-24 md:w-28 flex flex-col"
+                >
+                  <div
+                    className="relative w-full transition-transform duration-500 group-hover:-translate-y-1.5"
+                    style={{ aspectRatio: "2 / 3" }}
+                  >
+                    <BookCover book={book} />
                   </div>
-                ))}
+                  <h3 className="mt-3 text-[13px] md:text-sm font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
+                    {book.title}
+                  </h3>
+                  <div className="text-[10px] uppercase tracking-[0.16em] text-editorial-label mt-1">
+                    {book.author}
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </div>
