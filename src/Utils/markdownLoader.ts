@@ -197,6 +197,75 @@ export const loadWeekNoteFile = async (
   slug: string,
 ): Promise<WeekNote | null> => loadWeekNoteFileSync(slug);
 
+// ── Books ────────────────────────────────────────────────────────────────────
+// Books live as markdown files: frontmatter carries the cover metadata, the body
+// is the review. They don't get their own route — the archive reveals the review
+// inline on hover.
+const bookFiles = import.meta.glob("/src/Posts/Books/*.md", {
+  eager: true,
+  as: "raw",
+});
+
+export type Book = {
+  slug: string;
+  title: string;
+  author: string;
+  genres: string[];
+  review: string; // markdown body
+  date?: string;
+  accent?: string; // cover accent colour
+  cover?: string; // front-cover image (public/ path)
+  side?: string; // spine/side image shown when the book isn't in focus
+  publishRss?: boolean; // include this book in the RSS feed
+};
+
+export const getAvailableBooks = (): string[] =>
+  Object.keys(bookFiles)
+    .map((path) => path.match(/\/([^/]+)\.md$/)?.[1] ?? "")
+    .filter(Boolean);
+
+export const loadBookFileSync = (slug: string): Book | null => {
+  try {
+    const filePath = Object.keys(bookFiles).find((p) =>
+      p.endsWith(`/${slug}.md`),
+    );
+    if (!filePath) {
+      console.error(`Book file not found for slug: ${slug}`);
+      return null;
+    }
+    const { data, content } = parseFrontmatter(bookFiles[filePath] as string);
+    return {
+      slug,
+      title: data.title ?? "Untitled",
+      author: data.author ?? "",
+      genres: (data.genres ?? "")
+        .split(",")
+        .map((g: string) => g.trim())
+        .filter(Boolean),
+      review: content,
+      date: data.date,
+      accent: data.accent,
+      cover: data.cover,
+      side: data.side,
+      publishRss: data.publishRss === true || data.publishRss === "true",
+    };
+  } catch (err) {
+    console.error(`Error loading book ${slug}:`, err);
+    return null;
+  }
+};
+
+/** Assembles every book, newest first. */
+export const getBooksSync = (): Book[] =>
+  getAvailableBooks()
+    .map(loadBookFileSync)
+    .filter((b): b is Book => b !== null)
+    .sort((a, b) => {
+      if (a.date && b.date)
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      return 0;
+    });
+
 // Add DevLogs support
 const devLogFiles = import.meta.glob("/src/Posts/DevLogs/**/*.md", {
   eager: true,

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import CarIcon from "./CarIcon";
 import { getExclusionRect, clampOutsideRect } from "../Utils/exclusionZone";
 
@@ -160,6 +160,19 @@ function lerpAngleRad(from: number, to: number, t: number): number {
 const CursorCar = () => {
   const carRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  // Hidden while a full-screen overlay (e.g. an open book) is showing.
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    const hide = () => setHidden(true);
+    const show = () => setHidden(false);
+    window.addEventListener("overlay-open", hide);
+    window.addEventListener("overlay-close", show);
+    return () => {
+      window.removeEventListener("overlay-open", hide);
+      window.removeEventListener("overlay-close", show);
+    };
+  }, []);
 
   const stateRef = useRef({
     x: -300,
@@ -528,6 +541,7 @@ const CursorCar = () => {
           height: "100vh",
           pointerEvents: "none",
           zIndex: 9998,
+          display: hidden ? "none" : "block",
         }}
       />
       <div
@@ -539,6 +553,7 @@ const CursorCar = () => {
           pointerEvents: "none",
           zIndex: 9999,
           willChange: "transform",
+          display: hidden ? "none" : "block",
         }}
       >
         <CarIcon />

@@ -4,10 +4,23 @@
         <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sun, 28 Jun 2026 11:08:32 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 04 Jul 2026 06:20:01 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Sun, 28 Jun 2026 11:08:31 GMT</pubDate>
+        <pubDate>Sat, 04 Jul 2026 06:20:01 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[The Seven Days of Peter Crumb]]></title>
+            <description><![CDATA[
+Peter Crumb keeps a journal of his last seven days. He's forced to write it by his alter ego, the darker of his two personalities. Usually with two personalities, one is evil and one is good. However, the dynamic here is more complex. The book starts with the evil one speaking as a separate voice. ...]]></description>
+            <link>https://vishalr.dev/book/The-Seven-Days-of-Peter-Crumb</link>
+            <guid isPermaLink="false">https://vishalr.dev/book/The-Seven-Days-of-Peter-Crumb</guid>
+            <category><![CDATA[Book]]></category>
+            <pubDate>Thu, 02 Jul 2026 18:30:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>Peter Crumb keeps a journal of his last seven days. He&#39;s forced to write it by his alter ego, the darker of his two personalities. Usually with two personalities, one is evil and one is good. However, the dynamic here is more complex. The book starts with the evil one speaking as a separate voice. Somewhere in the middle, I felt a switch happen. It wasn&#39;t explicit, no line was drawn, but when I realized it, it hit me with a kind of dread. Like the ground had shifted under the story without warning. Since this book gets compared to American Psycho, it has its share of gory killings and disturbing thoughts to match.</p>
+<p>But the real strength here is the <strong>storytelling</strong>. The author writes Crumb&#39;s emotions so well that you start feeling them as your own. This comes through strongest in the quiet moments between the violence. That&#39;s where his self-loathing and confusion hit harder than the killings themselves. The story isn&#39;t a nightly body count. It keeps turning in directions you don&#39;t expect, right up to an ending that recontextualizes everything before it.</p>
+<p><strong>Worth the read, if you&#39;re brave enough.</strong></p>
+]]></content:encoded>
+        </item>
         <item>
             <title><![CDATA[Hobby Lock-in]]></title>
             <description><![CDATA[
