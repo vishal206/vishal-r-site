@@ -1,8 +1,8 @@
 ---
 title: "To Wonderla"
 date: "1 Mar 2026"
-weeknoteCount: 22
-publishRss: false
+tags: "Life"
+publishRss: true
 ---
 
 Yo! 🙋‍♂️In week 22,

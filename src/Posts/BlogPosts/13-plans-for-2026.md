@@ -1,7 +1,8 @@
 ---
 title: "Plans for 2026"
 date: "30 Dec 2025"
-weeknoteCount: 13
+tags: "Life"
+publishRss: true
 ---
 
 - Travelled to Kolkata, will cover the experience in a blog.

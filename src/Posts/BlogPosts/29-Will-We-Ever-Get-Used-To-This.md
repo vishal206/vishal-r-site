@@ -1,7 +1,7 @@
 ---
 title: "Will We Ever Get Used To This?"
 date: "19 Apr 2026"
-weeknoteCount: 29
+tags: "Life"
 publishRss: true
 ---
 

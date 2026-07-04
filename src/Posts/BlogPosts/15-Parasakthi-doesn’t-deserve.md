@@ -1,7 +1,8 @@
 ---
 title: "Parasakthi doesn’t deserve"
 date: "11 Jan 2026"
-weeknoteCount: 15
+tags: "Life"
+publishRss: true
 ---
 
 <figure style="float: right; margin: 0 0 1rem 1rem; text-align: center;">

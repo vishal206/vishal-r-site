@@ -1,8 +1,8 @@
 ---
 title: "Anniversary at Coimbatore"
 date: "15 Feb 2026"
-weeknoteCount: 20
-publishRss: false
+tags: "Life"
+publishRss: true
 ---
 
 Yo! 🙋‍♂️In week 20,

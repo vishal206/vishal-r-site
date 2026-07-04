@@ -1,8 +1,8 @@
 ---
 title: "Israel - Iran war"
 date: "8 Mar 2026"
-weeknoteCount: 23
-publishRss: false
+tags: "Life"
+publishRss: true
 ---
 
 Yo! 🙋‍♂️In week 23,

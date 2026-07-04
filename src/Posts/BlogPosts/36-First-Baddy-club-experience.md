@@ -1,7 +1,7 @@
 ---
 title: "First Baddy club experience"
 date: "07 June 2026"
-weeknoteCount: 36
+tags: "Life"
 publishRss: true
 ---
 

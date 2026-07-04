@@ -1,7 +1,7 @@
 ---
 title: "Theater 1 restaurant 0"
 date: "18 Jan 2026"
-weeknoteCount: 16
+tags: "Life"
 publishRss: true
 ---
 

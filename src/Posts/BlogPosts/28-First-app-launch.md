@@ -1,7 +1,7 @@
 ---
 title: "First App Launch"
 date: "12 Apr 2026"
-weeknoteCount: 28
+tags: "Life"
 publishRss: true
 ---
 

@@ -4,6 +4,7 @@ date: "01 Feb 2026"
 image: "/assets/its-a-wonderful-life.jpg"
 banner: "/assets/its-a-wonderful-life.jpg"
 tags: "Movie"
+publishRss: true
 ---
 
 Yo 🙋‍♂️!

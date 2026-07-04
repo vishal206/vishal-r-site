@@ -1,23 +1,17 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
-import {
-  WeekNoteMeta,
-  getAvailableWeekNotes,
-  loadWeekNoteFileSync,
-} from "../Utils/markdownLoader";
 import { getBlogPostsSync } from "../Utils/functions";
 import MovieDisk from "../components/MovieDisk";
 
-type FilterType = "all" | "weeklylogs" | string;
+type FilterType = "all" | string;
 
 interface UnifiedEntry {
   slug: string;
   title: string;
   date: string;
   tags?: string;
-  type: "blog" | "weeknote";
-  weeknoteCount?: number;
+  type: "blog";
 }
 
 const formatDate = (dateStr: string): string => {
@@ -39,7 +33,6 @@ const formatDate = (dateStr: string): string => {
 const TAGS = ["Devlog", "Movie", "Tech", "Life"];
 const ALL_FILTERS = [
   { key: "all", label: "All Entries" },
-  { key: "weeklylogs", label: "Weekly Logs" },
   ...TAGS.map((t) => ({ key: t, label: t })),
 ];
 
@@ -47,27 +40,6 @@ const ArchivePage: React.FC = () => {
   // Eager-bundled markdown → resolve synchronously so the prerendered HTML and
   // the client's first render match (clean hydration, no loading flash).
   const blogs = useMemo(() => getBlogPostsSync(), []);
-  const weekNotes = useMemo<WeekNoteMeta[]>(
-    () =>
-      getAvailableWeekNotes()
-        .map((slug) => {
-          const wn = loadWeekNoteFileSync(slug);
-          if (!wn) return null;
-          return {
-            slug,
-            title: wn.frontmatter.title,
-            date: wn.frontmatter.date,
-            weeknoteCount: wn.frontmatter.weeknoteCount,
-          } as WeekNoteMeta;
-        })
-        .filter((w) => w !== null)
-        .sort(
-          (a, b) =>
-            new Date((b as WeekNoteMeta).date).getTime() -
-            new Date((a as WeekNoteMeta).date).getTime(),
-        ) as WeekNoteMeta[],
-    [],
-  );
   const [filter, setFilter] = useState<FilterType>("all");
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
@@ -80,21 +52,12 @@ const ArchivePage: React.FC = () => {
     type: "blog",
   }));
 
-  const weekNoteEntries: UnifiedEntry[] = weekNotes.map((wn) => ({
-    slug: wn.slug,
-    title: wn.title,
-    date: wn.date,
-    type: "weeknote",
-    weeknoteCount: wn.weeknoteCount,
-  }));
-
-  const allEntries = [...blogEntries, ...weekNoteEntries].sort(
+  const allEntries = [...blogEntries].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 
   const getCount = (f: FilterType) => {
     if (f === "all") return allEntries.length;
-    if (f === "weeklylogs") return weekNoteEntries.length;
     return blogEntries.filter((e) => e.tags?.toLowerCase() === f.toLowerCase())
       .length;
   };
@@ -102,11 +65,9 @@ const ArchivePage: React.FC = () => {
   const filteredEntries =
     filter === "all"
       ? allEntries
-      : filter === "weeklylogs"
-        ? weekNoteEntries
-        : blogEntries.filter(
-            (e) => e.tags?.toLowerCase() === filter.toLowerCase(),
-          );
+      : blogEntries.filter(
+          (e) => e.tags?.toLowerCase() === filter.toLowerCase(),
+        );
 
   const totalPages = Math.ceil(filteredEntries.length / PAGE_SIZE);
   const pagedEntries = filteredEntries.slice(
@@ -155,12 +116,6 @@ const ArchivePage: React.FC = () => {
                 count={getCount("all")}
                 active={filter === "all"}
                 onClick={() => handleFilterChange("all")}
-              />
-              <SidebarItem
-                label="Weekly Logs"
-                count={getCount("weeklylogs")}
-                active={filter === "weeklylogs"}
-                onClick={() => handleFilterChange("weeklylogs")}
               />
 
               <div className="h-px bg-editorial-divider !mt-5 !mb-4" />
@@ -219,9 +174,7 @@ const ArchivePage: React.FC = () => {
                       {/* Content */}
                       <div className="flex-1 min-w-0">
                         <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-1.5">
-                          {entry.type === "weeknote"
-                            ? `Weekly Log · Week #${entry.weeknoteCount}`
-                            : entry.tags || "Essay"}
+                          {entry.tags || "Essay"}
                           <span className="md:hidden text-editorial-label ml-2">
                             · {formatDate(entry.date)}
                           </span>

@@ -1,8 +1,8 @@
 ---
 title: "Post Pongal"
 date: "25 Jan 2026"
-weeknoteCount: 17
-publishRss: false
+tags: "Life"
+publishRss: true
 ---
 
 <figure style="float: right; text-align: center;">

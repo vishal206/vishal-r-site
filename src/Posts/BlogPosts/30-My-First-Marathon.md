@@ -1,7 +1,7 @@
 ---
 title: "My First Marathon"
 date: "26 Apr 2026"
-weeknoteCount: 30
+tags: "Life"
 publishRss: true
 ---
 

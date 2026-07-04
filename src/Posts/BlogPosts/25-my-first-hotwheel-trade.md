@@ -1,7 +1,7 @@
 ---
 title: "My First Hotwheel Trade"
 date: "22 Mar 2026"
-weeknoteCount: 25
+tags: "Life"
 publishRss: true
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Hailstorm in church st"
 date: "3 May 2026"
-weeknoteCount: 31
+tags: "Life"
 publishRss: true
 ---
 

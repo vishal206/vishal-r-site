@@ -1,7 +1,7 @@
 ---
 title: "Native Temple fest"
 date: "10 May 2026"
-weeknoteCount: 32
+tags: "Life"
 publishRss: true
 ---
 

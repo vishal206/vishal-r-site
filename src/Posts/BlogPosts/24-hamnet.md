@@ -1,8 +1,8 @@
 ---
 title: "Hamnet"
 date: "15 Mar 2026"
-weeknoteCount: 24
-publishRss: false
+tags: "Life"
+publishRss: true
 ---
 
 Yo! 🙋‍♂️In week 24,

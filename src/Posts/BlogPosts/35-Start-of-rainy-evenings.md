@@ -1,7 +1,8 @@
 ---
 title: "Start of rainy evenings"
 date: "31 May 2026"
-weeknoteCount: 35
+tags: "Life"
+publishRss: true
 ---
 
 Yo! 🙋
