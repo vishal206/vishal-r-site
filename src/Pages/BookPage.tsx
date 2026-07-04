@@ -4,6 +4,10 @@ import SiteHeader from "../components/SiteHeader";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import { CustomMarkdownReader } from "../components/CustomMarkdownReader";
 import Book3D from "../components/Book3D";
+import { PostEngagement } from "../components/PostEngagement";
+import { PostComments } from "../components/PostComments";
+import { usePostEngagement } from "../hooks/usePostEngagement";
+import { useComments } from "../hooks/useComments";
 import { loadBookFileSync, getBooksSync } from "../Utils/markdownLoader";
 
 const formatDate = (dateStr?: string): string => {
@@ -32,6 +36,9 @@ const BookPage: React.FC = () => {
     if (idx === -1) return all.slice(0, 5);
     return all.slice(Math.max(0, idx - 2), idx + 3);
   }, [slug]);
+
+  const engagement = usePostEngagement(slug);
+  const { comments, submitting, submitComment } = useComments(slug);
 
   if (!book) {
     return (
@@ -98,6 +105,12 @@ const BookPage: React.FC = () => {
               ))}
             </div>
           )}
+
+          <PostEngagement
+            {...engagement}
+            commentCount={comments.length}
+            variant="compact"
+          />
         </div>
 
         {/* ── Body ── */}
@@ -147,6 +160,16 @@ const BookPage: React.FC = () => {
           {/* Content */}
           <article className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl">
             <CustomMarkdownReader content={book.review} />
+            <PostEngagement
+              {...engagement}
+              commentCount={comments.length}
+              variant="full"
+            />
+            <PostComments
+              comments={comments}
+              submitting={submitting}
+              onSubmit={submitComment}
+            />
           </article>
         </div>
       </div>
