@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import { CustomMarkdownReader } from "../components/CustomMarkdownReader";
+import Book3D from "../components/Book3D";
 import { loadBookFileSync, getBooksSync } from "../Utils/markdownLoader";
 
 const formatDate = (dateStr?: string): string => {
@@ -73,17 +74,15 @@ const BookPage: React.FC = () => {
             )}
           </div>
 
-          {/* Title with a small square thumbnail on the right */}
-          <div className="flex items-start gap-5 md:gap-8">
+          {/* Title with the 3D book on the right */}
+          <div className="flex items-start gap-6 md:gap-10">
             <h1 className="flex-1 min-w-0 text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[1.05]">
               {book.title}
             </h1>
             {book.cover && (
-              <img
-                src={book.cover}
-                alt={book.title}
-                className="shrink-0 w-20 h-20 md:w-28 md:h-28 object-cover rounded-xl"
-              />
+              <div className="shrink-0">
+                <Book3D book={book} height={{ base: 140, md: 220 }} />
+              </div>
             )}
           </div>
 
