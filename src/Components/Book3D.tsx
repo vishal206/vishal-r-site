@@ -18,6 +18,7 @@ type Props = {
  */
 const Book3D = ({ book, height, tiltDeg = 34, className = "" }: Props) => {
   const [ratio, setRatio] = useState(2 / 3); // cover width ÷ height
+  const [sideRatio, setSideRatio] = useState<number | null>(null); // spine w ÷ h
   const [hovered, setHovered] = useState(false);
   const [resolvedH, setResolvedH] = useState(
     typeof height === "number" ? height : height.base,
@@ -49,9 +50,28 @@ const Book3D = ({ book, height, tiltDeg = 34, className = "" }: Props) => {
     };
   }, [book.cover]);
 
+  useEffect(() => {
+    if (!book.side) return;
+    let alive = true;
+    const img = new Image();
+    img.onload = () => {
+      if (alive && img.naturalHeight)
+        setSideRatio(img.naturalWidth / img.naturalHeight);
+    };
+    img.src = book.side;
+    return () => {
+      alive = false;
+    };
+  }, [book.side]);
+
   const H = resolvedH;
   const W = Math.round(H * ratio);
-  const D = Math.max(14, Math.round(W * 0.16)); // spine thickness
+  // Spine thickness fits the side image's aspect ratio at the book height, so
+  // the whole spine shows uncropped. Falls back to a plain thickness otherwise.
+  const D =
+    book.side && sideRatio
+      ? Math.min(Math.max(Math.round(H * sideRatio), 12), Math.round(W * 0.5))
+      : Math.max(14, Math.round(W * 0.16));
   const accent = book.accent ?? "#333";
   const rot = hovered ? tiltDeg - 12 : tiltDeg;
 
@@ -82,13 +102,13 @@ const Book3D = ({ book, height, tiltDeg = 34, className = "" }: Props) => {
         {/* Front cover (front face) */}
         <div className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
           <BookCover book={book} />
-          {/* Hinge shadow down the cover's left (binding) edge. */}
+          {/* Crisp fold: a thin hard shadow right at the binding edge. */}
           <div
             className="absolute inset-y-0 left-0 pointer-events-none"
             style={{
-              width: Math.max(10, Math.round(W * 0.1)),
+              width: Math.max(3, Math.round(W * 0.03)),
               background:
-                "linear-gradient(to right, rgba(0,0,0,0.5), transparent)",
+                "linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.28) 40%, transparent)",
             }}
           />
         </div>
@@ -126,12 +146,18 @@ const Book3D = ({ book, height, tiltDeg = 34, className = "" }: Props) => {
               </span>
             </div>
           )}
-          {/* Shade the spine so it reads as a receding, lit-from-front face. */}
+          {/* Flat, uniform shade so the spine reads as one distinct plane —
+              its bright edge meets the cover at a hard corner, not a blend. */}
           <div
             className="absolute inset-0 pointer-events-none"
+            style={{ background: "rgba(0,0,0,0.34)" }}
+          />
+          {/* Thin sheen on the outer (page-block) edge. */}
+          <div
+            className="absolute inset-y-0 left-0 pointer-events-none"
             style={{
-              background:
-                "linear-gradient(to right, rgba(255,255,255,0.06), rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.5))",
+              width: 2,
+              background: "rgba(255,255,255,0.14)",
             }}
           />
         </div>
