@@ -6,10 +6,8 @@ import ScrollToTopButton from "./ScrollToTopButton";
 import { setExclusionRect } from "../Utils/exclusionZone";
 import {
   loadMarkdownFileSync,
-  loadWeekNoteFileSync,
   loadChapterFileSync,
   getAvailablePosts,
-  getAvailableWeekNotes,
   getAvailableChapters,
 } from "../Utils/markdownLoader";
 import { CustomMarkdownReader } from "./CustomMarkdownReader";
@@ -92,18 +90,6 @@ const loadEntry = (slug: string): Entry | null => {
     };
   }
 
-  const wn = loadWeekNoteFileSync(slug);
-  if (wn) {
-    return {
-      slug,
-      title: wn.frontmatter.title,
-      label: "Weekly Log",
-      sublabel: `Week #${wn.frontmatter.weeknoteCount} · ${formatDate(wn.frontmatter.date)}`,
-      content: wn.content,
-      sortKey: wn.frontmatter.date,
-    };
-  }
-
   const ch = loadChapterFileSync(slug);
   if (ch) {
     return {
@@ -128,14 +114,9 @@ interface SidebarEntry {
 
 // Build unified list sorted newest-first by date
 const buildUnifiedList = (): SidebarEntry[] => {
-  const [blogSlugs, wnSlugs, chSlugs] = [
-    getAvailablePosts(),
-    getAvailableWeekNotes(),
-    getAvailableChapters(),
-  ];
+  const [blogSlugs, chSlugs] = [getAvailablePosts(), getAvailableChapters()];
 
   const blogs = blogSlugs.map((s) => loadMarkdownFileSync(s));
-  const weeknotes = wnSlugs.map((s) => loadWeekNoteFileSync(s));
   const chapters = chSlugs.map((s) => loadChapterFileSync(s));
 
   const items: SidebarEntry[] = [];
@@ -147,16 +128,6 @@ const buildUnifiedList = (): SidebarEntry[] => {
       title: b.frontmatter.title,
       meta: `${b.frontmatter.tags || "Essay"} · ${formatDate(b.frontmatter.date)}`,
       ts: new Date(b.frontmatter.date).getTime(),
-    });
-  });
-
-  weeknotes.forEach((wn) => {
-    if (!wn) return;
-    items.push({
-      slug: wn.slug,
-      title: wn.frontmatter.title,
-      meta: `Week #${wn.frontmatter.weeknoteCount} · ${formatDate(wn.frontmatter.date)}`,
-      ts: new Date(wn.frontmatter.date).getTime(),
     });
   });
 

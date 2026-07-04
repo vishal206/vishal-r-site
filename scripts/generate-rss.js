@@ -22,7 +22,7 @@ const generateRSSFeed = async () => {
 
   const feed = new RSS({
     title: "Vishal R",
-    description: "Blogs, WeekNotes, and DevLogs from Vishal R",
+    description: "Blogs and DevLogs from Vishal R",
     feed_url: `${baseUrl}/rss.xml`,
     site_url: baseUrl,
     language: "en-us",
@@ -51,6 +51,10 @@ const generateRSSFeed = async () => {
       const filePath = path.join(blogDir, file);
       const fileContent = fs.readFileSync(filePath, "utf8");
       const { data: frontmatter, content } = matter(fileContent);
+
+      // ✅ Posts can explicitly opt out of RSS (e.g. migrated weeknotes)
+      if (frontmatter.publishRss === false) continue;
+
       const slug = file.replace(".md", "");
 
       items.push({
@@ -60,36 +64,6 @@ const generateRSSFeed = async () => {
         content,
         date: new Date(frontmatter.date),
         categories: ["Blog"],
-        isTech: frontmatter?.isTech,
-      });
-    }
-  }
-
-  // Process weeknotes
-  const weekNotesDir = path.join(process.cwd(), "src/Posts/WeekNotes");
-
-  if (fs.existsSync(weekNotesDir)) {
-    const weekNoteFiles = fs
-      .readdirSync(weekNotesDir)
-      .filter((file) => file.endsWith(".md"));
-
-    for (const file of weekNoteFiles) {
-      const filePath = path.join(weekNotesDir, file);
-      const fileContent = fs.readFileSync(filePath, "utf8");
-      const { data: frontmatter, content } = matter(fileContent);
-
-      // ✅ Only include selected weeknotes
-      if (!frontmatter.publishRss) continue;
-
-      const slug = file.replace(".md", "");
-
-      items.push({
-        title: frontmatter.title,
-        url: `${baseUrl}/archive/${slug}`,
-        description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
-        content,
-        date: new Date(frontmatter.date),
-        categories: ["WeekNote"],
         isTech: frontmatter?.isTech,
       });
     }

@@ -5,10 +5,7 @@ import MovieDisk from "./components/MovieDisk";
 import ProjectBar from "./components/ProjectBar";
 import {
   BlogPostMeta,
-  WeekNoteMeta,
   Book as BookType,
-  getAvailableWeekNotes,
-  loadWeekNoteFile,
   loadMarkdownFile,
   getBooksSync,
 } from "./Utils/markdownLoader";
@@ -133,7 +130,6 @@ const formatDateShort = (dateStr: string): string => {
 
 const App = () => {
   const [blogs, setBlogs] = useState<BlogPostMeta[]>([]);
-  const [weekNotes, setWeekNotes] = useState<WeekNoteMeta[]>([]);
   const [featuredContent, setFeaturedContent] = useState<string>("");
   const books = useMemo(() => getBooksSync(), []);
   const navigate = useNavigate();
@@ -191,33 +187,6 @@ const App = () => {
         setBlogs(posts);
       },
     );
-
-    const fetchWeekNotes = async () => {
-      try {
-        const slugs = getAvailableWeekNotes();
-        const promises = slugs.map(async (slug) => {
-          const wn = await loadWeekNoteFile(slug);
-          if (!wn) return null;
-          return {
-            slug,
-            title: wn.frontmatter.title,
-            date: wn.frontmatter.date,
-            weeknoteCount: wn.frontmatter.weeknoteCount,
-          } as WeekNoteMeta;
-        });
-        const fetched = (await Promise.all(promises)).filter(
-          Boolean,
-        ) as WeekNoteMeta[];
-        setWeekNotes(
-          fetched.sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-          ),
-        );
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchWeekNotes();
   }, []);
 
   return (
@@ -393,43 +362,6 @@ const App = () => {
             </div>
           </div>
         </div>
-
-        {/* ── 05 / Archive ── */}
-        <section className="border-t border-editorial-divider py-8">
-          <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-            05 / Archive
-          </div>
-          <div className="h-px bg-editorial-divider" />
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-0">
-            {weekNotes.slice(0, 4).map((wn, i) => (
-              <div
-                key={wn.slug}
-                className={[
-                  "py-5",
-                  i < 3
-                    ? "md:pr-8 md:border-r border-editorial-divider md:mr-8"
-                    : "",
-                ].join(" ")}
-              >
-                <Link to={`/archive/${wn.slug}`} className="group block">
-                  <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-2">
-                    <span>{formatDateLabel(wn.date)}</span>
-                    {wn.weeknoteCount && (
-                      <>
-                        <span>·</span>
-                        <span>Week #{wn.weeknoteCount}</span>
-                      </>
-                    )}
-                  </div>
-                  <h4 className="text-base font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">
-                    {wn.title}
-                  </h4>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </section>
 
         {/* ── Footer ── */}
         <footer className="border-t border-editorial-divider py-6 mt-4">

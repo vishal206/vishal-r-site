@@ -134,69 +134,6 @@ export const loadMarkdownFile = async (
   slug: string,
 ): Promise<BlogPost | null> => loadMarkdownFileSync(slug);
 
-// Add WeekNotes support
-const weekNotesFiles = import.meta.glob("/src/Posts/WeekNotes/*.md", {
-  eager: true,
-  as: "raw",
-});
-
-export type WeekNoteMeta = {
-  slug: string;
-  title: string;
-  date: string;
-  weeknoteCount: number;
-  [key: string]: any;
-};
-
-export type WeekNote = {
-  slug: string;
-  frontmatter: WeekNoteMeta;
-  content: string;
-};
-
-/**
- * Gets all available week notes
- */
-export const getAvailableWeekNotes = (): string[] => {
-  return Object.keys(weekNotesFiles)
-    .map((path) => {
-      const match = path.match(/\/([^/]+)\.md$/);
-      return match ? match[1] : "";
-    })
-    .filter(Boolean);
-};
-
-/**
- * Loads a specific week note by slug
- */
-export const loadWeekNoteFileSync = (slug: string): WeekNote | null => {
-  try {
-    const filePath = `/src/Posts/WeekNotes/${slug}.md`;
-    const fileContent = weekNotesFiles[filePath];
-
-    if (!fileContent) {
-      console.error(`Week note file not found: ${filePath}`);
-      return null;
-    }
-
-    const { data, content } = parseFrontmatter(fileContent);
-
-    return {
-      slug,
-      frontmatter: data as WeekNoteMeta,
-      content,
-    };
-  } catch (error) {
-    console.error(`Error loading week note ${slug}:`, error);
-    return null;
-  }
-};
-
-/** Async wrapper kept for existing callers. */
-export const loadWeekNoteFile = async (
-  slug: string,
-): Promise<WeekNote | null> => loadWeekNoteFileSync(slug);
-
 // ── Books ────────────────────────────────────────────────────────────────────
 // Books live as markdown files: frontmatter carries the cover metadata, the body
 // is the review. They don't get their own route — the archive reveals the review

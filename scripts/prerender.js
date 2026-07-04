@@ -53,7 +53,6 @@ const frontmatterFor = (dirs, slug) => {
 
 const archiveDirs = [
   "src/Posts/BlogPosts",
-  "src/Posts/WeekNotes",
   "src/Posts/About",
 ];
 
@@ -111,7 +110,7 @@ const excerpt = (content) =>
 
 const metaFor = (data, content, urlPath) => {
   const title = data.title ? `${data.title} · Vishal R` : "Vishal R";
-  const description = data.description || excerpt(content) || "Blogs, WeekNotes, and DevLogs from Vishal R";
+  const description = data.description || excerpt(content) || "Blogs and DevLogs from Vishal R";
   const url = `${baseUrl}${urlPath}`;
   // Posts without their own image fall back to the branded logo card.
   return { title, description, url, image: data.image || data.banner || "/og-default.png" };

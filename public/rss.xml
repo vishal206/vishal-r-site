@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title><![CDATA[Vishal R]]></title>
-        <description><![CDATA[Blogs, WeekNotes, and DevLogs from Vishal R]]></description>
+        <description><![CDATA[Blogs and DevLogs from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sat, 04 Jul 2026 06:40:19 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 04 Jul 2026 10:09:16 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Sat, 04 Jul 2026 06:40:19 GMT</pubDate>
+        <pubDate>Sat, 04 Jul 2026 10:09:16 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
         <item>
             <title><![CDATA[The Seven Days of Peter Crumb]]></title>
@@ -85,7 +85,7 @@ Outside the Koshe restaurant I spotted a billboard, which had posters of drama h
 Watched Dhurandhar 2, a well written movie with good cinematography...]]></description>
             <link>https://vishalr.dev/archive/36-First-Baddy-club-experience</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/36-First-Baddy-club-experience</guid>
-            <category><![CDATA[WeekNote]]></category>
+            <category><![CDATA[Blog]]></category>
             <pubDate>Sat, 06 Jun 2026 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<p>Yo! 🙋</p>
 <p>Outside the Koshe restaurant I spotted a billboard, which had posters of drama happening in the town. How come I have been walking through there and never noticed it. I will be on the look out for a worthwhile performance.</p>
@@ -132,7 +132,7 @@ img src="/assets/native-temple.png" alt="" style="float: right; width: 35%; max-
 Our temple has a wee...]]></description>
             <link>https://vishalr.dev/archive/32-Native-Temple-fest</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/32-Native-Temple-fest</guid>
-            <category><![CDATA[WeekNote]]></category>
+            <category><![CDATA[Blog]]></category>
             <pubDate>Sat, 09 May 2026 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<p>Yo! 🙋
 So there I was in my native, Devakottai, Tamil Nadu.</p>
@@ -157,7 +157,7 @@ Got my marathon picture. Good lord, I did not pay for that thing.
 On the 29th, Bengaluru got hit with a heavy hailstorm. I was in office when it started. Coming out of a meeting room, I stopped. The sky outside had gone completely grey, visibility was near zero, and water was streaming in f...]]></description>
             <link>https://vishalr.dev/archive/31-hailstorm-in-church-street</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/31-hailstorm-in-church-street</guid>
-            <category><![CDATA[WeekNote]]></category>
+            <category><![CDATA[Blog]]></category>
             <pubDate>Sat, 02 May 2026 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<p>Yo! 🙋
 Got my marathon picture. Good lord, I did not pay for that thing.</p>
@@ -234,7 +234,7 @@ For World Book Day, Sadhana gifted me Watchmen, while I got her Martyr! by Kaveh
 Sunday was special. I ran my first marathon, thanks to Ritik dragging me into it. Yes, people had opinions about whether 4.2 km counts as a marathon. But for someone who has never crossed a ...]]></description>
             <link>https://vishalr.dev/archive/30-My-First-Marathon</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/30-My-First-Marathon</guid>
-            <category><![CDATA[WeekNote]]></category>
+            <category><![CDATA[Blog]]></category>
             <pubDate>Sat, 25 Apr 2026 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<p>Yo!🙋
 For World Book Day, Sadhana gifted me Watchmen, while I got her Martyr! by Kaveh Akbar. A good trade.</p>
@@ -250,7 +250,7 @@ Yo!
 This week, I witnessed a mass layoff. My team members were removed. My friends were removed. The whole day went by refreshing my inbox, wondering if I was next, pinging everyone on leave to check if they were among them. The person I’d lunch with, the person who got teased for being a workahol...]]></description>
             <link>https://vishalr.dev/archive/29-Will-We-Ever-Get-Used-To-This</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/29-Will-We-Ever-Get-Used-To-This</guid>
-            <category><![CDATA[WeekNote]]></category>
+            <category><![CDATA[Blog]]></category>
             <pubDate>Sat, 18 Apr 2026 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<p>Yo!</p>
 <p>This week, I witnessed a mass layoff. My team members were removed. My friends were removed. The whole day went by refreshing my inbox, wondering if I was next, pinging everyone on leave to check if they were among them. The person I’d lunch with, the person who got teased for being a workaholic, is gone.</p>
@@ -271,7 +271,7 @@ Yo!
 - This week, I built a straightforward habit tr...]]></description>
             <link>https://vishalr.dev/archive/28-First-app-launch</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/28-First-app-launch</guid>
-            <category><![CDATA[WeekNote]]></category>
+            <category><![CDATA[Blog]]></category>
             <pubDate>Sat, 11 Apr 2026 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<p>Yo!</p>
 <ul>
@@ -291,7 +291,7 @@ Yo!
 - Traded my Mercedes Hot Wheels for a Nissan this week. On paper, not a fair swap, but I'm building a themed collection, strictly JDMs , so the Mercedes had to go. I've watched enough History Channel car trading shows to know a good deal when I see one. This felt like that, just in miniature. ...]]></description>
             <link>https://vishalr.dev/archive/25-my-first-hotwheel-trade</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/25-my-first-hotwheel-trade</guid>
-            <category><![CDATA[WeekNote]]></category>
+            <category><![CDATA[Blog]]></category>
             <pubDate>Sat, 21 Mar 2026 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<p>Yo!</p>
 <ul>
@@ -346,7 +346,7 @@ Yo!
 As per my trip goals for this year, I went to Chennai to celebrate Pongal. This was an educational trip, as I was requested to teach my brother the NCERT. He is jee aspirant and has cleared Olympiads. But he has no interest in opening an NCERT book. So I had to summarize some lessons and motiv...]]></description>
             <link>https://vishalr.dev/archive/16-Theater-1-restaurant-0</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/16-Theater-1-restaurant-0</guid>
-            <category><![CDATA[WeekNote]]></category>
+            <category><![CDATA[Blog]]></category>
             <pubDate>Sat, 17 Jan 2026 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<p>Yo!</p>
 <p>As per my trip goals for this year, I went to Chennai to celebrate Pongal. This was an educational trip, as I was requested to teach my brother the NCERT. He is jee aspirant and has cleared Olympiads. But he has no interest in opening an NCERT book. So I had to summarize some lessons and motivate him to read these books just for the next two weeks until the final exams.</p>
