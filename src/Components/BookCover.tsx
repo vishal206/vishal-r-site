@@ -14,7 +14,7 @@ const BookCover = ({ book, className = "" }: Props) => {
 
   return (
     <div
-      className={`absolute inset-0 overflow-hidden rounded-[3px] ${className}`}
+      className={`absolute inset-0 overflow-hidden ${className}`}
       style={{
         background: book.cover
           ? "#0e0e0e"

@@ -216,6 +216,7 @@ export type Book = {
   accent?: string; // cover accent colour
   cover?: string; // front-cover image (public/ path)
   side?: string; // spine/side image shown when the book isn't in focus
+  publishRss?: boolean; // include this book in the RSS feed
 };
 
 export const getAvailableBooks = (): string[] =>
@@ -246,6 +247,7 @@ export const loadBookFileSync = (slug: string): Book | null => {
       accent: data.accent,
       cover: data.cover,
       side: data.side,
+      publishRss: data.publishRss === true || data.publishRss === "true",
     };
   } catch (err) {
     console.error(`Error loading book ${slug}:`, err);
