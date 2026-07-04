@@ -9,7 +9,6 @@ import BooksPage from "./Pages/BooksPage.tsx";
 import BookPage from "./Pages/BookPage.tsx";
 import AboutPage from "./Pages/AboutPage.tsx";
 import ProjectPage from "./Pages/ProjectPage.tsx";
-import CursorCar from "./components/CursorCar.tsx";
 import { analytics } from "./firebase.ts";
 import { logEvent } from "firebase/analytics";
 
@@ -37,7 +36,6 @@ const tree = (
   <StrictMode>
     <BrowserRouter>
       <PageViewTracker />
-      <CursorCar />
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/archive" element={<ArchivePage />} />
