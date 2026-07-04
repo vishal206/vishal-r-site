@@ -2,7 +2,7 @@
 title: "Start of rainy evenings"
 date: "31 May 2026"
 tags: "Life"
-publishRss: false
+publishRss: true
 ---
 
 Yo! 🙋

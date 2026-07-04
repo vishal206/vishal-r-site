@@ -2,7 +2,7 @@
 title: "Plans for 2026"
 date: "30 Dec 2025"
 tags: "Life"
-publishRss: false
+publishRss: true
 ---
 
 - Travelled to Kolkata, will cover the experience in a blog.

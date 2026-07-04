@@ -22,17 +22,8 @@ const generateRSSFeed = async () => {
 
   const feed = new RSS({
     title: "Vishal R",
-    description: "Blogs and DevLogs from Vishal R",
+    description: "Blogs, movies, books, and project writing from Vishal R",
     feed_url: `${baseUrl}/rss.xml`,
-    site_url: baseUrl,
-    language: "en-us",
-    pubDate: new Date(),
-  });
-
-  const techFeed = new RSS({
-    title: "Vishal R",
-    description: "Tech Blogs and DevLogs from Vishal R",
-    feed_url: `${baseUrl}/techrss.xml`,
     site_url: baseUrl,
     language: "en-us",
     pubDate: new Date(),
@@ -63,39 +54,43 @@ const generateRSSFeed = async () => {
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
         content,
         date: new Date(frontmatter.date),
-        categories: ["Blog"],
-        isTech: frontmatter?.isTech,
+        categories: [frontmatter.tags || "Blog"],
       });
     }
   }
 
-  // Process devlogs
-  const devLogsDir = path.join(process.cwd(), "src/Posts/DevLogs");
+  // Process project write-ups (each project folder's non-readme posts;
+  // the readme itself is a static overview page, not a dated entry)
+  const projectsDir = path.join(process.cwd(), "src/Posts/Projects");
 
-  if (fs.existsSync(devLogsDir)) {
-    const devLogFiles = fs
-      .readdirSync(devLogsDir)
-      .filter((file) => file.endsWith(".md"));
+  if (fs.existsSync(projectsDir)) {
+    for (const projectSlug of fs.readdirSync(projectsDir)) {
+      const projectDir = path.join(projectsDir, projectSlug);
+      if (!fs.statSync(projectDir).isDirectory()) continue;
 
-    for (const file of devLogFiles) {
-      const filePath = path.join(devLogsDir, file);
-      const fileContent = fs.readFileSync(filePath, "utf8");
-      const { data: frontmatter, content } = matter(fileContent);
+      const postFiles = fs
+        .readdirSync(projectDir)
+        .filter((file) => file.endsWith(".md") && file.toLowerCase() !== "readme.md");
 
-      // ✅ Only include selected devlogs
-      if (!frontmatter.publishRss) continue;
+      for (const file of postFiles) {
+        const filePath = path.join(projectDir, file);
+        const fileContent = fs.readFileSync(filePath, "utf8");
+        const { data: frontmatter, content } = matter(fileContent);
 
-      const slug = file.replace(".md", "");
+        // ✅ Posts can explicitly opt out of RSS
+        if (frontmatter.publishRss === false) continue;
 
-      items.push({
-        title: frontmatter.title,
-        url: `${baseUrl}/archive/${slug}`,
-        description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
-        content,
-        date: new Date(frontmatter.date),
-        categories: ["Devlog"],
-        isTech: frontmatter?.isTech,
-      });
+        const slug = file.replace(".md", "");
+
+        items.push({
+          title: frontmatter.title,
+          url: `${baseUrl}/archive/${slug}`,
+          description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
+          content,
+          date: new Date(frontmatter.date),
+          categories: [frontmatter.tags || "Project"],
+        });
+      }
     }
   }
 
@@ -112,8 +107,8 @@ const generateRSSFeed = async () => {
       const fileContent = fs.readFileSync(filePath, "utf8");
       const { data: frontmatter, content } = matter(fileContent);
 
-      // ✅ Only include books opted into RSS
-      if (!frontmatter.publishRss) continue;
+      // ✅ Books can explicitly opt out of RSS
+      if (frontmatter.publishRss === false) continue;
 
       const slug = file.replace(".md", "");
 
@@ -124,7 +119,6 @@ const generateRSSFeed = async () => {
         content,
         date: new Date(frontmatter.date),
         categories: ["Book"],
-        isTech: frontmatter?.isTech,
       });
     }
   }
@@ -133,7 +127,7 @@ const generateRSSFeed = async () => {
   items
     .sort((a, b) => b.date.getTime() - a.date.getTime())
     .forEach((item) => {
-      const entry = {
+      feed.item({
         title: item.title,
         url: item.url,
         description: item.description,
@@ -141,9 +135,7 @@ const generateRSSFeed = async () => {
         categories: item.categories,
         guid: item.url,
         custom_elements: [{ "content:encoded": { _cdata: toRssHtml(item.content, baseUrl) } }],
-      };
-      if (item.isTech) techFeed.item(entry);
-      feed.item(entry);
+      });
     });
 
   // Ensure public directory exists
@@ -156,11 +148,7 @@ const generateRSSFeed = async () => {
   const xml = feed.xml({ indent: true });
   fs.writeFileSync(path.join(publicDir, "rss.xml"), xml);
 
-  // Write RSS file
-  const techxml = techFeed.xml({ indent: true });
-  fs.writeFileSync(path.join(publicDir, "techrss.xml"), techxml);
-
-  console.log("RSS feed generated at public/rss.xml & public/techrss.xml");
+  console.log("RSS feed generated at public/rss.xml");
 };
 
 generateRSSFeed().catch(console.error);

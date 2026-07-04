@@ -2,7 +2,7 @@
 title: "Parasakthi doesn’t deserve"
 date: "11 Jan 2026"
 tags: "Life"
-publishRss: false
+publishRss: true
 ---
 
 <figure style="float: right; margin: 0 0 1rem 1rem; text-align: center;">

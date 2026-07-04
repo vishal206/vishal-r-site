@@ -4,6 +4,7 @@ date: "26 Jan 2026"
 image: "/assets/the-goldfinch-poster.jpg"
 banner: "/assets/the-goldfinch-poster.jpg"
 tags: "Movie"
+publishRss: true
 ---
 
 A painting that survives. The painting that lived. A painter dies in an accidental explosion. Only survivor is a bird painted — a bird tied at a place. After time, the bird gets into a terrorist explosion in an art museum. Yet again, it survives in the hands of a child.

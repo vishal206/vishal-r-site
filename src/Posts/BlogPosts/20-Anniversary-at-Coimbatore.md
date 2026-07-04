@@ -2,7 +2,7 @@
 title: "Anniversary at Coimbatore"
 date: "15 Feb 2026"
 tags: "Life"
-publishRss: false
+publishRss: true
 ---
 
 Yo! 🙋‍♂️In week 20,

@@ -2,7 +2,7 @@
 title: "Hamnet"
 date: "15 Mar 2026"
 tags: "Life"
-publishRss: false
+publishRss: true
 ---
 
 Yo! 🙋‍♂️In week 24,

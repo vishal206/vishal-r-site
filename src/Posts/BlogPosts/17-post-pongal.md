@@ -2,7 +2,7 @@
 title: "Post Pongal"
 date: "25 Jan 2026"
 tags: "Life"
-publishRss: false
+publishRss: true
 ---
 
 <figure style="float: right; text-align: center;">

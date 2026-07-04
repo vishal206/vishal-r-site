@@ -56,6 +56,25 @@ const archiveDirs = [
   "src/Posts/About",
 ];
 
+// Project write-ups live nested under src/Posts/Projects/<project>/<post>.md
+// (the project's readme.md is a static overview, not an archive entry) but
+// are reachable at /archive/:slug just like a regular blog post.
+const readProjectPosts = () => {
+  const projectsRoot = path.join(root, "src/Posts/Projects");
+  if (!fs.existsSync(projectsRoot)) return [];
+  const posts = [];
+  for (const projectSlug of fs.readdirSync(projectsRoot)) {
+    const projectDir = path.join(projectsRoot, projectSlug);
+    if (!fs.statSync(projectDir).isDirectory()) continue;
+    for (const file of fs.readdirSync(projectDir)) {
+      if (!file.endsWith(".md") || file.toLowerCase() === "readme.md") continue;
+      const { data, content } = matter(fs.readFileSync(path.join(projectDir, file), "utf8"));
+      posts.push({ slug: file.replace(/\.md$/, ""), data, content });
+    }
+  }
+  return posts;
+};
+
 const buildRoutes = () => {
   // NOTE: the home route ("/") is intentionally not prerendered — App.tsx loads
   // its data asynchronously, so a snapshot would not match the client's first
@@ -72,6 +91,15 @@ const buildRoutes = () => {
 
   for (const slug of archiveSlugs) {
     const { data, content } = frontmatterFor(archiveDirs, slug);
+    routes.push({
+      url: `/archive/${encodeURI(slug)}`,
+      out: path.join("archive", `${slug}.html`),
+      meta: metaFor(data, content, `/archive/${slug}`),
+    });
+  }
+
+  for (const { slug, data, content } of readProjectPosts()) {
+    if (archiveSlugs.has(slug)) continue;
     routes.push({
       url: `/archive/${encodeURI(slug)}`,
       out: path.join("archive", `${slug}.html`),

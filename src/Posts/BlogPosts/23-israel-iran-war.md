@@ -2,7 +2,7 @@
 title: "Israel - Iran war"
 date: "8 Mar 2026"
 tags: "Life"
-publishRss: false
+publishRss: true
 ---
 
 Yo! 🙋‍♂️In week 23,

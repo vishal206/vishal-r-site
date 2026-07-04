@@ -24,7 +24,9 @@
       "Bash(perl -0pi -e 's/\\\\n\\\\s*aspectRatio: \"1 \\\\/ 1\\\\.5\",//g' src/components/Book.tsx)",
       "Bash(echo \"exit=$?\")",
       "Bash(cat)",
-      "Bash(echo \"EXIT=$?\")"
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(git show HEAD --name-only | grep \"^src/Posts/BlogPosts\" | sed 's/^src\\\\/Posts\\\\/BlogPosts\\\\///' | sort > /tmp/committed.txt *)",
+      "Read(//tmp/**)"
     ]
   }
 }
