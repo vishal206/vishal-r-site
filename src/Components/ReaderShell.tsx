@@ -204,7 +204,7 @@ const ReaderShell = ({
 
         {/* ── Content pane ── */}
         <main ref={mainRef} className="flex-1 overflow-y-auto">
-          <div className="px-6 md:px-12 pt-10 pb-20 max-w-3xl">{children}</div>
+          <div className="px-6 md:px-12 pt-10 pb-20">{children}</div>
         </main>
 
         {/* ── Right rail (desktop, optional) ── */}
