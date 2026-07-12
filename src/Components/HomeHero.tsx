@@ -60,9 +60,8 @@ const HomeHero = () => (
               alt=""
               aria-hidden="true"
               className="pointer-events-none select-none absolute left-0 top-1/2 w-[0.9em] h-auto"
-              style={{ transform: "translate(-65%, -50%) rotate(-8deg)" }}
+              style={{ transform: "translate(-65%, -50%) rotate(-2deg)" }}
             />
-
             {/* Social icons — slapped on top of the title, between "h" and "l" */}
             <div className="absolute left-[58%] top-0 -translate-x-1/2 -translate-y-1/2 flex gap-2.5 z-10">
               {SOCIALS.map((s, i) => (
@@ -101,14 +100,13 @@ const HomeHero = () => (
                 </a>
               ))}
             </div>
-
             {/* "I'm a full stack developer" sticker — slapped on the title's bottom-right */}
             <img
               src="/assets/stickers/im-full-stack-developer-trim.png"
               alt="I'm a full stack developer"
-              className="pointer-events-none select-none absolute right-[6%] bottom-0 translate-y-1/2 w-20 sm:w-28 md:w-36 lg:w-44 z-10"
+              className="pointer-events-none select-none absolute right-[2%] bottom-0 w-20 sm:w-28 md:w-36 lg:w-44 z-10"
+              style={{ transform: "translateY(70%) rotate(-6deg)" }}
             />
-
             Vishal R
           </h1>
         </div>
