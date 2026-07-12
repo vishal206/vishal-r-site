@@ -48,65 +48,69 @@ const HomeHero = () => (
   <div className="absolute inset-0 overflow-y-auto">
     <div className="px-6 md:px-12 pb-[14rem] max-w-screen-xl mx-auto">
       {/* ── Name hero ── */}
-      <div className="pt-20 pb-10 md:pt-16 md:pb-0 lg:pt-[8vh]">
-        <div className="relative">
+      <div className="pt-20 pb-10 md:pt-16 md:pb-16 lg:pt-[8vh] lg:pb-28">
+        <div className="relative flex justify-center">
           <h1
-            className="text-center font-name font-black leading-none whitespace-nowrap select-none"
+            className="relative inline-block font-name font-black leading-none whitespace-nowrap select-none"
             style={{ fontSize: "clamp(3.5rem, 13vw, 12rem)" }}
           >
+            {/* Sticker slapped to the left, overlapping the "V" */}
+            <img
+              src="/assets/stickers/vishal-sticker.png"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none select-none absolute left-0 top-1/2 w-[0.9em] h-auto"
+              style={{ transform: "translate(-65%, -50%) rotate(-8deg)" }}
+            />
+
+            {/* Social icons — slapped on top of the title, between "h" and "l" */}
+            <div className="absolute left-[58%] top-0 -translate-x-1/2 -translate-y-1/2 flex gap-2.5 z-10">
+              {SOCIALS.map((s, i) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  style={{ transform: `rotate(${(i - 1) * 8}deg)` }}
+                  className="transition-transform hover:scale-110 hover:!rotate-0"
+                >
+                  {s.img ? (
+                    <img
+                      src={s.img}
+                      alt={s.label}
+                      className={`object-contain select-none ${
+                        s.label === "Résumé"
+                          ? "h-7 sm:h-9 lg:h-11 w-auto"
+                          : "w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
+                      }`}
+                    />
+                  ) : (
+                    <span className="flex items-center justify-center w-9 h-9 rounded-full border-[3px] border-white bg-editorial-bg shadow-[0_6px_16px_-4px_rgba(0,0,0,0.8)]">
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox={s.viewBox}
+                        fill={s.color}
+                        aria-hidden="true"
+                      >
+                        <path d={s.path} />
+                      </svg>
+                    </span>
+                  )}
+                </a>
+              ))}
+            </div>
+
+            {/* "I'm a full stack developer" sticker — slapped on the title's bottom-right */}
+            <img
+              src="/assets/stickers/im-full-stack-developer-trim.png"
+              alt="I'm a full stack developer"
+              className="pointer-events-none select-none absolute right-[6%] bottom-0 translate-y-1/2 w-20 sm:w-28 md:w-36 lg:w-44 z-10"
+            />
+
             Vishal R
           </h1>
-
-          {/* Social icons — slapped on the title's bottom-right like stickers */}
-          <div className="absolute right-[8%] md:right-[14%] bottom-0 translate-y-1/2 flex gap-2.5">
-            {SOCIALS.map((s, i) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={s.label}
-                style={{ transform: `rotate(${(i - 1) * 8}deg)` }}
-                className="transition-transform hover:scale-110 hover:!rotate-0"
-              >
-                {s.img ? (
-                  <img
-                    src={s.img}
-                    alt={s.label}
-                    className={`object-contain select-none ${
-                      s.label === "Résumé"
-                        ? "h-7 sm:h-9 lg:h-11 w-auto"
-                        : "w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
-                    }`}
-                  />
-                ) : (
-                  <span className="flex items-center justify-center w-9 h-9 rounded-full border-[3px] border-white bg-editorial-bg shadow-[0_6px_16px_-4px_rgba(0,0,0,0.8)]">
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox={s.viewBox}
-                      fill={s.color}
-                      aria-hidden="true"
-                    >
-                      <path d={s.path} />
-                    </svg>
-                  </span>
-                )}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div
-          className="flex justify-center"
-          style={{ marginTop: "clamp(-2.5rem, -3vw, -0.75rem)" }}
-        >
-          <img
-            src="/assets/stickers/im-full-stack-developer-trim.png"
-            alt="I'm a full stack developer"
-            className="w-20 sm:w-28 md:w-36 lg:w-44 select-none"
-            style={{ transform: "translateX(-60%)" }}
-          />
         </div>
       </div>
 
