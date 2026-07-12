@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lexend+Zetta:wght@100..900&family=Lora:ital,wght@0,400;0,500;1,400&family=Caveat:wght@600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Unbounded:wght@200..900&family=Lexend+Zetta:wght@100..900&family=Lora:ital,wght@0,400;0,500;1,400&family=Caveat:wght@600&display=swap");
 @import "tailwindcss";
 
 html * {
@@ -47,6 +47,7 @@ body {
   --color-available: #4ade80;
   --font-display: "Playfair Display";
   --font-body: "Lora";
+  --font-name: "Unbounded";
 }
 
 *::-webkit-scrollbar {

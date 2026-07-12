@@ -77,7 +77,7 @@ const SectionDock = ({
           <img
             src="/assets/stickers/vishal-sticker.png"
             alt="Home"
-            style={{ height: 118, maxWidth: "none", transform: "rotate(-2deg)" }}
+            style={{ height: 105, maxWidth: "none", transform: "rotate(-2deg)" }}
             className="block select-none"
           />
         </button>
