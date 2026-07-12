@@ -16,22 +16,6 @@ import { PostEngagement } from "./PostEngagement";
 import { useComments } from "../hooks/useComments";
 import { PostComments } from "./PostComments";
 
-const formatDate = (dateStr: string): string => {
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr.toUpperCase();
-    return d
-      .toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
-      .toUpperCase();
-  } catch {
-    return dateStr.toUpperCase();
-  }
-};
-
 // Unified entry shape ─────────────────────────────────────────────────────────
 interface Entry {
   slug: string;
@@ -79,7 +63,7 @@ const loadEntry = (slug: string): Entry | null => {
       slug,
       title: blog.frontmatter.title,
       label: blog.frontmatter.tags || "Essay",
-      sublabel: formatDate(blog.frontmatter.date),
+      sublabel: "",
       content: blog.content,
       banner: blog.frontmatter.banner,
       image: blog.frontmatter.image,
@@ -126,7 +110,7 @@ const buildUnifiedList = (): SidebarEntry[] => {
     items.push({
       slug: b.slug,
       title: b.frontmatter.title,
-      meta: `${b.frontmatter.tags || "Essay"} · ${formatDate(b.frontmatter.date)}`,
+      meta: `${b.frontmatter.tags || "Essay"}`,
       ts: new Date(b.frontmatter.date).getTime(),
     });
   });
@@ -136,7 +120,7 @@ const buildUnifiedList = (): SidebarEntry[] => {
     items.push({
       slug: ch.slug,
       title: ch.frontmatter.title,
-      meta: `Chapter ${String(ch.frontmatter.sno).padStart(2, "0")} · ${formatDate(ch.frontmatter.date)}`,
+      meta: `Chapter ${String(ch.frontmatter.sno).padStart(2, "0")}`,
       ts: new Date(ch.frontmatter.date).getTime(),
     });
   });

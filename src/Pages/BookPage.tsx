@@ -10,20 +10,6 @@ import { usePostEngagement } from "../hooks/usePostEngagement";
 import { useComments } from "../hooks/useComments";
 import { loadBookFileSync, getBooksSync } from "../Utils/markdownLoader";
 
-const formatDate = (dateStr?: string): string => {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  return isNaN(d.getTime())
-    ? dateStr.toUpperCase()
-    : d
-        .toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        })
-        .toUpperCase();
-};
-
 const BookPage: React.FC = () => {
   const { slug = "" } = useParams();
   const book = useMemo(() => loadBookFileSync(slug), [slug]);
@@ -57,9 +43,7 @@ const BookPage: React.FC = () => {
     );
   }
 
-  const sublabel = [book.author, formatDate(book.date)]
-    .filter(Boolean)
-    .join(" · ");
+  const sublabel = book.author;
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
@@ -141,9 +125,7 @@ const BookPage: React.FC = () => {
                       ) : (
                         <Link to={`/book/${b.slug}`} className="block group">
                           <div className="text-[9px] uppercase tracking-[0.18em] text-editorial-label mb-1 line-clamp-1">
-                            {[b.genres[0], formatDate(b.date)]
-                              .filter(Boolean)
-                              .join(" · ")}
+                            {b.genres[0]}
                           </div>
                           <p className="text-sm font-display font-bold text-editorial-text leading-tight group-hover:opacity-70 transition-opacity line-clamp-2">
                             {b.title}

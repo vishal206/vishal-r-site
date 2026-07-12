@@ -43,21 +43,6 @@ const LogoBox = ({
   );
 };
 
-const formatDate = (dateStr: string): string => {
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr.toUpperCase();
-    return d
-      .toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-      .toUpperCase();
-  } catch {
-    return dateStr.toUpperCase();
-  }
-};
 
 const ProjectPage = () => {
   const { projectSlug, postSlug } = useParams<{
@@ -232,11 +217,6 @@ const ProjectPage = () => {
                     <p className="text-base font-display font-bold text-editorial-text leading-snug">
                       {post.title}
                     </p>
-                    {post.date && (
-                      <p className="text-[9px] uppercase tracking-[0.15em] text-editorial-label mt-1">
-                        {formatDate(post.date)}
-                      </p>
-                    )}
                   </Link>
                 </div>
               );
@@ -304,11 +284,6 @@ const ProjectPage = () => {
                       <p className="text-sm font-display font-bold text-editorial-text leading-tight group-hover:opacity-70 transition-opacity line-clamp-2">
                         {post.title}
                       </p>
-                      {post.date && (
-                        <p className="text-[9px] uppercase tracking-[0.15em] text-editorial-label mt-1">
-                          {formatDate(post.date)}
-                        </p>
-                      )}
                     </Link>
                   </div>
                 );

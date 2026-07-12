@@ -96,38 +96,6 @@ const PostCounts = ({ counts }: { counts: PostCountsType }) => (
   </div>
 );
 
-const formatDateLabel = (dateStr: string): string => {
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr.toUpperCase();
-    return d
-      .toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
-      .toUpperCase();
-  } catch {
-    return dateStr.toUpperCase();
-  }
-};
-
-const formatDateShort = (dateStr: string): string => {
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr.toUpperCase();
-    return d
-      .toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-      .toUpperCase();
-  } catch {
-    return dateStr.toUpperCase();
-  }
-};
-
 const App = () => {
   const [blogs, setBlogs] = useState<BlogPostMeta[]>([]);
   const [featuredContent, setFeaturedContent] = useState<string>("");
@@ -210,10 +178,6 @@ const App = () => {
                   <span className="text-[10px] uppercase tracking-[0.22em] text-available whitespace-nowrap">
                     Featured {featured.label}
                   </span>
-                  <div className="w-12 h-px bg-editorial-divider shrink-0" />
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-editorial-label whitespace-nowrap hidden sm:block">
-                    {formatDateLabel(featured.date)}
-                  </span>
                 </div>
 
                 <div className="relative md:flex md:flex-row md:items-stretch md:gap-8 flex-1 min-h-0">
@@ -288,12 +252,9 @@ const App = () => {
               {feed.slice(1, 4).map((item) => (
                 <div key={item.slug} className="py-5">
                   <Link to={item.to} className="group block">
-                    <div className="flex justify-between items-center mb-2">
+                    <div className="mb-2">
                       <span className="text-[10px] uppercase tracking-[0.2em] text-available">
                         {item.label}
-                      </span>
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-editorial-label">
-                        {formatDateShort(item.date)}
                       </span>
                     </div>
                     <h3 className="text-base md:text-lg font-display font-bold text-editorial-text leading-snug group-hover:opacity-70 transition-opacity">

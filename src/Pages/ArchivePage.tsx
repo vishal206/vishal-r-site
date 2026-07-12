@@ -14,22 +14,6 @@ interface UnifiedEntry {
   type: "blog";
 }
 
-const formatDate = (dateStr: string): string => {
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr.toUpperCase();
-    return d
-      .toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-      .toUpperCase();
-  } catch {
-    return dateStr.toUpperCase();
-  }
-};
-
 const TAGS = ["Devlog", "Tech", "Life"];
 const ALL_FILTERS = [
   { key: "all", label: "All Entries" },
@@ -164,13 +148,8 @@ const ArchivePage: React.FC = () => {
                         </div>
                       )}
 
-                      <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] mb-2">
-                        <span className="text-available">
-                          {entry.tags || "Essay"}
-                        </span>
-                        <span className="text-editorial-label">
-                          · {formatDate(entry.date)}
-                        </span>
+                      <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-2">
+                        {entry.tags || "Essay"}
                       </div>
                       <h3 className="text-lg md:text-xl font-display font-bold text-editorial-text leading-tight group-hover:opacity-70 transition-opacity">
                         {entry.title}
