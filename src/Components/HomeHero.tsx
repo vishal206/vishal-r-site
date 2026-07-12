@@ -48,7 +48,7 @@ const HomeHero = () => (
   <div className="absolute inset-0 overflow-y-auto">
     <div className="px-6 md:px-12 pb-[14rem] max-w-screen-xl mx-auto">
       {/* ── Name hero ── */}
-      <div className="pt-10 md:pt-16 lg:pt-[8vh]">
+      <div className="pt-20 pb-10 md:pt-16 md:pb-0 lg:pt-[8vh]">
         <div className="relative">
           <h1
             className="text-center font-name font-black leading-none whitespace-nowrap select-none"
@@ -74,7 +74,9 @@ const HomeHero = () => (
                     src={s.img}
                     alt={s.label}
                     className={`object-contain select-none ${
-                      s.label === "Résumé" ? "h-11 w-auto" : "w-10 h-10"
+                      s.label === "Résumé"
+                        ? "h-7 sm:h-9 lg:h-11 w-auto"
+                        : "w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10"
                     }`}
                   />
                 ) : (
@@ -102,7 +104,7 @@ const HomeHero = () => (
           <img
             src="/assets/stickers/im-full-stack-developer-trim.png"
             alt="I'm a full stack developer"
-            className="w-28 md:w-36 lg:w-44 select-none"
+            className="w-20 sm:w-28 md:w-36 lg:w-44 select-none"
             style={{ transform: "translateX(-60%)" }}
           />
         </div>

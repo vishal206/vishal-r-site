@@ -8,7 +8,7 @@ import {
   bottomBlogRest,
   bottomBunch,
 } from "../Utils/pilePositions";
-import { SectionId, SECTION_ORDER, SECTION_LABELS } from "../Utils/sections";
+import { SectionId, SECTION_LABELS } from "../Utils/sections";
 
 const isImageLogo = (logo: string) =>
   !!logo && (logo.startsWith("/") || logo.startsWith("http"));
@@ -58,10 +58,14 @@ const SectionDock = ({
 }) => {
   return (
     <>
-      {/* ── Desktop: sticker piles that fan their items open on hover ── */}
+      {/* ── Sticker piles that fan their items open on hover. Shown at every
+          breakpoint; the whole row scales down toward its bottom-center on
+          smaller screens so all five stickers stay on screen. ── */}
       <div
-        className={`hidden lg:flex absolute bottom-0 inset-x-0 z-40 justify-center items-end gap-8 xl:gap-20 px-10 pb-0 origin-bottom transition-transform duration-500 ease-out ${
-          active ? "scale-[0.6]" : "scale-100"
+        className={`flex absolute bottom-0 inset-x-0 z-40 justify-center items-end gap-8 xl:gap-20 px-10 pb-0 origin-bottom transition-transform duration-500 ease-out ${
+          active
+            ? "scale-[0.36] sm:scale-[0.55] md:scale-[0.72] lg:scale-[0.6]"
+            : "scale-[0.36] sm:scale-[0.55] md:scale-[0.72] lg:scale-100"
         }`}
       >
         {/* Home — the Vishal sticker returns to the home screen */}
@@ -224,34 +228,6 @@ const SectionDock = ({
           }))}
         />
       </div>
-
-      {/* ── Mobile: a persistent bottom tab bar ── */}
-      <nav className="lg:hidden absolute bottom-0 inset-x-0 z-40 grid grid-cols-5 border-t border-editorial-divider bg-editorial-bg">
-        <button
-          onClick={onHome}
-          aria-label="Home"
-          className={`py-4 text-[10px] uppercase tracking-[0.18em] transition-colors cursor-pointer ${
-            active === null
-              ? "text-editorial-text"
-              : "text-editorial-label hover:text-editorial-text"
-          }`}
-        >
-          Home
-        </button>
-        {SECTION_ORDER.map((id) => (
-          <button
-            key={id}
-            onClick={() => onSelect(id)}
-            className={`py-4 text-[10px] uppercase tracking-[0.18em] transition-colors cursor-pointer ${
-              active === id
-                ? "text-editorial-text"
-                : "text-editorial-label hover:text-editorial-text"
-            }`}
-          >
-            {SECTION_LABELS[id]}
-          </button>
-        ))}
-      </nav>
     </>
   );
 };

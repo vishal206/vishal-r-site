@@ -42,7 +42,8 @@
       "Bash(rm -f /tmp/dock2.png /tmp/vite-dev.log)",
       "Bash(python3 -c ' *)",
       "Bash(python3 -m pip install --user pillow -q)",
-      "Bash(python3 -)"
+      "Bash(python3 -)",
+      "Bash(npx vite *)"
     ]
   }
 }
