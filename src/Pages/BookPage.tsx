@@ -1,14 +1,16 @@
 import React, { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import SiteHeader from "../components/SiteHeader";
-import ScrollToTopButton from "../components/ScrollToTopButton";
 import { CustomMarkdownReader } from "../components/CustomMarkdownReader";
 import Book3D from "../components/Book3D";
+import ReaderShell, { LogoBox } from "../components/ReaderShell";
 import { PostEngagement } from "../components/PostEngagement";
 import { PostComments } from "../components/PostComments";
 import { usePostEngagement } from "../hooks/usePostEngagement";
 import { useComments } from "../hooks/useComments";
 import { loadBookFileSync, getBooksSync } from "../Utils/markdownLoader";
+
+const BRAND_LOGO = "/assets/stickers/book-sticker.png";
+const BRAND_TITLE = "Bookshelf";
 
 const BookPage: React.FC = () => {
   const { slug = "" } = useParams();
@@ -29,7 +31,6 @@ const BookPage: React.FC = () => {
   if (!book) {
     return (
       <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-        <SiteHeader activePage="books" />
         <div className="max-w-2xl mx-auto px-6 py-24 text-center">
           <p className="text-editorial-label mb-6">Book not found.</p>
           <Link
@@ -43,120 +44,105 @@ const BookPage: React.FC = () => {
     );
   }
 
-  const sublabel = book.author;
+  const nav =
+    shelf.length > 0 &&
+    shelf.map((b) => {
+      const isCurrent = b.slug === slug;
+      return (
+        <div
+          key={b.slug}
+          className={`py-4 border-b border-editorial-divider last:border-0 transition-opacity ${isCurrent ? "opacity-100" : "opacity-50 hover:opacity-100"}`}
+        >
+          {isCurrent ? (
+            <>
+              <div className="text-[9px] uppercase tracking-[0.18em] text-available mb-1">
+                Reading
+              </div>
+              <p className="text-sm font-display font-bold text-editorial-text leading-tight">
+                {b.title}
+              </p>
+            </>
+          ) : (
+            <Link to={`/book/${b.slug}`} className="block group">
+              <div className="text-[9px] uppercase tracking-[0.18em] text-editorial-label mb-1 line-clamp-1">
+                {b.genres[0]}
+              </div>
+              <p className="text-sm font-display font-bold text-editorial-text leading-tight group-hover:opacity-70 transition-opacity line-clamp-2">
+                {b.title}
+              </p>
+            </Link>
+          )}
+        </div>
+      );
+    });
 
   return (
-    <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-      <SiteHeader activePage="books" />
-      <div className="px-6 md:px-12 pb-6 max-w-screen-xl mx-auto">
-        {/* ── Article header ── */}
-        <div className="pt-10 md:pt-14 pb-8 md:pb-12 border-b border-editorial-divider">
-          <div className="flex items-center gap-4 mb-8">
-            <span className="text-[10px] uppercase tracking-[0.22em] text-available">
-              Book
-            </span>
-            {sublabel && (
-              <>
-                <div className="w-8 h-px bg-editorial-divider shrink-0" />
-                <span className="text-[10px] uppercase tracking-[0.22em] text-editorial-label hidden sm:block">
-                  {sublabel}
+    <ReaderShell
+      brandLogo={BRAND_LOGO}
+      brandTitle={BRAND_TITLE}
+      brandBare
+      navLabel="Bookshelf"
+      backTo="/books"
+      backLabel="Books"
+      nav={nav || undefined}
+    >
+      {/* ── Compact header ── */}
+      <div className="mb-8 pb-8 border-b border-editorial-divider">
+        <div className="flex items-center gap-5">
+          {book.cover ? (
+            <div className="shrink-0">
+              <Book3D book={book} height={{ base: 96, md: 120 }} />
+            </div>
+          ) : (
+            <LogoBox logo="📕" title={book.title} size="lg" />
+          )}
+          <div className="min-w-0">
+            <div className="flex items-center gap-3 mb-1">
+              <span className="text-[10px] uppercase tracking-[0.22em] text-available">
+                Book
+              </span>
+              {book.author && (
+                <span className="text-[10px] uppercase tracking-[0.22em] text-editorial-label truncate">
+                  {book.author}
                 </span>
-              </>
-            )}
-          </div>
-
-          {/* Title with the 3D book on the right */}
-          <div className="flex items-start gap-6 md:gap-10">
-            <h1 className="flex-1 min-w-0 text-4xl md:text-6xl lg:text-7xl font-display font-black text-editorial-text leading-[1.05]">
+              )}
+            </div>
+            <h1 className="text-2xl md:text-3xl font-display font-black text-editorial-text leading-tight">
               {book.title}
             </h1>
-            {book.cover && (
-              <div className="shrink-0">
-                <Book3D book={book} height={{ base: 140, md: 220 }} />
+            {book.genres.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {book.genres.map((g) => (
+                  <span
+                    key={g}
+                    className="text-[9px] uppercase tracking-[0.16em] text-editorial-muted border border-editorial-divider px-2 py-0.5 rounded-full"
+                  >
+                    {g}
+                  </span>
+                ))}
               </div>
             )}
           </div>
-
-          {book.genres.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-6">
-              {book.genres.map((g) => (
-                <span
-                  key={g}
-                  className="text-[9px] uppercase tracking-[0.16em] text-editorial-muted border border-editorial-divider px-2 py-0.5 rounded-full"
-                >
-                  {g}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <PostEngagement
-            {...engagement}
-            commentCount={comments.length}
-            variant="compact"
-          />
         </div>
-
-        {/* ── Body ── */}
-        <div className="flex flex-col md:flex-row gap-0">
-          {/* Bookshelf rail */}
-          {shelf.length > 0 && (
-            <aside className="hidden md:block w-52 shrink-0 border-r border-editorial-divider pr-8 pt-12">
-              <div className="text-[9px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-                Bookshelf
-              </div>
-              <div>
-                {shelf.map((b) => {
-                  const isCurrent = b.slug === slug;
-                  return (
-                    <div
-                      key={b.slug}
-                      className={`py-4 border-b border-editorial-divider transition-opacity ${isCurrent ? "opacity-100" : "opacity-50 hover:opacity-100"}`}
-                    >
-                      {isCurrent ? (
-                        <>
-                          <div className="text-[9px] uppercase tracking-[0.18em] text-available mb-1">
-                            Reading
-                          </div>
-                          <p className="text-sm font-display font-bold text-editorial-text leading-tight">
-                            {b.title}
-                          </p>
-                        </>
-                      ) : (
-                        <Link to={`/book/${b.slug}`} className="block group">
-                          <div className="text-[9px] uppercase tracking-[0.18em] text-editorial-label mb-1 line-clamp-1">
-                            {b.genres[0]}
-                          </div>
-                          <p className="text-sm font-display font-bold text-editorial-text leading-tight group-hover:opacity-70 transition-opacity line-clamp-2">
-                            {b.title}
-                          </p>
-                        </Link>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </aside>
-          )}
-
-          {/* Content */}
-          <article className="flex-1 md:pl-12 md:pr-12 pt-10 md:pt-12 max-w-3xl">
-            <CustomMarkdownReader content={book.review} />
-            <PostEngagement
-              {...engagement}
-              commentCount={comments.length}
-              variant="full"
-            />
-            <PostComments
-              comments={comments}
-              submitting={submitting}
-              onSubmit={submitComment}
-            />
-          </article>
-        </div>
+        <PostEngagement
+          {...engagement}
+          commentCount={comments.length}
+          variant="compact"
+        />
       </div>
-      <ScrollToTopButton />
-    </div>
+
+      <CustomMarkdownReader content={book.review} />
+      <PostEngagement
+        {...engagement}
+        commentCount={comments.length}
+        variant="full"
+      />
+      <PostComments
+        comments={comments}
+        submitting={submitting}
+        onSubmit={submitComment}
+      />
+    </ReaderShell>
   );
 };
 

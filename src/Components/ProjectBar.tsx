@@ -126,7 +126,7 @@ const Polaroid = ({ project, tilt, lifted, onClick, onMouseEnter, onMouseLeave }
   );
 };
 
-const ProjectBar = () => {
+const ProjectBar = ({ label = "02 / Projects" }: { label?: string } = {}) => {
   const [projects, setProjects] = useState<ProjectMeta[]>([]);
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -202,9 +202,9 @@ const ProjectBar = () => {
   if (projects.length === 0) return null;
 
   return (
-    <section className="border-t border-editorial-divider py-8">
+    <section id="work" className="border-t border-editorial-divider py-8 scroll-mt-24">
       <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-        02 / Projects
+        {label}
       </div>
       <div className="h-px bg-editorial-divider mb-12" />
 

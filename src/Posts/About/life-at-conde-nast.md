@@ -2,6 +2,7 @@
 title: "Life at Conde Nast"
 sno: "1"
 date: "30 Jan 2026"
+image: "/assets/conde-nast.jpeg"
 ---
 
 It was 2023, Me being in a new city, Bengaluru, nearing the end of the startup I was working on. Starting to apply for full time role during a time when top companies were pausing interviews. Got a call from Conde Nast for an interview for which I was shortlisted months back. Gave my 3 rounds of interview, this must be the coolest and most casual interview I gave. Conde Nast came into my life when I needed it exactly.
