@@ -34,13 +34,58 @@ const STACK: { title: string; path: string; hex: string }[] = [
 
 // Overlapping placements for the tech icons — mixed sizes, piled.
 const TECH_LAYOUT = [
-  { x: 0, y: 14, size: 58, rot: -10 },
-  { x: 44, y: 0, size: 42, rot: 9 },
-  { x: 74, y: 30, size: 66, rot: -6 },
-  { x: 18, y: 50, size: 48, rot: 13 },
-  { x: 58, y: 68, size: 38, rot: -14 },
-  { x: 104, y: 6, size: 52, rot: 7 },
+  { x: 0, y: 14, size: 62, rot: -10 },
+  { x: 48, y: 0, size: 50, rot: 9 },
+  { x: 80, y: 30, size: 70, rot: -6 },
+  { x: 20, y: 54, size: 56, rot: 13 },
+  { x: 62, y: 72, size: 48, rot: -14 },
+  { x: 112, y: 8, size: 56, rot: 7 },
 ];
+
+// Die-cut sticker backing per tech icon — flat colour + shape, like a sticker sheet.
+const TECH_STICKERS = [
+  { bg: "#61DAFB", fg: "#1a1a1a", shape: "circle" },
+  { bg: "#2FA84F", fg: "#ffffff", shape: "squircle" },
+  { bg: "#F4B740", fg: "#1a1a1a", shape: "sun" },
+  { bg: "#6C63FF", fg: "#ffffff", shape: "oval" },
+  { bg: "#1F6E6E", fg: "#ffffff", shape: "rect" },
+  { bg: "#F7A8C4", fg: "#1a1a1a", shape: "circle" },
+];
+
+// Sunburst clip-path: alternating outer/inner radii around a circle.
+const sunburst = (spikes = 12, outer = 50, inner = 33) => {
+  const pts: string[] = [];
+  const total = spikes * 2;
+  for (let i = 0; i < total; i++) {
+    const r = i % 2 === 0 ? outer : inner;
+    const ang = (Math.PI * 2 * i) / total - Math.PI / 2;
+    pts.push(
+      `${(50 + r * Math.cos(ang)).toFixed(1)}% ${(50 + r * Math.sin(ang)).toFixed(1)}%`,
+    );
+  }
+  return `polygon(${pts.join(", ")})`;
+};
+const SUN_CLIP = sunburst();
+
+const shapeDims = (
+  shape: string,
+  size: number,
+): { w: number; h: number; radius: number | string } => {
+  switch (shape) {
+    case "squircle":
+      return { w: size, h: size, radius: size * 0.34 };
+    case "blob":
+      return { w: size, h: size, radius: "62% 38% 55% 45% / 58% 50% 50% 42%" };
+    case "oval":
+      return { w: Math.round(size * 1.4), h: size, radius: 9999 };
+    case "rect":
+      return { w: Math.round(size * 1.3), h: Math.round(size * 0.9), radius: 14 };
+    case "sun":
+      return { w: Math.round(size * 1.25), h: Math.round(size * 1.25), radius: 0 };
+    default: // circle
+      return { w: size, h: size, radius: 9999 };
+  }
+};
 
 // Rotations/offsets that make a small group read as a tossed-down pile.
 const PILE_TF = [
@@ -157,25 +202,31 @@ const App = () => {
       <div className="hidden lg:block absolute inset-0">
         {/* Name — sits behind the portrait's head */}
         <h1
-          className="absolute left-1/2 top-[15%] -translate-x-1/2 z-10 text-center font-display font-black leading-none whitespace-nowrap select-none"
+          className="absolute left-1/2 top-[9%] -translate-x-1/2 z-10 text-center font-display font-black leading-none whitespace-nowrap select-none"
           style={{ fontSize: "clamp(5rem, 13vw, 12rem)" }}
         >
           Vishal R
         </h1>
 
-        {/* Portrait — hero cutout sticker, dead center */}
+        {/* Portrait — hero cutout sticker, flush to the bottom-middle. The jpeg
+            has empty space under the shoulders, so a negative bottom pulls the
+            subject down to the screen edge. */}
         <img
           src="/assets/vishal-pic.jpeg"
           alt="Vishal R"
-          className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 z-20 w-[24rem] xl:w-[27rem] select-none pointer-events-none"
+          className="absolute left-1/2 -bottom-12 -translate-x-1/2 z-20 block w-[24rem] xl:w-[27rem] select-none pointer-events-none"
           style={{ mixBlendMode: "lighten" }}
         />
 
-        {/* Tech stack — bare icons, mixed sizes, piled at the portrait's lower-left */}
-        <div className="absolute left-1/2 top-[60%] -translate-x-[19rem] xl:-translate-x-[21rem] z-30">
-          <div className="relative w-40 h-32">
+        {/* Tech stack — bare icons piled on the portrait's left shoulder (z above it) */}
+        <div className="absolute left-1/2 top-[80%] -translate-x-[11rem] xl:-translate-x-[12rem] z-30">
+          <div className="relative w-44 h-36">
             {STACK.map((s, i) => {
               const t = TECH_LAYOUT[i % TECH_LAYOUT.length];
+              const st = TECH_STICKERS[i % TECH_STICKERS.length];
+              const { w, h, radius } = shapeDims(st.shape, t.size);
+              const isSun = st.shape === "sun";
+              const icon = Math.round(Math.min(w, h) * (isSun ? 0.36 : 0.52));
               return (
                 <div
                   key={s.title}
@@ -184,13 +235,26 @@ const App = () => {
                     left: t.x,
                     top: t.y,
                     transform: `rotate(${t.rot}deg)`,
-                    filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.55))",
+                    filter: "drop-shadow(0 4px 7px rgba(0,0,0,0.5))",
+                    zIndex: isSun ? 30 : undefined,
                   }}
                   className="absolute transition-transform duration-300 ease-out hover:!rotate-0 hover:scale-125 hover:z-50"
                 >
-                  <svg viewBox="0 0 24 24" width={t.size} height={t.size} fill={s.hex}>
-                    <path d={s.path} />
-                  </svg>
+                  <div
+                    className="flex items-center justify-center"
+                    style={{
+                      width: w,
+                      height: h,
+                      background: st.bg,
+                      ...(isSun
+                        ? { clipPath: SUN_CLIP }
+                        : { borderRadius: radius }),
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" width={icon} height={icon} fill={st.fg}>
+                      <path d={s.path} />
+                    </svg>
+                  </div>
                 </div>
               );
             })}
@@ -317,8 +381,8 @@ const App = () => {
           </div>
         </div>
 
-        {/* ── Bottom-center: minimal nav / socials ── */}
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-6 text-[10px] uppercase tracking-[0.2em] text-editorial-label">
+        {/* ── Below the name: minimal nav / socials ── */}
+        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 z-40 flex items-center gap-6 text-[10px] uppercase tracking-[0.2em] text-editorial-label">
           <Link to="/about" className="hover:text-editorial-text transition-colors">
             About
           </Link>
