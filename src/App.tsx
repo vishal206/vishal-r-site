@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, ReactNode } from "react";
+import { useState, useEffect, useMemo, ReactNode, CSSProperties } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
@@ -25,9 +25,17 @@ const OPENAI_PATH =
 
 const STACK: { title: string; path: string; hex: string }[] = [
   { title: siReact.title, path: siReact.path, hex: `#${siReact.hex}` },
-  { title: siNodedotjs.title, path: siNodedotjs.path, hex: `#${siNodedotjs.hex}` },
+  {
+    title: siNodedotjs.title,
+    path: siNodedotjs.path,
+    hex: `#${siNodedotjs.hex}`,
+  },
   { title: siPython.title, path: siPython.path, hex: `#${siPython.hex}` },
-  { title: siLangchain.title, path: siLangchain.path, hex: `#${siLangchain.hex}` },
+  {
+    title: siLangchain.title,
+    path: siLangchain.path,
+    hex: `#${siLangchain.hex}`,
+  },
   { title: "OpenAI", path: OPENAI_PATH, hex: "#10A37F" },
   { title: siQlik.title, path: siQlik.path, hex: `#${siQlik.hex}` },
 ];
@@ -42,30 +50,21 @@ const TECH_LAYOUT = [
   { x: 112, y: 8, size: 56, rot: 7 },
 ];
 
-// Die-cut sticker backing per tech icon — flat colour + shape, like a sticker sheet.
-const TECH_STICKERS = [
+// Die-cut sticker backing per tech icon — flat colour + shape, like a sticker
+// sheet. `img` overrides the shape with a ready-made sticker PNG.
+const TECH_STICKERS: {
+  bg?: string;
+  fg?: string;
+  shape?: string;
+  img?: string;
+}[] = [
   { bg: "#61DAFB", fg: "#1a1a1a", shape: "circle" },
   { bg: "#2FA84F", fg: "#ffffff", shape: "squircle" },
-  { bg: "#F4B740", fg: "#1a1a1a", shape: "sun" },
+  { img: "/assets/stickers/python-sticker.png" },
   { bg: "#6C63FF", fg: "#ffffff", shape: "oval" },
   { bg: "#1F6E6E", fg: "#ffffff", shape: "rect" },
   { bg: "#F7A8C4", fg: "#1a1a1a", shape: "circle" },
 ];
-
-// Sunburst clip-path: alternating outer/inner radii around a circle.
-const sunburst = (spikes = 12, outer = 50, inner = 33) => {
-  const pts: string[] = [];
-  const total = spikes * 2;
-  for (let i = 0; i < total; i++) {
-    const r = i % 2 === 0 ? outer : inner;
-    const ang = (Math.PI * 2 * i) / total - Math.PI / 2;
-    pts.push(
-      `${(50 + r * Math.cos(ang)).toFixed(1)}% ${(50 + r * Math.sin(ang)).toFixed(1)}%`,
-    );
-  }
-  return `polygon(${pts.join(", ")})`;
-};
-const SUN_CLIP = sunburst();
 
 const shapeDims = (
   shape: string,
@@ -79,24 +78,65 @@ const shapeDims = (
     case "oval":
       return { w: Math.round(size * 1.4), h: size, radius: 9999 };
     case "rect":
-      return { w: Math.round(size * 1.3), h: Math.round(size * 0.9), radius: 14 };
-    case "sun":
-      return { w: Math.round(size * 1.25), h: Math.round(size * 1.25), radius: 0 };
+      return {
+        w: Math.round(size * 1.3),
+        h: Math.round(size * 0.9),
+        radius: 14,
+      };
     default: // circle
       return { w: size, h: size, radius: 9999 };
   }
 };
 
-// Rotations/offsets that make a small group read as a tossed-down pile.
-const PILE_TF = [
-  "rotate(-8deg)",
-  "translate(34px, 30px) rotate(7deg)",
-  "translate(10px, 58px) rotate(-4deg)",
+// Each corner pile hides its items behind a sticker at rest, then fans them out
+// diagonally away from the corner on hover (rabbit-from-a-bush). REST = near the
+// corner (hidden); SPREAD = fanned toward the interior, covering the sticker.
+type Pos = { x: number; y: number; r: number };
+
+// Top-left — spread down-right.
+const MOVIE_REST: Pos[] = [
+  { x: 6, y: 0, r: -8 },
+  { x: 22, y: 12, r: 7 },
+  { x: 12, y: 24, r: -3 },
+];
+const MOVIE_SPREAD: Pos[] = [
+  { x: 58, y: 66, r: -12 },
+  { x: 128, y: 92, r: 11 },
+  { x: 88, y: 150, r: -6 },
 ];
 
-// The blog pile is a circular "bunch": the 3 latest sit on top in the middle,
-// the rest ring around behind them in a random-looking circular scatter.
-const bunchTf = (i: number, n: number) => {
+// Top-right — spread down-left.
+const PROJECT_REST: Pos[] = [
+  { x: 110, y: 2, r: 8 },
+  { x: 96, y: 16, r: -6 },
+  { x: 118, y: 30, r: 4 },
+];
+const PROJECT_SPREAD: Pos[] = [
+  { x: 70, y: 60, r: -11 },
+  { x: 14, y: 92, r: 9 },
+  { x: 96, y: 138, r: -5 },
+];
+
+// Bottom-left — spread up-right.
+const BOOK_REST: Pos[] = [
+  { x: 2, y: 80, r: -7 },
+  { x: 18, y: 64, r: 6 },
+  { x: 10, y: 98, r: -3 },
+];
+const BOOK_SPREAD: Pos[] = [
+  { x: 56, y: 10, r: 10 },
+  { x: 120, y: 40, r: -8 },
+  { x: 92, y: -6, r: 5 },
+];
+
+// Blog (bottom-right): rest clustered behind the sticker, spread into a circular
+// bunch — 3 latest on top, the rest ringed around behind them.
+const blogRest = (i: number): Pos => ({
+  x: 96 + ((i % 3) - 1) * 7,
+  y: 120 + Math.floor(i / 3) * 3 - 4,
+  r: i % 2 ? 5 : -5,
+});
+const bunchPos = (i: number, n: number): Pos => {
   if (i < 3) {
     const spots: [number, number, number][] = [
       [0, 0, -5],
@@ -104,63 +144,77 @@ const bunchTf = (i: number, n: number) => {
       [-14, 16, -9],
     ];
     const [x, y, r] = spots[i];
-    return `translate(${x}px, ${y}px) rotate(${r}deg)`;
+    return { x, y, r };
   }
   const ringCount = Math.max(n - 3, 1);
   const k = i - 3;
   const ang = (k / ringCount) * Math.PI * 2 + 0.5;
-  const rad = 60 + Math.sin(i * 53.3) * 16; // jittered radius
+  const rad = 60 + Math.sin(i * 53.3) * 16;
   const x = Math.cos(ang) * rad + Math.sin(i * 17.1) * 8;
-  const y = Math.sin(ang) * rad + 28 + Math.cos(i * 11.7) * 8; // ring nudged down
-  const rot = Math.sin(i * 12.9) * 18;
-  return `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) rotate(${rot.toFixed(1)}deg)`;
+  const y = Math.sin(ang) * rad + 28 + Math.cos(i * 11.7) * 8;
+  const r = Math.sin(i * 12.9) * 18;
+  return { x, y, r };
 };
 
-// A single sticker in a pile: absolutely stacked, straightens + lifts on hover.
-const PileItem = ({
-  i,
-  tf,
-  z,
-  onClick,
-  title,
-  children,
+// A corner pile: items hidden behind a sticker at rest, fanned out on hover.
+const CornerPile = ({
+  wrapperClass,
+  boxClass,
+  items,
+  rest,
+  spread,
+  sticker,
+  stickerStyle,
+  restScale = 0.85,
+  hoverScale = 1.05,
 }: {
-  i: number;
-  tf?: string;
-  z?: number;
-  onClick?: () => void;
-  title?: string;
-  children: ReactNode;
-}) => (
-  <div
-    onClick={onClick}
-    title={title}
-    style={{ transform: tf ?? PILE_TF[i % PILE_TF.length], zIndex: z }}
-    className="absolute top-0 left-0 cursor-pointer hover:!z-50"
-  >
-    <div className="transition-transform duration-300 ease-out hover:rotate-0 hover:scale-110 hover:-translate-y-1.5">
-      {children}
+  wrapperClass: string;
+  boxClass: string;
+  items: { key: string; title: string; onClick: () => void; node: ReactNode }[];
+  rest: Pos[];
+  spread: Pos[];
+  sticker: ReactNode;
+  stickerStyle: CSSProperties;
+  restScale?: number;
+  hoverScale?: number;
+}) => {
+  const [hover, setHover] = useState(false);
+  return (
+    <div className={wrapperClass}>
+      <div className={boxClass}>
+        {items.map((it, i) => {
+          const p = hover ? spread[i % spread.length] : rest[i % rest.length];
+          return (
+            <div
+              key={it.key}
+              title={it.title}
+              onClick={it.onClick}
+              style={{
+                zIndex: items.length - i,
+                transform: `translate(${p.x}px, ${p.y}px) rotate(${p.r}deg) scale(${hover ? hoverScale : restScale})`,
+              }}
+              className="absolute top-0 left-0 cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+            >
+              {it.node}
+            </div>
+          );
+        })}
+        <div
+          className="absolute"
+          style={stickerStyle}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+        >
+          {sticker}
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Shared die-cut sticker chrome: thick white edge + lift shadow.
 const STICKER =
   "border-[3px] border-white bg-editorial-bg shadow-[0_12px_28px_-8px_rgba(0,0,0,0.8)]";
-
-const SectionLabel = ({ to, children }: { to?: string; children: ReactNode }) =>
-  to ? (
-    <Link
-      to={to}
-      className="inline-block text-[10px] uppercase tracking-[0.22em] text-available hover:opacity-70 transition-opacity"
-    >
-      {children}
-    </Link>
-  ) : (
-    <span className="inline-block text-[10px] uppercase tracking-[0.22em] text-editorial-label">
-      {children}
-    </span>
-  );
 
 const App = () => {
   const navigate = useNavigate();
@@ -212,7 +266,7 @@ const App = () => {
             has empty space under the shoulders, so a negative bottom pulls the
             subject down to the screen edge. */}
         <img
-          src="/assets/vishal-pic.jpeg"
+          src="/assets/vishal-pic.png"
           alt="Vishal R"
           className="absolute left-1/2 -bottom-12 -translate-x-1/2 z-20 block w-[24rem] xl:w-[27rem] select-none pointer-events-none"
           style={{ mixBlendMode: "lighten" }}
@@ -224,9 +278,12 @@ const App = () => {
             {STACK.map((s, i) => {
               const t = TECH_LAYOUT[i % TECH_LAYOUT.length];
               const st = TECH_STICKERS[i % TECH_STICKERS.length];
-              const { w, h, radius } = shapeDims(st.shape, t.size);
-              const isSun = st.shape === "sun";
-              const icon = Math.round(Math.min(w, h) * (isSun ? 0.36 : 0.52));
+              const dims = st.img
+                ? null
+                : shapeDims(st.shape ?? "circle", t.size);
+              const icon = dims
+                ? Math.round(Math.min(dims.w, dims.h) * 0.52)
+                : 0;
               return (
                 <div
                   key={s.title}
@@ -236,25 +293,37 @@ const App = () => {
                     top: t.y,
                     transform: `rotate(${t.rot}deg)`,
                     filter: "drop-shadow(0 4px 7px rgba(0,0,0,0.5))",
-                    zIndex: isSun ? 30 : undefined,
+                    zIndex: st.img ? 30 : undefined,
                   }}
                   className="absolute transition-transform duration-300 ease-out hover:!rotate-0 hover:scale-125 hover:z-50"
                 >
-                  <div
-                    className="flex items-center justify-center"
-                    style={{
-                      width: w,
-                      height: h,
-                      background: st.bg,
-                      ...(isSun
-                        ? { clipPath: SUN_CLIP }
-                        : { borderRadius: radius }),
-                    }}
-                  >
-                    <svg viewBox="0 0 24 24" width={icon} height={icon} fill={st.fg}>
-                      <path d={s.path} />
-                    </svg>
-                  </div>
+                  {st.img ? (
+                    <img
+                      src={st.img}
+                      alt={s.title}
+                      style={{ width: Math.round(t.size * 1.5) }}
+                      className="block select-none pointer-events-none"
+                    />
+                  ) : (
+                    <div
+                      className="flex items-center justify-center"
+                      style={{
+                        width: dims!.w,
+                        height: dims!.h,
+                        background: st.bg,
+                        borderRadius: dims!.radius,
+                      }}
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        width={icon}
+                        height={icon}
+                        fill={st.fg}
+                      >
+                        <path d={s.path} />
+                      </svg>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -262,142 +331,224 @@ const App = () => {
         </div>
 
         {/* ── Top-left: Movies as CDs ── */}
-        <div className="absolute top-8 left-8 z-30">
-          <div className="mb-3">
-            <SectionLabel to="/movies">Movies →</SectionLabel>
-          </div>
-          <div className="relative w-52 h-52">
-            {movies.map((post, i) => (
-              <PileItem
-                key={post.slug}
-                i={i}
-                title={post.title}
-                onClick={() => navigate(`/archive/${post.slug}`)}
+        <CornerPile
+          wrapperClass="absolute -top-16 -left-16 z-30"
+          boxClass="relative w-52 h-52"
+          rest={MOVIE_REST}
+          spread={MOVIE_SPREAD}
+          stickerStyle={{ left: 92, top: 96, zIndex: 40 }}
+          sticker={
+            <Link to="/movies">
+              <img
+                src="/assets/stickers/movie-sticker.png"
+                alt="Movies"
+                style={{
+                  width: 150,
+                  maxWidth: "none",
+                  transform: "rotate(-4deg)",
+                }}
+                className="block select-none transition-transform duration-300 ease-out hover:rotate-0 hover:scale-105"
+              />
+            </Link>
+          }
+          items={movies.map((post) => ({
+            key: post.slug,
+            title: post.title,
+            onClick: () => navigate(`/archive/${post.slug}`),
+            node: (
+              <div
+                style={{ filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.6))" }}
               >
-                <div style={{ filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.6))" }}>
-                  <MovieDisk post={post} tilt={0} diskClassName="w-28 h-28" />
-                </div>
-              </PileItem>
-            ))}
-          </div>
-        </div>
+                <MovieDisk post={post} tilt={0} diskClassName="w-28 h-28" />
+              </div>
+            ),
+          }))}
+        />
 
         {/* ── Bottom-left: Books ── */}
-        <div className="absolute bottom-8 left-8 z-30">
-          <div className="relative w-52 h-56">
-            {books.slice(0, 3).map((book, i) => (
-              <PileItem
-                key={book.slug}
-                i={i}
-                title={book.title}
-                onClick={() => navigate(`/book/${book.slug}`)}
-              >
-                <div className={`w-24 rounded-md overflow-hidden ${STICKER}`}>
-                  {book.cover ? (
-                    <img
-                      src={book.cover}
-                      alt={book.title}
-                      className="w-full aspect-[2/3] object-cover"
-                    />
-                  ) : (
-                    <div
-                      className="w-full aspect-[2/3] flex items-center justify-center p-2 text-center text-[11px] font-display font-bold"
-                      style={{ background: book.accent || "#333" }}
-                    >
-                      {book.title}
-                    </div>
-                  )}
-                </div>
-              </PileItem>
-            ))}
-          </div>
-          <div className="mt-3">
-            <SectionLabel to="/books">Books →</SectionLabel>
-          </div>
-        </div>
-
-        {/* ── Top-right: Projects as icon stickers ── */}
-        <div className="absolute top-8 right-8 z-30 flex flex-col items-end">
-          <div className="mb-3">
-            <SectionLabel>Projects</SectionLabel>
-          </div>
-          <div className="relative w-52 h-52">
-            {projects.slice(0, 3).map((p, i) => (
-              <PileItem
-                key={p.slug}
-                i={i}
-                title={p.title}
-                onClick={() => navigate(`/projects/${p.slug}`)}
-              >
-                <div
-                  className={`w-24 h-24 rounded-2xl overflow-hidden flex items-center justify-center bg-white ${STICKER}`}
-                >
-                  {isImageLogo(p.logo) ? (
-                    <img
-                      src={p.logo}
-                      alt={p.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span className="text-4xl select-none">{p.logo || "📦"}</span>
-                  )}
-                </div>
-              </PileItem>
-            ))}
-          </div>
-        </div>
-
-        {/* ── Bottom-right: Blogs — circular bunch, 3 latest on top ── */}
-        <div className="absolute bottom-12 right-12 z-30 flex flex-col items-end">
-          <div className="relative w-52 h-52">
-            {writing.map((b, i) => (
-              <PileItem
-                key={b.slug}
-                i={i}
-                tf={bunchTf(i, writing.length)}
-                z={writing.length - i}
-                title={b.title}
-                onClick={() => navigate(`/archive/${b.slug}`)}
-              >
-                <div className={`w-32 rounded-xl overflow-hidden ${STICKER}`}>
-                  {b.image ? (
-                    <img
-                      src={b.image}
-                      alt={b.title}
-                      className="w-full h-20 object-cover"
-                    />
-                  ) : null}
-                  <div className="px-2.5 py-2">
-                    <p className="text-[13px] font-display font-bold leading-snug line-clamp-2">
-                      {b.title}
-                    </p>
+        <CornerPile
+          wrapperClass="absolute -bottom-16 -left-16 z-30"
+          boxClass="relative w-52 h-56"
+          rest={BOOK_REST}
+          spread={BOOK_SPREAD}
+          stickerStyle={{ left: 92, bottom: 50, zIndex: 40 }}
+          sticker={
+            <Link to="/books">
+              <img
+                src="/assets/stickers/book-sticker.png"
+                alt="Books"
+                style={{
+                  width: 120,
+                  maxWidth: "none",
+                  transform: "rotate(3deg)",
+                }}
+                className="block select-none transition-transform duration-300 ease-out hover:rotate-0 hover:scale-105"
+              />
+            </Link>
+          }
+          items={books.slice(0, 3).map((book) => ({
+            key: book.slug,
+            title: book.title,
+            onClick: () => navigate(`/book/${book.slug}`),
+            node: (
+              <div className={`w-24 rounded-md overflow-hidden ${STICKER}`}>
+                {book.cover ? (
+                  <img
+                    src={book.cover}
+                    alt={book.title}
+                    className="w-full aspect-[2/3] object-cover"
+                  />
+                ) : (
+                  <div
+                    className="w-full aspect-[2/3] flex items-center justify-center p-2 text-center text-[11px] font-display font-bold"
+                    style={{ background: book.accent || "#333" }}
+                  >
+                    {book.title}
                   </div>
+                )}
+              </div>
+            ),
+          }))}
+        />
+
+        {/* ── Top-right: Projects ── */}
+        <CornerPile
+          wrapperClass="absolute -top-16 -right-16 z-30"
+          boxClass="relative w-52 h-52"
+          rest={PROJECT_REST}
+          spread={PROJECT_SPREAD}
+          stickerStyle={{ right: 92, top: 96, zIndex: 40 }}
+          sticker={
+            <img
+              src="/assets/stickers/project-sticker.png"
+              alt="Projects"
+              style={{
+                width: 180,
+                maxWidth: "none",
+                transform: "rotate(-3deg)",
+              }}
+              className="block cursor-pointer select-none transition-transform duration-300 ease-out hover:rotate-0 hover:scale-105"
+            />
+          }
+          items={projects.slice(0, 3).map((p) => ({
+            key: p.slug,
+            title: p.title,
+            onClick: () => navigate(`/projects/${p.slug}`),
+            node: (
+              <div
+                className={`w-24 h-24 rounded-2xl overflow-hidden flex items-center justify-center bg-white ${STICKER}`}
+              >
+                {isImageLogo(p.logo) ? (
+                  <img
+                    src={p.logo}
+                    alt={p.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-4xl select-none">{p.logo || "📦"}</span>
+                )}
+              </div>
+            ),
+          }))}
+        />
+
+        {/* ── Bottom-right: Blogs — circular bunch ── */}
+        <CornerPile
+          wrapperClass="absolute -bottom-16 -right-16 z-30"
+          boxClass="relative w-52 h-52"
+          rest={writing.map((_, i) => blogRest(i))}
+          spread={writing.map((_, i) => bunchPos(i, writing.length))}
+          stickerStyle={{ right: 92, bottom: 96, zIndex: 40 }}
+          sticker={
+            <Link to="/archive">
+              <img
+                src="/assets/stickers/blog-sticker.png"
+                alt="Blog"
+                style={{ width: 170, maxWidth: "none", transform: "rotate(4deg)" }}
+                className="block select-none transition-transform duration-300 ease-out hover:rotate-0 hover:scale-105"
+              />
+            </Link>
+          }
+          items={writing.map((b) => ({
+            key: b.slug,
+            title: b.title,
+            onClick: () => navigate(`/archive/${b.slug}`),
+            node: (
+              <div className={`w-32 rounded-xl overflow-hidden ${STICKER}`}>
+                {b.image ? (
+                  <img
+                    src={b.image}
+                    alt={b.title}
+                    className="w-full h-20 object-cover"
+                  />
+                ) : null}
+                <div className="px-2.5 py-2">
+                  <p className="text-[13px] font-display font-bold leading-snug line-clamp-2">
+                    {b.title}
+                  </p>
                 </div>
-              </PileItem>
-            ))}
-          </div>
-          <div className="mt-3">
-            <SectionLabel to="/archive">Blog →</SectionLabel>
-          </div>
-        </div>
+              </div>
+            ),
+          }))}
+        />
 
         {/* ── Below the name: minimal nav / socials ── */}
         <div className="absolute top-[40%] left-1/2 -translate-x-1/2 z-40 flex items-center gap-6 text-[10px] uppercase tracking-[0.2em] text-editorial-label">
-          <Link to="/about" className="hover:text-editorial-text transition-colors">
+          <Link
+            to="/about"
+            className="hover:text-editorial-text transition-colors"
+          >
             About
           </Link>
-          <a href={Vishal_Resume} target="_blank" rel="noopener noreferrer" className="hover:text-editorial-text transition-colors">
+          <a
+            href={Vishal_Resume}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-editorial-text transition-colors"
+          >
             Résumé
           </a>
           <span className="flex items-center gap-4">
-            <a href="https://linkedin.com/in/vishal-r-profile" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-editorial-text transition-colors">
+            <a
+              href="https://linkedin.com/in/vishal-r-profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="hover:text-editorial-text transition-colors"
+            >
               <FontAwesomeIcon icon={faLinkedin} className="text-base" />
             </a>
-            <a href="https://github.com/vishal206" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="hover:text-editorial-text transition-colors">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" /></svg>
+            <a
+              href="https://github.com/vishal206"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="hover:text-editorial-text transition-colors"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" />
+              </svg>
             </a>
-            <a href="https://x.com/vishal_r_dev" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X" className="hover:text-editorial-text transition-colors">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+            <a
+              href="https://x.com/vishal_r_dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Twitter / X"
+              className="hover:text-editorial-text transition-colors"
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
             </a>
           </span>
         </div>
@@ -409,15 +560,21 @@ const App = () => {
           Vishal R
         </h1>
         <img
-          src="/assets/vishal-pic.jpeg"
+          src="/assets/vishal-pic.png"
           alt="Vishal R"
           className="w-56 select-none"
           style={{ mixBlendMode: "lighten" }}
         />
         <div className="flex flex-wrap justify-center gap-3 mt-6">
           {STACK.map((s) => (
-            <div key={s.title} title={s.title} className={`w-11 h-11 rounded-full flex items-center justify-center bg-white ${STICKER}`}>
-              <svg viewBox="0 0 24 24" width="20" height="20" fill={s.hex}><path d={s.path} /></svg>
+            <div
+              key={s.title}
+              title={s.title}
+              className={`w-11 h-11 rounded-full flex items-center justify-center bg-white ${STICKER}`}
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill={s.hex}>
+                <path d={s.path} />
+              </svg>
             </div>
           ))}
         </div>
@@ -440,10 +597,45 @@ const App = () => {
         </nav>
 
         <div className="flex items-center gap-6 mt-8 text-editorial-label">
-          <a href={Vishal_Resume} target="_blank" rel="noopener noreferrer" className="text-[10px] uppercase tracking-[0.2em] hover:text-editorial-text">Résumé</a>
-          <a href="https://linkedin.com/in/vishal-r-profile" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-editorial-text"><FontAwesomeIcon icon={faLinkedin} className="text-base" /></a>
-          <a href="https://github.com/vishal206" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="hover:text-editorial-text"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" /></svg></a>
-          <a href="https://x.com/vishal_r_dev" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X" className="hover:text-editorial-text"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg></a>
+          <a
+            href={Vishal_Resume}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] uppercase tracking-[0.2em] hover:text-editorial-text"
+          >
+            Résumé
+          </a>
+          <a
+            href="https://linkedin.com/in/vishal-r-profile"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            className="hover:text-editorial-text"
+          >
+            <FontAwesomeIcon icon={faLinkedin} className="text-base" />
+          </a>
+          <a
+            href="https://github.com/vishal206"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            className="hover:text-editorial-text"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" />
+            </svg>
+          </a>
+          <a
+            href="https://x.com/vishal_r_dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Twitter / X"
+            className="hover:text-editorial-text"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          </a>
         </div>
       </div>
     </div>
