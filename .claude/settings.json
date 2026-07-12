@@ -31,7 +31,15 @@
       "Bash(curl -s http://localhost:5173/src/App.tsx -o /dev/null -w \"App.tsx transforms: HTTP %{http_code}\\\\n\")",
       "Bash(curl -s http://localhost:5173/src/App.tsx)",
       "Bash(node -e \"const s=require\\('simple-icons'\\); ['siReact','siNodedotjs','siPython','siLangchain','siOpenai','siQlik'].forEach\\(k=>console.log\\(k, s[k]?\\('OK '+s[k].title\\):'MISSING'\\)\\)\")",
-      "Bash(node -e \"const s=require\\('simple-icons'\\); Object.keys\\(s\\).filter\\(k=>/ai$|openai|gpt/i.test\\(k\\)&&s[k]&&s[k].title\\).slice\\(0,20\\).forEach\\(k=>console.log\\(k, s[k].title\\)\\)\")"
+      "Bash(node -e \"const s=require\\('simple-icons'\\); Object.keys\\(s\\).filter\\(k=>/ai$|openai|gpt/i.test\\(k\\)&&s[k]&&s[k].title\\).slice\\(0,20\\).forEach\\(k=>console.log\\(k, s[k].title\\)\\)\")",
+      "Read(//private/tmp/**)",
+      "Bash(rm -f /tmp/f-*.png /tmp/vite-dev.log)",
+      "Bash(git checkout *)",
+      "Bash(pkill -f vite)",
+      "Bash(rm -f /tmp/dock-home.png /tmp/dock-open.png /tmp/vite-dev.log)",
+      "Bash(rm -f /tmp/home.png /tmp/open.png /tmp/vite-dev.log)",
+      "Bash(rm -f /tmp/dock.png /tmp/vite-dev.log)",
+      "Bash(rm -f /tmp/dock2.png /tmp/vite-dev.log)"
     ]
   }
 }
