@@ -10,6 +10,7 @@ interface UnifiedEntry {
   title: string;
   date: string;
   tags?: string;
+  image?: string;
   type: "blog";
 }
 
@@ -52,6 +53,7 @@ const ArchivePage: React.FC = () => {
     title: b.title,
     date: b.date,
     tags: b.tags,
+    image: b.image,
     type: "blog",
   }));
 
@@ -143,35 +145,36 @@ const ArchivePage: React.FC = () => {
               </div>
             ) : (
               <>
-                <div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
                   {pagedEntries.map((entry) => (
                     <Link
                       key={`${entry.type}-${entry.slug}`}
                       to={`/archive/${entry.slug}`}
-                      className="group flex items-start gap-4 md:gap-8 py-5 md:py-6 border-b border-editorial-divider"
+                      className="group flex flex-col"
                     >
-                      {/* Date — desktop only */}
-                      <div className="hidden md:block text-[10px] uppercase tracking-[0.18em] text-editorial-label whitespace-nowrap w-28 shrink-0 pt-1.5">
-                        {formatDate(entry.date)}
-                      </div>
-
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-1.5">
-                          {entry.tags || "Essay"}
-                          <span className="md:hidden text-editorial-label ml-2">
-                            · {formatDate(entry.date)}
-                          </span>
+                      {/* Cover image — shown only when the post has one */}
+                      {entry.image && (
+                        <div className="aspect-[3/2] w-full overflow-hidden rounded-xl mb-4">
+                          <img
+                            src={entry.image}
+                            alt={entry.title}
+                            loading="lazy"
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
                         </div>
-                        <h3 className="text-lg md:text-2xl font-display font-bold text-editorial-text leading-tight group-hover:opacity-70 transition-opacity">
-                          {entry.title}
-                        </h3>
-                      </div>
+                      )}
 
-                      {/* Arrow */}
-                      <div className="text-editorial-label pt-1 md:pt-1.5 shrink-0 group-hover:text-editorial-text transition-colors text-sm">
-                        ↗
+                      <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] mb-2">
+                        <span className="text-available">
+                          {entry.tags || "Essay"}
+                        </span>
+                        <span className="text-editorial-label">
+                          · {formatDate(entry.date)}
+                        </span>
                       </div>
+                      <h3 className="text-lg md:text-xl font-display font-bold text-editorial-text leading-tight group-hover:opacity-70 transition-opacity">
+                        {entry.title}
+                      </h3>
                     </Link>
                   ))}
                 </div>
