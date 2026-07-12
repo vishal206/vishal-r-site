@@ -26,7 +26,12 @@
       "Bash(cat)",
       "Bash(echo \"EXIT=$?\")",
       "Bash(git show HEAD --name-only | grep \"^src/Posts/BlogPosts\" | sed 's/^src\\\\/Posts\\\\/BlogPosts\\\\///' | sort > /tmp/committed.txt *)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(curl -s http://localhost:5173/ -o /dev/null -w \"HTTP %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:5173/src/App.tsx -o /dev/null -w \"App.tsx transforms: HTTP %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:5173/src/App.tsx)",
+      "Bash(node -e \"const s=require\\('simple-icons'\\); ['siReact','siNodedotjs','siPython','siLangchain','siOpenai','siQlik'].forEach\\(k=>console.log\\(k, s[k]?\\('OK '+s[k].title\\):'MISSING'\\)\\)\")",
+      "Bash(node -e \"const s=require\\('simple-icons'\\); Object.keys\\(s\\).filter\\(k=>/ai$|openai|gpt/i.test\\(k\\)&&s[k]&&s[k].title\\).slice\\(0,20\\).forEach\\(k=>console.log\\(k, s[k].title\\)\\)\")"
     ]
   }
 }
