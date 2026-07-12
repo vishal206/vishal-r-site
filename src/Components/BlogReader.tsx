@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
-import SiteHeader from "./SiteHeader";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import MovieDisk from "./MovieDisk";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { setExclusionRect } from "../Utils/exclusionZone";
@@ -142,6 +141,7 @@ const getWindow = (all: SidebarEntry[], slug: string): SidebarEntry[] => {
 
 const BlogReader = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
 
   // Markdown is eager-bundled (see markdownLoader), so the entry and sidebar are
   // resolved synchronously on the first render. This means the prerendered HTML
@@ -185,10 +185,9 @@ const BlogReader = () => {
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-      <SiteHeader />
-      <div className="px-6 md:px-12 pb-6 max-w-screen-xl mx-auto">
+      <div className="px-6 md:px-12 pt-8 md:pt-10 pb-16 max-w-screen-xl mx-auto">
         {/* ── Article header ── */}
-        <div className="pt-10 md:pt-14 pb-8 md:pb-12 border-b border-editorial-divider">
+        <div className="pb-8 md:pb-12 border-b border-editorial-divider">
           <div className="flex items-center gap-4 mb-8">
             <span className="text-[10px] uppercase tracking-[0.22em] text-available">
               {entry.label}
@@ -345,6 +344,24 @@ const BlogReader = () => {
             })()}
         </div>
       </div>
+
+      {/* ── Home sticker, fixed bottom-right, just left of the scroll-to-top ── */}
+      <button
+        onClick={() => navigate("/")}
+        aria-label="Home"
+        className="fixed bottom-6 right-20 z-50 flex flex-col items-center gap-1 cursor-pointer group"
+      >
+        <img
+          src="/assets/stickers/vishal-sticker.png"
+          alt="Home"
+          style={{ transform: "rotate(-2deg)" }}
+          className="h-12 md:h-14 w-auto select-none transition-transform duration-300 ease-out group-hover:-translate-y-0.5"
+        />
+        <span className="text-[9px] uppercase tracking-[0.2em] text-editorial-label group-hover:text-editorial-text transition-colors">
+          Home
+        </span>
+      </button>
+
       <ScrollToTopButton />
     </div>
   );
