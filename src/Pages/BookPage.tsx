@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
-import SiteHeader from "../components/SiteHeader";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import { CustomMarkdownReader } from "../components/CustomMarkdownReader";
 import Book3D from "../components/Book3D";
@@ -12,6 +11,7 @@ import { loadBookFileSync, getBooksSync } from "../Utils/markdownLoader";
 
 const BookPage: React.FC = () => {
   const { slug = "" } = useParams();
+  const navigate = useNavigate();
   const book = useMemo(() => loadBookFileSync(slug), [slug]);
 
   // Other books on the shelf — a window of up to 2 newer + current + 2 older,
@@ -29,7 +29,6 @@ const BookPage: React.FC = () => {
   if (!book) {
     return (
       <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-        <SiteHeader activePage="books" />
         <div className="max-w-2xl mx-auto px-6 py-24 text-center">
           <p className="text-editorial-label mb-6">Book not found.</p>
           <Link
@@ -47,10 +46,9 @@ const BookPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary">
-      <SiteHeader activePage="books" />
-      <div className="px-6 md:px-12 pb-6 max-w-screen-xl mx-auto">
+      <div className="px-6 md:px-12 pt-8 md:pt-10 pb-16 max-w-screen-xl mx-auto">
         {/* ── Article header ── */}
-        <div className="pt-10 md:pt-14 pb-8 md:pb-12 border-b border-editorial-divider">
+        <div className="pb-8 md:pb-12 border-b border-editorial-divider">
           <div className="flex items-center gap-4 mb-8">
             <span className="text-[10px] uppercase tracking-[0.22em] text-available">
               Book
@@ -155,6 +153,24 @@ const BookPage: React.FC = () => {
           </article>
         </div>
       </div>
+
+      {/* ── Home sticker, fixed bottom-right, just left of the scroll-to-top ── */}
+      <button
+        onClick={() => navigate("/")}
+        aria-label="Home"
+        className="fixed bottom-6 right-20 z-50 flex flex-col items-center gap-1 cursor-pointer group"
+      >
+        <img
+          src="/assets/stickers/vishal-sticker.png"
+          alt="Home"
+          style={{ transform: "rotate(-2deg)" }}
+          className="h-12 md:h-14 w-auto select-none transition-transform duration-300 ease-out group-hover:-translate-y-0.5"
+        />
+        <span className="text-[9px] uppercase tracking-[0.2em] text-editorial-label group-hover:text-editorial-text transition-colors">
+          Home
+        </span>
+      </button>
+
       <ScrollToTopButton />
     </div>
   );

@@ -87,7 +87,7 @@ const BlogSection: React.FC = () => {
       </div>
 
       {/* ── Body ── */}
-      <div className="flex flex-col md:flex-row mt-6 md:mt-12">
+      <div className="flex flex-col md:flex-row">
         {/* Left sidebar — desktop only */}
         <aside className="hidden md:block w-44 shrink-0 border-r border-editorial-divider pr-8">
           <div className="text-[9px] uppercase tracking-[0.22em] text-editorial-label mb-5">

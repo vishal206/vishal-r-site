@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import SiteHeader from "../components/SiteHeader";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import { setExclusionRect } from "../Utils/exclusionZone";
 import {
@@ -123,11 +122,6 @@ const ProjectPage = () => {
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-text font-primary flex flex-col">
-
-      {/* ── Desktop header ── */}
-      <div className="hidden md:block shrink-0">
-        <SiteHeader />
-      </div>
 
       {/* ── Mobile header — project-specific ── */}
       <header className="md:hidden px-6 py-4 flex items-center justify-between border-b border-editorial-divider shrink-0">
