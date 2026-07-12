@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
 import { getBlogPostsSync } from "../Utils/functions";
-import MovieDisk from "../components/MovieDisk";
 
 type FilterType = "all" | string;
 
@@ -30,7 +29,7 @@ const formatDate = (dateStr: string): string => {
   }
 };
 
-const TAGS = ["Devlog", "Movie", "Tech", "Life"];
+const TAGS = ["Devlog", "Tech", "Life"];
 const ALL_FILTERS = [
   { key: "all", label: "All Entries" },
   ...TAGS.map((t) => ({ key: t, label: t })),
@@ -39,7 +38,11 @@ const ALL_FILTERS = [
 const ArchivePage: React.FC = () => {
   // Eager-bundled markdown → resolve synchronously so the prerendered HTML and
   // the client's first render match (clean hydration, no loading flash).
-  const blogs = useMemo(() => getBlogPostsSync(), []);
+  // Movies live in their own section (/movies) now — keep them out of the blog.
+  const blogs = useMemo(
+    () => getBlogPostsSync().filter((b) => b.tags !== "Movie"),
+    [],
+  );
   const [filter, setFilter] = useState<FilterType>("all");
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
@@ -134,26 +137,7 @@ const ArchivePage: React.FC = () => {
 
           {/* Right — entry list / disk view */}
           <main className="flex-1 md:pl-12">
-            {filter === "Movie" ? (
-              /* ── Disk view for Movie filter ── */
-              blogs.filter((p) => p.tags === "Movie").length === 0 ? (
-                <div className="text-editorial-label text-sm py-6">
-                  No movies found.
-                </div>
-              ) : (
-                <div className="flex flex-wrap gap-10 md:gap-16 pt-10 pb-6 items-end">
-                  {blogs
-                    .filter((p) => p.tags === "Movie")
-                    .map((post, i) => (
-                      <MovieDisk
-                        key={post.slug}
-                        post={post}
-                        tilt={i % 2 === 0 ? -5 : 4}
-                      />
-                    ))}
-                </div>
-              )
-            ) : filteredEntries.length === 0 ? (
+            {filteredEntries.length === 0 ? (
               <div className="text-editorial-label text-sm py-6">
                 No entries found.
               </div>

@@ -319,8 +319,16 @@ const App = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 md:items-start gap-0 border-t border-editorial-divider">
           {/* Left — 03 / Movie */}
           <div className="md:border-r border-editorial-divider md:pr-12 py-8">
-            <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label mb-5">
-              03 / Movie
+            <div className="flex items-center justify-between mb-5">
+              <div className="text-[10px] uppercase tracking-[0.22em] text-editorial-label">
+                03 / Movie
+              </div>
+              <Link
+                to="/movies"
+                className="text-[10px] uppercase tracking-[0.2em] text-available hover:opacity-70 transition-opacity"
+              >
+                All movies →
+              </Link>
             </div>
             <div className="h-px bg-editorial-divider" />
 

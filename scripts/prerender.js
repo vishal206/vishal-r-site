@@ -83,6 +83,7 @@ const buildRoutes = () => {
   const routes = [
     { url: "/archive", out: "archive.html" },
     { url: "/books", out: "books.html" },
+    { url: "/movies", out: "movies.html" },
     { url: "/about", out: "about.html" },
   ];
 
