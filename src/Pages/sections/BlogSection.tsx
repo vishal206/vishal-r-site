@@ -132,7 +132,7 @@ const BlogSection: React.FC = () => {
                     className="group flex flex-col"
                   >
                     {entry.image && (
-                      <div className="aspect-[3/2] w-full overflow-hidden rounded-xl mb-4">
+                      <div className="aspect-[21/9] w-full overflow-hidden rounded-xl mb-4">
                         <img
                           src={entry.image}
                           alt={entry.title}

@@ -4,6 +4,7 @@ date: "14 July 2026"
 isTech: true
 isContextTable: true
 tags: "Devlog"
+image: "/assets/hermes-agent.png"
 ---
 
 **Hermes** is an open-source, self-hostable AI agent: a personal, always-available assistant that you run and own instead of renting from a closed platform. You can talk to it from a terminal, a desktop app, an API, or messaging platforms such as Telegram, Slack, WhatsApp, and email. It keeps durable memories, can search earlier conversations, learns reusable procedures as skills, and can run scheduled jobs such as a daily briefing without waiting for you to send the first message.

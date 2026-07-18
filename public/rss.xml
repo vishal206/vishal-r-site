@@ -4,10 +4,187 @@
         <description><![CDATA[Blogs, movies, books, and project writing from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sun, 12 Jul 2026 18:27:56 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 12 Jul 2026 19:45:26 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Sun, 12 Jul 2026 18:27:56 GMT</pubDate>
+        <pubDate>Sun, 12 Jul 2026 19:45:26 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[Teardown: Hermes Agent]]></title>
+            <description><![CDATA[
+**Hermes** is an open-source, self-hostable AI agent: a personal, always-available assistant that you run and own instead of renting from a closed platform. You can talk to it from a terminal, a desktop app, an API, or messaging platforms such as Telegram, Slack, WhatsApp, and email. It keeps durab...]]></description>
+            <link>https://vishalr.dev/archive/Teardown-Hermes-Agent</link>
+            <guid isPermaLink="false">https://vishalr.dev/archive/Teardown-Hermes-Agent</guid>
+            <category><![CDATA[Devlog]]></category>
+            <pubDate>Mon, 13 Jul 2026 18:30:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p><strong>Hermes</strong> is an open-source, self-hostable AI agent: a personal, always-available assistant that you run and own instead of renting from a closed platform. You can talk to it from a terminal, a desktop app, an API, or messaging platforms such as Telegram, Slack, WhatsApp, and email. It keeps durable memories, can search earlier conversations, learns reusable procedures as skills, and can run scheduled jobs such as a daily briefing without waiting for you to send the first message.</p>
+<blockquote>
+<p>Think of it as an early, practical version of Jarvis, without the flying suit.</p>
+</blockquote>
+<p>The basic loop is straightforward: send context and tools to a model, execute any tool calls it returns, feed the results back, and repeat.</p>
+<p>The difficult part is everything required to make that loop reliable for months: session isolation, prompt caching, memory boundaries, interrupts, permissions, provider differences, background work, scheduling, and dozens of user interfaces that all have to behave like the same assistant. That reliability is what set Hermes apart from the usual agent demo.</p>
+<p><strong>This article starts with the loop, then goes module by module through everything wrapped around it.&quot;</strong></p>
+<h1>Bird&#39;s view</h1>
+<img src="https://vishalr.dev/assets/bird_view.svg" alt="Bird's View" /><blockquote>
+<p>At the highest level, Hermes sits between you, an AI model, your data, and the outside world.</p>
+</blockquote>
+<p>You can talk to it from a terminal, the desktop app, an API, or a messaging app (a gateway). A message sent from Telegram and a question typed in the terminal eventually reach the same central system.</p>
+<p>When Hermes receives a message, it first finds the correct conversation. It then gathers a small briefing pack for the AI model: your recent messages, useful long-term memories, preferences, project instructions, and any relevant skills. This is what lets a conversation continue instead of starting from zero every time.</p>
+<p>Hermes then asks the chosen AI model what to do. Sometimes the model can answer immediately. Other times it asks Hermes to use a tool: search the web, read a file, run a command, control a browser, or send a message. Hermes performs that action, gives the result back to the model, and repeats until the task is complete.</p>
+<p>Finally, Hermes saves the conversation in a <strong>SQLite database</strong> and returns the result through the same place you contacted it.</p>
+<p>Scheduled tasks follow the same path, except a timer starts the work instead of a new message from you.</p>
+<p>Hermes chooses what context and tools the model receives, calls the selected model, executes approved actions, records the results, enforces limits, saves state, and routes the final reply. You can switch the underlying model while the rest of Hermes keeps working the same way.</p>
+<h1>Detailed view</h1>
+<p>Before looking at individual modules, it helps to follow one turn from beginning to end.</p>
+<img src="https://vishalr.dev/assets/detailed-view.png" alt="Detailed Flow" /><p>For a terminal session, the entry adapter is the CLI or TUI gateway. For a Telegram session, it&#39;s the Telegram adapter plus GatewayRunner. The middle of the sequence stays essentially the same.</p>
+<p>That shared middle is the architectural win: new surfaces don&#39;t need to reimplement reasoning, tools, memory, or provider logic.</p>
+<h2>1. Gateway</h2>
+<blockquote>
+<p>The gateway handles messaging apps. It accepts messages written in many platform-specific formats, checks who sent them, and passes each one to the correct Hermes conversation. It combines platform adapters, session routing, authorization, and delivery behind one shared messaging layer.</p>
+</blockquote>
+<p>An adapter converts a platform-specific event into a common message format plus a description of where it came from. From there, the gateway does four things.</p>
+<h3>Authorization</h3>
+<p>Messaging an internet-facing bot isn&#39;t the same as typing into a local shell, so the gateway decides whether the sender is even allowed to use the assistant. It checks platform allow-lists, pairing state, role-based authorization, and relay trust before a message can start an agent run.</p>
+<h3>Session routing</h3>
+<p>Every person, chat, and thread needs to open the correct conversation instead of somebody else&#39;s. The gateway creates a deterministic routing key for each conversation. A typical default-profile direct-message key looks like this:</p>
+<p><code>agent:main:telegram:dm:&lt;chat-id&gt;</code></p>
+<p>Group, thread, participant-isolation, and named-profile settings add or change segments. Centralizing this logic stops two users, threads, or profiles from accidentally sharing history.</p>
+<h3>Concurrency and interruption</h3>
+<p>A user can send another message while the agent is still calling a model or running a tool. The gateway tracks active sessions, queues follow-ups, lets control commands like /stop bypass the normal queue, and signals the running agent to interrupt when needed. This is a surprisingly important difference between a demo bot and an assistant people can actually rely on.</p>
+<h3>Delivery</h3>
+<p>The gateway sends final text, streamed updates, media, approval prompts, and scheduled-job results back through the correct adapter, so the answer reaches whoever should get it. Keeping delivery separate from reasoning is also what makes cross-platform delivery possible.</p>
+<blockquote>
+<p>The gateway wraps the agent. It doesn&#39;t contain it.</p>
+</blockquote>
+<h2>2. Agent core</h2>
+<blockquote>
+<p>The agent core gives the AI model the right information, carries out whatever actions it requests, feeds the results back, and keeps going until there&#39;s an answer.</p>
+</blockquote>
+<p>It runs on a shared agent runtime. Turn setup and the main conversation loop are separated internally, but they share the same agent state, budgets, callbacks, tools, and persistence lifecycle. The conceptual loop is small enough to write as pseudocode:</p>
+<pre><code>messages = history + [user_message]
+
+while iteration_budget_remains():
+    response = provider.call(
+        system_prompt=system_prompt,
+        messages=messages,
+        tools=tool_schemas,
+    )
+
+    if response.tool_calls:
+        messages.append(response.as_assistant_message())
+        results = execute_tools(response.tool_calls)
+        messages.extend(results)
+        continue
+
+    return response.text
+</code></pre>
+<p>That&#39;s the easy part. Hermes layers several production constraints around it: a unified message format, valid role ordering, interruptible model and tool calls, safe parallel tool execution, bounded agent iterations, retries and provider fallback, repetition guardrails, real-time progress updates, and crash-safe message persistence.</p>
+<p>The loop itself is just an algorithm. What makes it usable in production is everything wrapped around it.</p>
+<h3>3. Prompt and context assembly</h3>
+<p>Before asking the AI model for anything, Hermes puts together everything the model needs: rules, memories, conversation, project details.</p>
+<p>An agent is largely defined by the context it sends to the model, and Hermes assembles its system prompt from several ordered sources, each with a different purpose and expected lifetime. The prompt has three broad tiers:</p>
+<ul>
+<li><strong>Stable guidance:</strong> agent identity, tool-use rules, skills index, environment hints, model-specific guidance, platform guidance.</li>
+<li><strong>Conversation context:</strong> an optional caller system message plus project-specific instruction files.</li>
+<li><strong>Session snapshot:</strong> bounded local memory, the user profile, an external-memory provider block, and session/model/date metadata.</li>
+</ul>
+<p>The labels describe how often the inputs are expected to change, but the joined system prompt is treated as one frozen snapshot for the conversation. A memory write updates disk immediately, but it doesn&#39;t rewrite the system message halfway through a session. The refreshed value shows up at a new session, or at an explicit rebuild boundary like context compression.</p>
+<p>Turn-scoped data follows a different path. Plugin-provided context and dynamic recall from an external memory provider get attached to the current user turn instead of mutating the cached system prompt.</p>
+<img src="https://vishalr.dev/assets/prompt_and_context.svg" alt="Prompt and context assembly" /><p>This protects prompt caching, one of Hermes&#39;s most important cost controls. Long-running conversations repeatedly send a large common prefix. If the system prompt or earlier history changes unnecessarily on every turn, the provider can&#39;t reuse its cached prefix, and the same conversation gets slower and more expensive.</p>
+<p>So Hermes sticks to frozen snapshots, append-only turn history, and explicit compression boundaries instead of mutating the prompt live.</p>
+<p><strong>Context compression</strong></p>
+<p>Even a well-cached conversation eventually runs into the model&#39;s context window. When that happens, the default compressor keeps the beginning and a recent tail, removes or truncates stale tool output, summarizes the middle, and keeps tool-call/result groups valid. Compression can create session lineage, so the continuation stays connected to its parent session.</p>
+<p>The compression strategy is swappable through a plugin interface, so you can change how context gets managed without rewriting the agent loop.</p>
+<h3>4. Provider layer</h3>
+<p>The provider layer lets Hermes talk to different AI services without rebuilding the rest of the assistant for each one.</p>
+<p>Hermes supports several wire protocols, including OpenAI-compatible Chat Completions, OpenAI/Codex Responses, native Anthropic Messages, Bedrock Converse, and an optional Codex app-server runtime. Adapters translate these into and out of the agent&#39;s common internal message format. This separation solves two problems.</p>
+<p>First, the same CLI, gateway, cron job, and ACP session can switch providers without changing their own code. Second, provider-specific behavior (authentication refresh, reasoning blocks, cache markers, response parsing, model-specific fields) stays contained instead of leaking across the whole application.</p>
+<p>Hermes also routes auxiliary tasks separately. Vision preprocessing, compression summaries, memory review, and other side jobs can run on a cheaper or better-suited model than the main conversation.</p>
+<p>This isn&#39;t just about avoiding vendor lock-in. It keeps protocol differences from bleeding into the agent loop.</p>
+<h3>5. Tools</h3>
+<p>Tools let Hermes actually do things: read files, search the web, run commands, instead of just talking about them.</p>
+<p>Before a turn starts, Hermes resolves enabled and disabled toolsets, checks availability gates, adds plugin and MCP tools, and sends the resulting schemas to the model. A tool that needs an unconfigured service just disappears from the schema instead of showing up and failing every time it&#39;s called.</p>
+<h3>6. Persistence and memory</h3>
+<p>The word &quot;memory&quot; hides several unrelated mechanisms, and Hermes keeps them separate instead of lumping them into one store:</p>
+<table>
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>Main store</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Conversation transcript</td>
+<td>state.db</td>
+<td>Exact user, assistant, reasoning, and tool messages</td>
+</tr>
+<tr>
+<td>Session routing and metadata</td>
+<td>state.db</td>
+<td>Maps platforms/threads/profiles to sessions; tracks usage, lineage, and state</td>
+</tr>
+<tr>
+<td>Session recall</td>
+<td>SQLite FTS indexes</td>
+<td>Finds relevant text across earlier conversations</td>
+</tr>
+<tr>
+<td>Durable local memory</td>
+<td>MEMORY.md</td>
+<td>Compact facts, environment knowledge, and lasting lessons</td>
+</tr>
+<tr>
+<td>User profile</td>
+<td>USER.md</td>
+<td>Preferences, identity, and communication style</td>
+</tr>
+<tr>
+<td>Project context</td>
+<td>.hermes.md, AGENTS.md, and compatible files</td>
+<td>Repository-specific rules and facts</td>
+</tr>
+<tr>
+<td>Procedural memory</td>
+<td>SKILL.md</td>
+<td>Reusable workflows and supporting resources</td>
+</tr>
+<tr>
+<td>External memory</td>
+<td>Active memory-provider plugin</td>
+<td>Semantic recall, user modeling, or remote memory systems</td>
+</tr>
+<tr>
+<td>Scheduled work</td>
+<td>jobs.json</td>
+<td>Job definitions and next-run state</td>
+</tr>
+</tbody></table>
+<p>This separation is both cheaper and more accurate. The model gets a small set of durable facts on every new session, can search the larger transcript when it needs to, and only loads a detailed procedure when the task actually matches it.</p>
+<h3>7. Delegation</h3>
+<p>Delegation lets Hermes split a large job into smaller pieces, hand them to helper agents, and bring the results back together.</p>
+<p>It&#39;s implemented as an agent-level tool rather than a separate orchestration product. A parent can launch child agents with isolated context for parallel or specialized work. At the top level, delegated tasks can run in the background and report completion back into the originating session. Nested orchestrator agents can wait for their workers when they need the results to compose an answer.</p>
+<p>The useful pattern here isn&#39;t &quot;ask several models the same question.&quot; It&#39;s decomposition: give each child a bounded goal and only the context it needs, let independent work happen in parallel, keep tool and iteration limits explicit, and return structured results to one owner that pulls them together.</p>
+<p>Because child agents reuse the same agent runtime, they inherit the same provider, tool, safety, and persistence machinery instead of needing a second execution architecture.</p>
+<h2>What makes Hermes more than a toy agent?</h2>
+<blockquote>
+<p>A toy agent can work once, in a perfect demo. A dependable agent has to keep working safely when conversations grow, services fail, users interrupt, or several things happen at once.</p>
+</blockquote>
+<p>Strip away the interfaces and production safeguards, and Hermes reduces to the same loop you&#39;ll find in most agent tutorials. Its maturity comes from the decisions built around that loop:</p>
+<ul>
+<li><strong>cache stability</strong> (don&#39;t mutate the conversation prefix casually)</li>
+<li><strong>message correctness</strong> (preserve strict user/assistant/tool relationships)</li>
+<li><strong>state separation</strong> (transcripts, memories, instructions, skills, and schedules are different things)</li>
+<li><strong>platform isolation</strong> (every chat, thread, user, and profile has to map to the correct session)</li>
+<li><strong>interruptibility</strong> (users need to redirect or stop work that&#39;s already running)</li>
+<li><strong>capability gating</strong> (unavailable services shouldn&#39;t show up as callable tools)</li>
+<li><strong>safety boundaries</strong> (approvals and scope checks around powerful side effects)</li>
+<li><strong>edge extensibility</strong> (providers, platforms, tools, memory, and context strategies can grow without bloating the core)</li>
+<li><strong>failure recovery</strong> (persistence, retries, fallbacks, locks, and idempotent delivery, which all matter when a process runs for months).</li>
+</ul>
+<p>That&#39;s also the answer to my earlier question. <strong>Almost anyone will be able to assemble a basic agent now. The center is turning into a commodity, the same way wiring an HTTP request did.</strong></p>
+<p>But building an agent people actually trust is still systems engineering. It&#39;s not the while loop that matters. It&#39;s the quality of the context, tools, permissions, recovery paths, interfaces, and learned procedures around it, and the discipline to keep those pieces understandable as the product grows.</p>
+]]></content:encoded>
+        </item>
         <item>
             <title><![CDATA[The Seven Days of Peter Crumb]]></title>
             <description><![CDATA[

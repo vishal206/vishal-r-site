@@ -196,6 +196,12 @@ const BlogReader = () => {
   const section =
     entry.label === "Movie" ? SECTIONS.movie : SECTIONS.archive;
 
+  // Movies keep the poster disk beside the title; chapters keep their number
+  // badge. Every other post (essays / life) with an image gets a 3:2 banner
+  // shown between the title and the engagement row instead of a side thumbnail.
+  const isMovie = entry.label === "Movie";
+  const showBanner = Boolean(entry.image) && !isMovie;
+
   return (
     <ReaderShell
       brandLogo={section.logo}
@@ -210,17 +216,11 @@ const BlogReader = () => {
       {/* ── Compact header ── */}
       <div className="mb-8 pb-8 border-b border-editorial-divider">
         <div className="flex items-center gap-5">
-          {entry.label === "Movie" && entry.image ? (
+          {isMovie && entry.image ? (
             <MovieDisk
               post={{ slug: entry.slug, title: entry.title, date: entry.sortKey, image: entry.image }}
               tilt={-5}
               diskClassName="w-20 h-20 md:w-24 md:h-24 shrink-0"
-            />
-          ) : entry.image ? (
-            <img
-              src={entry.image}
-              alt={entry.title}
-              className="shrink-0 w-16 h-16 rounded-2xl object-cover border border-editorial-divider"
             />
           ) : entry.sublabel ? (
             <LogoBox logo={entry.sublabel} title={entry.title} size="lg" />
@@ -241,6 +241,15 @@ const BlogReader = () => {
             </h1>
           </div>
         </div>
+        {showBanner && (
+          <div className="aspect-[21/9] w-full overflow-hidden rounded-xl mt-6">
+            <img
+              src={entry.image}
+              alt={entry.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
         <PostEngagement
           {...engagement}
           commentCount={comments.length}
