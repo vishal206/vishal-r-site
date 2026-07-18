@@ -1,6 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { getBlogPostsSync } from "../../Utils/functions";
+import { usePageViews } from "../../hooks/usePageViews";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 
 type FilterType = "all" | string;
 
@@ -60,6 +63,15 @@ const BlogSection: React.FC = () => {
     (page - 1) * PAGE_SIZE,
     page * PAGE_SIZE,
   );
+
+  // Only the visible page's slugs are queried — keeps reads minimal and stays
+  // under Firestore's 30-value `in` limit (page size is 10).
+  const pageSlugs = useMemo(
+    () => pagedEntries.map((e) => e.slug),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pagedEntries.map((e) => e.slug).join(",")],
+  );
+  const views = usePageViews(pageSlugs);
 
   const handleFilterChange = (f: FilterType) => {
     setFilter(f);
@@ -142,8 +154,14 @@ const BlogSection: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-2">
-                      {entry.tags || "Essay"}
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-available">
+                        {entry.tags || "Essay"}
+                      </span>
+                      <span className="flex items-center gap-1 text-[10px] text-editorial-label tabular-nums">
+                        <FontAwesomeIcon icon={faEye} className="text-[10px]" />
+                        {(views[entry.slug] ?? 0).toLocaleString()}
+                      </span>
                     </div>
                     <h3 className="text-lg md:text-xl font-display font-bold text-editorial-text leading-tight group-hover:opacity-70 transition-opacity">
                       {entry.title}
