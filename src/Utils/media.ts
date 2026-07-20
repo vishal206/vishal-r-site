@@ -13,7 +13,6 @@ export type MediaBook = {
   image: string | null;
   post?: string; // slug of the review, when one exists
   olCoverId?: number; // pins the Open Library cover when search guesses wrong
-  accent?: string; // spine colour when there's no side image — pick from the cover
 };
 
 export type MediaMovie = {

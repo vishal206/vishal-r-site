@@ -78,7 +78,8 @@
       "Bash(curl -s \"https://openlibrary.org/search.json?title=Mill+House+Murders&author=Yukito+Ayatsuji&limit=1&fields=title,cover_i,number_of_pages_median,cover_edition_key,edition_key\")",
       "Bash(python3 -m json.tool)",
       "Bash(curl -s \"https://openlibrary.org/books/OL37044060M.json\")",
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\({k:d.get\\(k\\) for k in ['title','physical_dimensions','number_of_pages','pagination','physical_format','weight']}\\)\")"
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\({k:d.get\\(k\\) for k in ['title','physical_dimensions','number_of_pages','pagination','physical_format','weight']}\\)\")",
+      "Bash(python3 -m json.tool src/data/media.json)"
     ]
   }
 }

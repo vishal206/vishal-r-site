@@ -18,7 +18,6 @@ const toBook = (m: MediaBook): BookType => ({
   author: m.author,
   genres: [],
   review: "",
-  accent: m.accent,
   cover: m.image ?? undefined,
 });
 
@@ -40,20 +39,43 @@ const scaleFor = (slug: string) => {
   return SIZE_SCALES[hash % SIZE_SCALES.length];
 };
 
-const BookCard: React.FC<{ item: Shelved }> = ({ item }) => {
-  const shared =
-    "w-full block rounded-md overflow-hidden shadow-[0_10px_24px_-12px_rgba(0,0,0,0.7)] transition-transform duration-300 group-hover:-translate-y-1";
+/**
+ * A book cover. The typographic placeholder (BookCover's no-image fallback)
+ * shows immediately, so there's never blank space while the real cover loads —
+ * it fades in on top once ready, and stays hidden if the image fails to load.
+ */
+const Cover: React.FC<{ book: BookType }> = ({ book }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const showImg = Boolean(book.cover) && !failed;
 
-  // With a cover we render the image at its natural height, so each card takes
-  // the book's real proportions (the masonry look). Without one, the
-  // typographic fallback needs an explicit box, so it gets a standard 2:3.
-  const cover = item.book.cover ? (
-    <img src={item.book.cover} alt={item.book.title} draggable={false} className={shared} />
-  ) : (
-    <div className={`relative aspect-[2/3] ${shared}`}>
-      <BookCover book={item.book} />
+  return (
+    <div
+      // Until the real cover is up, hold a standard 2:3 box for the placeholder;
+      // once loaded the image's natural height drives the card (the masonry look).
+      className={`relative w-full rounded-md overflow-hidden shadow-[0_10px_24px_-12px_rgba(0,0,0,0.7)] transition-transform duration-300 group-hover:-translate-y-1 ${
+        showImg && loaded ? "" : "aspect-[2/3]"
+      }`}
+    >
+      {(!showImg || !loaded) && <BookCover book={{ ...book, cover: undefined }} />}
+      {showImg && (
+        <img
+          src={book.cover}
+          alt={book.title}
+          draggable={false}
+          onLoad={() => setLoaded(true)}
+          onError={() => setFailed(true)}
+          className={`w-full h-auto block transition-opacity duration-300 ${
+            loaded ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      )}
     </div>
   );
+};
+
+const BookCard: React.FC<{ item: Shelved }> = ({ item }) => {
+  const cover = <Cover book={item.book} />;
 
   return (
     <div className="group flex flex-col gap-2.5">
