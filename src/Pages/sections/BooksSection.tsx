@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import BookCover from "../../components/BookCover";
 import { getBooksSync } from "../../Utils/markdownLoader";
@@ -9,7 +9,13 @@ import type { MediaBook } from "../../Utils/media";
 type Category = "reviewed" | "read" | "wishlist";
 type Filter = "all" | Category;
 
-type Shelved = { book: BookType; to: string | null; category: Category };
+type Shelved = {
+  book: BookType;
+  to: string | null;
+  category: Category;
+  volumes: number; // total count (a set counts as its number of volumes)
+  covers?: string[]; // per-volume cover URLs when this is a set
+};
 
 /** A media.json entry dressed as a Book so BookCover can render it. */
 const toBook = (m: MediaBook): BookType => ({
@@ -44,7 +50,10 @@ const scaleFor = (slug: string) => {
  * shows immediately, so there's never blank space while the real cover loads —
  * it fades in on top once ready, and stays hidden if the image fails to load.
  */
-const Cover: React.FC<{ book: BookType }> = ({ book }) => {
+const Cover: React.FC<{ book: BookType; volumes: number }> = ({
+  book,
+  volumes,
+}) => {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
   const showImg = Boolean(book.cover) && !failed;
@@ -70,12 +79,107 @@ const Cover: React.FC<{ book: BookType }> = ({ book }) => {
           }`}
         />
       )}
+      {volumes > 1 && (
+        <span className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-full bg-black/70 text-white text-[9px] font-medium tracking-wide backdrop-blur-sm">
+          ×{volumes}
+        </span>
+      )}
+    </div>
+  );
+};
+
+// How long each volume holds focus before the deck rolls to the next.
+const PILE_INTERVAL = 1800;
+// How many upcoming volumes peek out behind the focus card.
+const PILE_PEEK = 3;
+
+/**
+ * A set rendered as a rolling deck: the focus cover sits in front, the next few
+ * volumes peek out above and behind it, and on a loop the front card rolls back
+ * into the stack as the next one comes forward — first to last, then repeats.
+ */
+const VolumePile: React.FC<{ covers: string[]; alt: string }> = ({
+  covers,
+  alt,
+}) => {
+  const [active, setActive] = useState(0);
+  const n = covers.length;
+
+  useEffect(() => {
+    if (n < 2) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => setActive((i) => (i + 1) % n), PILE_INTERVAL);
+    return () => clearInterval(id);
+  }, [n]);
+
+  const exitSlot = n - 1;
+
+  return (
+    <div className="relative aspect-[2/3] w-full transition-transform duration-300 group-hover:-translate-y-1">
+      {covers.map((src, i) => {
+        // Slot 0 is the focus. Slots 1..PEEK are the upcoming volumes peeking
+        // up-and-right behind it (top-right corners showing). The last slot is
+        // the card that just left focus — it rolls out toward the bottom-left,
+        // shrinking away, then loops back in at the top-right end of the deck.
+        const slot = (i - active + n) % n;
+        const isExit = slot === exitSlot;
+        const depth = Math.min(slot, PILE_PEEK);
+
+        let transform: string;
+        let opacity: number;
+        if (slot === 0) {
+          transform = "translate(0px, 0px) scale(1)";
+          opacity = 1;
+        } else if (isExit) {
+          // The roll-off: down to the bottom-left, shrinking, fading out.
+          transform = "translate(-30px, 34px) scale(0.42)";
+          opacity = 0;
+        } else {
+          // Upcoming peeks (and, past PEEK, the invisible cards waiting to
+          // re-enter — parked at the furthest peek spot so re-entry is in place).
+          transform = `translate(${depth * 11}px, ${-depth * 11}px) scale(${1 - depth * 0.06})`;
+          opacity = slot <= PILE_PEEK ? 1 - depth * 0.22 : 0;
+        }
+
+        // A card leaving the exit slot must not fly across the deck from
+        // bottom-left to top-right. It came from the exit already invisible, so
+        // freeze its transform (snap into place) and only fade it in.
+        const cameFromExit = n >= 3 && slot === exitSlot - 1;
+        const transition = cameFromExit
+          ? "opacity 650ms ease"
+          : "transform 650ms cubic-bezier(0.22,1,0.36,1), opacity 650ms ease";
+
+        return (
+          <img
+            key={src}
+            src={src}
+            alt={`${alt} — volume ${i + 1}`}
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-cover rounded-md shadow-[0_14px_28px_-16px_rgba(0,0,0,0.85)]"
+            style={{
+              transform,
+              opacity,
+              zIndex: isExit ? n + 1 : n - slot,
+              transition,
+              willChange: "transform, opacity",
+            }}
+          />
+        );
+      })}
+      <span className="absolute top-1.5 right-1.5 z-[999] px-1.5 py-0.5 rounded-full bg-black/70 text-white text-[9px] font-medium tracking-wide backdrop-blur-sm">
+        ×{n}
+      </span>
     </div>
   );
 };
 
 const BookCard: React.FC<{ item: Shelved }> = ({ item }) => {
-  const cover = <Cover book={item.book} />;
+  const cover =
+    item.covers && item.covers.length > 0 ? (
+      <VolumePile covers={item.covers} alt={item.book.title} />
+    ) : (
+      <Cover book={item.book} volumes={item.volumes} />
+    );
 
   return (
     <div className="group flex flex-col gap-2.5">
@@ -113,6 +217,7 @@ const BooksSection: React.FC = () => {
       book: b,
       to: `/book/${b.slug}`,
       category: "reviewed",
+      volumes: 1,
     }));
 
     const readShelf: Shelved[] = media.books.read
@@ -121,25 +226,33 @@ const BooksSection: React.FC = () => {
         book: toBook(m),
         to: m.post ? `/book/${m.post}` : null,
         category: "read",
+        volumes: m.volumes?.length ?? 1,
+        covers: m.volumes,
       }));
 
     const wishlistShelf: Shelved[] = media.books.wishlist.map((m) => ({
       book: toBook(m),
       to: null,
       category: "wishlist",
+      volumes: m.volumes?.length ?? 1,
+      covers: m.volumes,
     }));
 
     return [...reviewedShelf, ...readShelf, ...wishlistShelf];
   }, []);
 
+  // Tallies count total volumes, so a 20-volume set adds 20 rather than 1.
   const counts = useMemo(() => {
     const c: Record<Filter, number> = {
-      all: books.length,
+      all: 0,
       reviewed: 0,
       read: 0,
       wishlist: 0,
     };
-    for (const b of books) c[b.category]++;
+    for (const b of books) {
+      c[b.category] += b.volumes;
+      c.all += b.volumes;
+    }
     return c;
   }, [books]);
 

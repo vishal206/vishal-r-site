@@ -31,7 +31,28 @@
       {
         "title": "BAKUMAN",
         "author": "Tsugumi Ohba & Takeshi Obata",
-        "image": "https://covers.openlibrary.org/b/id/8537695-L.jpg"
+        "volumes": [
+          "https://covers.openlibrary.org/b/id/9354224-L.jpg",
+          "https://covers.openlibrary.org/b/id/6667569-L.jpg",
+          "https://covers.openlibrary.org/b/id/6681638-L.jpg",
+          "https://covers.openlibrary.org/b/id/12817366-L.jpg",
+          "https://covers.openlibrary.org/b/id/12962249-L.jpg",
+          "https://covers.openlibrary.org/b/id/7820917-L.jpg",
+          "https://covers.openlibrary.org/b/id/12816891-L.jpg",
+          "https://covers.openlibrary.org/b/id/7838953-L.jpg",
+          "https://covers.openlibrary.org/b/id/7315310-L.jpg",
+          "https://covers.openlibrary.org/b/id/7315314-L.jpg",
+          "https://covers.openlibrary.org/b/id/12816896-L.jpg",
+          "https://covers.openlibrary.org/b/id/9250475-L.jpg",
+          "https://covers.openlibrary.org/b/id/9251358-L.jpg",
+          "https://covers.openlibrary.org/b/id/12769542-L.jpg",
+          "https://covers.openlibrary.org/b/id/7315327-L.jpg",
+          "https://covers.openlibrary.org/b/id/8537695-L.jpg",
+          "https://covers.openlibrary.org/b/id/7335314-L.jpg",
+          "https://covers.openlibrary.org/b/id/7315328-L.jpg",
+          "https://covers.openlibrary.org/b/id/7335318-L.jpg",
+          "https://covers.openlibrary.org/b/id/7335320-L.jpg"
+        ]
       }
     ],
     "wishlist": [

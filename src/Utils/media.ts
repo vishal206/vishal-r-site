@@ -13,6 +13,7 @@ export type MediaBook = {
   image: string | null;
   post?: string; // slug of the review, when one exists
   olCoverId?: number; // pins the Open Library cover when search guesses wrong
+  volumes?: string[]; // cover URLs, one per volume in a set — renders as an animated pile; count = length
 };
 
 export type MediaMovie = {
