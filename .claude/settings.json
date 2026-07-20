@@ -74,7 +74,11 @@
       "Bash(curl -s \"https://openlibrary.org/search.json?title=Labyrinth+House+Murders&fields=key,editions,editions.cover_i,editions.title&limit=2\")",
       "Bash(node -e 'let s=\"\";process.stdin.on\\(\"data\",d=>s+=d\\).on\\(\"end\",\\(\\)=>console.log\\(JSON.stringify\\(JSON.parse\\(s\\).docs,null,1\\).slice\\(0,600\\)\\)\\)')",
       "Bash(curl -s \"https://openlibrary.org/search.json?title=Six+of+Crows&author=Leigh+Bardugo&limit=3&fields=key,editions,editions.cover_i&editions.limit=10\")",
-      "Bash(node -e 'let s=\"\";process.stdin.on\\(\"data\",d=>s+=d\\).on\\(\"end\",\\(\\)=>{JSON.parse\\(s\\).docs.forEach\\(d=>d.editions?.docs?.forEach\\(e=>e.cover_i&&console.log\\(e.cover_i\\)\\)\\)}\\)')"
+      "Bash(node -e 'let s=\"\";process.stdin.on\\(\"data\",d=>s+=d\\).on\\(\"end\",\\(\\)=>{JSON.parse\\(s\\).docs.forEach\\(d=>d.editions?.docs?.forEach\\(e=>e.cover_i&&console.log\\(e.cover_i\\)\\)\\)}\\)')",
+      "Bash(curl -s \"https://openlibrary.org/search.json?title=Mill+House+Murders&author=Yukito+Ayatsuji&limit=1&fields=title,cover_i,number_of_pages_median,cover_edition_key,edition_key\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s \"https://openlibrary.org/books/OL37044060M.json\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\({k:d.get\\(k\\) for k in ['title','physical_dimensions','number_of_pages','pagination','physical_format','weight']}\\)\")"
     ]
   }
 }

@@ -1,13 +1,17 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import Book3D from "../../components/Book3D";
+import BookCover from "../../components/BookCover";
 import { getBooksSync } from "../../Utils/markdownLoader";
 import type { Book as BookType } from "../../Utils/markdownLoader";
 import { media } from "../../Utils/media";
 import type { MediaBook } from "../../Utils/media";
 
-/** A media.json entry dressed as a Book so Book3D can render it — cover from
- *  the API art, typographic spine/cover fallbacks for the rest. */
+type Category = "reviewed" | "read" | "wishlist";
+type Filter = "all" | Category;
+
+type Shelved = { book: BookType; to: string | null; category: Category };
+
+/** A media.json entry dressed as a Book so BookCover can render it. */
 const toBook = (m: MediaBook): BookType => ({
   slug: m.post ?? m.title,
   title: m.title,
@@ -18,94 +22,149 @@ const toBook = (m: MediaBook): BookType => ({
   cover: m.image ?? undefined,
 });
 
-type Shelved = { book: BookType; to: string | null };
+const FILTERS: { key: Filter; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "reviewed", label: "Reviewed" },
+  { key: "read", label: "Read" },
+  { key: "wishlist", label: "To Be Read" },
+];
 
-/**
- * Books stacked like they're leaning on a table: each one overlaps the next so
- * mostly spines show. Hovering a book turns it front-on and slides everything
- * after it out of the way so the full cover is visible.
- */
-const Shelf: React.FC<{ items: Shelved[] }> = ({ items }) => {
-  const [hovered, setHovered] = useState<number | null>(null);
+// Each book gets a random display size for a livelier, less uniform grid. It's
+// derived from the slug (not Math.random) so a given book always lands the same
+// size — no reshuffle on re-render or when the filter changes. Widths only, so
+// covers scale proportionally and never distort.
+const SIZE_SCALES = [0.7, 0.8, 0.9, 1];
+const scaleFor = (slug: string) => {
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
+  return SIZE_SCALES[hash % SIZE_SCALES.length];
+};
+
+const BookCard: React.FC<{ item: Shelved }> = ({ item }) => {
+  const shared =
+    "w-full block rounded-md overflow-hidden shadow-[0_10px_24px_-12px_rgba(0,0,0,0.7)] transition-transform duration-300 group-hover:-translate-y-1";
+
+  // With a cover we render the image at its natural height, so each card takes
+  // the book's real proportions (the masonry look). Without one, the
+  // typographic fallback needs an explicit box, so it gets a standard 2:3.
+  const cover = item.book.cover ? (
+    <img src={item.book.cover} alt={item.book.title} draggable={false} className={shared} />
+  ) : (
+    <div className={`relative aspect-[2/3] ${shared}`}>
+      <BookCover book={item.book} />
+    </div>
+  );
 
   return (
-    <div className="flex flex-wrap justify-center gap-y-12 md:gap-y-16 pt-12 md:pt-16 items-end">
-      {items.map(({ book, to }, i) => {
-        const shifted = hovered !== null && i > hovered;
-        const inner = (
-          <Book3D
-            book={book}
-            height={{ base: 200, md: 260 }}
-            tiltDeg={30}
-            hoverTiltDeg={6}
-          />
-        );
-        return (
-          <div
-            key={book.slug}
-            className={`relative transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              i === 0 ? "" : "-ml-[86px] md:-ml-[116px]"
-            } ${shifted ? "translate-x-[86px] md:translate-x-[116px]" : ""}`}
-            // Later books stack on top, so the visible slice of each is its
-            // spine edge; the hovered one jumps above its right-hand neighbour.
-            style={{ zIndex: hovered === i ? 60 : i + 1 }}
-            onMouseEnter={() => setHovered(i)}
-            onMouseLeave={() => setHovered((h) => (h === i ? null : h))}
-          >
-            {to ? (
-              <Link to={to} className="group block">
-                {inner}
-              </Link>
-            ) : (
-              inner
-            )}
+    <div className="group flex flex-col gap-2.5">
+      {item.to ? (
+        <Link to={item.to} className="block">
+          {cover}
+        </Link>
+      ) : (
+        cover
+      )}
+      <div className="text-center leading-snug">
+        <div className="text-editorial-text/90 text-[11px] line-clamp-2">
+          {item.book.title}
+        </div>
+        {item.book.author && (
+          <div className="text-editorial-label text-[9px] mt-0.5 line-clamp-1">
+            {item.book.author}
           </div>
-        );
-      })}
+        )}
+      </div>
     </div>
   );
 };
 
 const BooksSection: React.FC = () => {
-  // The read shelf is driven by media.json. Entries whose `post` matches a
-  // review get the full reviewed book (real cover, spine, link); the rest
-  // render from their API art alone. Reviewed books missing from media.json
-  // still show, so the two sources can't drift apart silently.
-  const { read, wishlist } = useMemo(() => {
+  const [filter, setFilter] = useState<Filter>("all");
+
+  // One flat list of every book tagged by category. A read entry whose `post`
+  // points at a review is promoted to `reviewed`, so no book is counted twice.
+  const books = useMemo<Shelved[]>(() => {
     const reviewed = getBooksSync();
-    const bySlug = new Map(reviewed.map((b) => [b.slug, b]));
+    const reviewedSlugs = new Set(reviewed.map((b) => b.slug));
 
-    const read: Shelved[] = media.books.read.map((m) => {
-      const book = m.post ? bySlug.get(m.post) : undefined;
-      return book
-        ? { book, to: `/book/${book.slug}` }
-        : { book: toBook(m), to: null };
-    });
+    const reviewedShelf: Shelved[] = reviewed.map((b) => ({
+      book: b,
+      to: `/book/${b.slug}`,
+      category: "reviewed",
+    }));
 
-    const listed = new Set(media.books.read.map((m) => m.post));
-    for (const b of reviewed)
-      if (!listed.has(b.slug)) read.unshift({ book: b, to: `/book/${b.slug}` });
+    const readShelf: Shelved[] = media.books.read
+      .filter((m) => !(m.post && reviewedSlugs.has(m.post)))
+      .map((m) => ({
+        book: toBook(m),
+        to: m.post ? `/book/${m.post}` : null,
+        category: "read",
+      }));
 
-    return { read, wishlist: media.books.wishlist.map(toBook) };
+    const wishlistShelf: Shelved[] = media.books.wishlist.map((m) => ({
+      book: toBook(m),
+      to: null,
+      category: "wishlist",
+    }));
+
+    return [...reviewedShelf, ...readShelf, ...wishlistShelf];
   }, []);
+
+  const counts = useMemo(() => {
+    const c: Record<Filter, number> = {
+      all: books.length,
+      reviewed: 0,
+      read: 0,
+      wishlist: 0,
+    };
+    for (const b of books) c[b.category]++;
+    return c;
+  }, [books]);
+
+  const visible =
+    filter === "all" ? books : books.filter((b) => b.category === filter);
 
   return (
     <div className="flex-1 px-6 md:px-12 pb-10 max-w-screen-xl mx-auto w-full">
-      {read.length === 0 ? (
+      {/* ── Filter bar ── */}
+      <div className="flex flex-wrap justify-center gap-2 pt-2">
+        {FILTERS.map(({ key, label }) => {
+          if (key !== "all" && counts[key] === 0) return null;
+          const active = filter === key;
+          return (
+            <button
+              key={key}
+              onClick={() => setFilter(key)}
+              className={`px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] transition-colors ${
+                active
+                  ? "bg-editorial-text text-editorial-bg"
+                  : "text-editorial-label hover:text-editorial-text"
+              }`}
+            >
+              {label}
+              <span className="ml-1.5 opacity-60">{counts[key]}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── Grid ── */}
+      {visible.length === 0 ? (
         <div className="text-center text-editorial-label text-sm py-16">
           No books yet.
         </div>
       ) : (
-        <Shelf items={read} />
-      )}
-
-      {wishlist.length > 0 && (
-        <>
-          <div className="text-center text-editorial-label text-xs uppercase tracking-[0.3em] pt-16">
-            Wishlist
-          </div>
-          <Shelf items={wishlist.map((book) => ({ book, to: null }))} />
-        </>
+        <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-5 lg:gap-10 pt-10">
+          {visible.map((item) => (
+            <div
+              key={`${item.category}-${item.book.slug}`}
+              className="mb-9 lg:mb-12 break-inside-avoid mx-auto"
+              style={{ width: `${scaleFor(item.book.slug) * 100}%` }}
+            >
+              <BookCard item={item} />
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
