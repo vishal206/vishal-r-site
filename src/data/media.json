@@ -1,0 +1,65 @@
+{
+  "books": {
+    "read": [
+      {
+        "title": "The Seven Days of Peter Crumb",
+        "author": "Jonny Glynn",
+        "image": "/assets/seven-days-of-peter-crumb.jpeg",
+        "post": "The-Seven-Days-of-Peter-Crumb"
+      },
+      {
+        "title": "Crooked Kingdom",
+        "author": "Leigh Bardugo",
+        "image": "https://covers.openlibrary.org/b/id/12667428-L.jpg"
+      },
+      {
+        "title": "Six of Crows",
+        "author": "Leigh Bardugo",
+        "olCoverId": 15154301,
+        "image": "https://covers.openlibrary.org/b/id/15154301-L.jpg"
+      },
+      {
+        "title": "The Decagon House Murders",
+        "author": "Yukito Ayatsuji",
+        "accent": "#2A4E9C",
+        "image": "https://covers.openlibrary.org/b/id/14648882-L.jpg"
+      },
+      {
+        "title": "The Mill House Murders",
+        "author": "Yukito Ayatsuji",
+        "accent": "#639929",
+        "image": "https://covers.openlibrary.org/b/id/13863987-L.jpg"
+      }
+    ],
+    "wishlist": [
+      {
+        "title": "The Labyrinth House Murders",
+        "author": "Yukito Ayatsuji",
+        "image": null
+      }
+    ]
+  },
+  "movies": {
+    "watched": [
+      {
+        "title": "Kamome Diner",
+        "year": 2006,
+        "image": null,
+        "post": "Kamome-Diner"
+      },
+      {
+        "title": "It's a Wonderful Life",
+        "year": 1946,
+        "image": null,
+        "post": "Its-a-Wonderful-Life"
+      },
+      {
+        "title": "The Goldfinch",
+        "year": 2019,
+        "image": null,
+        "post": "The-Goldfinch"
+      }
+    ],
+    "wishlist": []
+  }
+}
