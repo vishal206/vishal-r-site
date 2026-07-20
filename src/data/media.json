@@ -67,21 +67,106 @@
     "watched": [
       {
         "title": "Kamome Diner",
-        "year": 2006,
         "image": null,
         "post": "Kamome-Diner"
       },
       {
         "title": "It's a Wonderful Life",
-        "year": 1946,
         "image": null,
         "post": "Its-a-Wonderful-Life"
       },
       {
         "title": "The Goldfinch",
-        "year": 2019,
         "image": null,
         "post": "The-Goldfinch"
+      },
+      {
+        "title": "The Shawshank Redemption",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+      },
+      {
+        "title": "Project Hail Mary",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/yihdXomYb5kTeSivtFndMy5iDmf.jpg"
+      },
+      {
+        "title": "Schindler's List",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg"
+      },
+      {
+        "title": "12 Angry Men",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/zhG3vKWyDRaZYoaww1UVAi29T9h.jpg"
+      },
+      {
+        "title": "Spirited Away",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg"
+      },
+      {
+        "title": "The Green Mile",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/8VG8fDNiy50H4FedGwdSVUPoaJe.jpg"
+      },
+      {
+        "title": "Parasite",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/igICOruFgiqdY1HXwTNRuXJute.jpg"
+      },
+      {
+        "title": "Interstellar",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg"
+      },
+      {
+        "title": "Your Name.",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/9E045eVSf8gqPXwJqwVOChyhuQH.jpg"
+      },
+      {
+        "title": "Pulp Fiction",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg"
+      },
+      {
+        "title": "The Good, the Bad and the Ugly",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/bX2xnavhMYjWDoZp1VM6VnU1xwe.jpg"
+      },
+      {
+        "title": "Forrest Gump",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/Cw4hIUIAmSYfK9QfaUW5igp9La.jpg"
+      },
+      {
+        "title": "Goodfellas",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/9OkCLM73MIU2CrKZbqiT8Ln1wY2.jpg"
+      },
+      {
+        "title": "Fight Club",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg"
+      },
+      {
+        "title": "A Silent Voice: The Movie",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/tuFaWiqX0TXoWu7DGNcmX3UW7sT.jpg"
+      },
+      {
+        "title": "Se7en",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/191nKfP0ehp3uIvWqgPbFmI4lv9.jpg"
+      },
+      {
+        "title": "Inception",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg"
+      },
+      {
+        "title": "The Silence of the Lambs",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/uS9m8OBk1A8eM9I042bx8XXpqAq.jpg"
+      },
+      {
+        "title": "Back to the Future",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/vN5B5WgYscRGcQpVhHl6p9DDTP0.jpg"
+      },
+      {
+        "title": "Dead Poets Society",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/erzbMlcNHOdx24AXOcn2ZKA7R1q.jpg"
+      },
+      {
+        "title": "The Matrix",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg"
+      },
+      {
+        "title": "Gladiator",
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/wN2xWp1eIwCKOD0BHTcErTBv1Uq.jpg"
       }
     ],
     "wishlist": []

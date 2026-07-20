@@ -133,8 +133,8 @@ const resolveBookCover = async ({ title, author, olCoverId }) => {
   return null;
 };
 
-/** TMDB. Needs TMDB_API_KEY. `year` narrows ambiguous titles (e.g. remakes). */
-const resolveMoviePoster = async ({ title, year, tmdbId }) => {
+/** TMDB. Needs TMDB_API_KEY. Pin ambiguous titles (e.g. remakes) with tmdbId. */
+const resolveMoviePoster = async ({ title, tmdbId }) => {
   let posterPath;
 
   if (tmdbId) {
@@ -145,7 +145,6 @@ const resolveMoviePoster = async ({ title, year, tmdbId }) => {
     ).poster_path;
   } else {
     const params = new URLSearchParams({ api_key: TMDB_KEY, query: title });
-    if (year) params.set("primary_release_year", String(year));
     posterPath = (
       await getJson(`https://api.themoviedb.org/3/search/movie?${params}`)
     ).results?.find((r) => r.poster_path)?.poster_path;

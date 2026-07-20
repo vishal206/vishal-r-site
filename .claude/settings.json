@@ -83,7 +83,20 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5199/books)",
       "Bash(curl -s \"https://openlibrary.org/search.json?title=Bakuman&author=Ohba&limit=5&fields=key,title,author_name,edition_count\")",
       "Bash(python3 -c \"import sys,json; [print\\(d.get\\('key'\\),'|',d.get\\('title'\\),'|',d.get\\('edition_count'\\)\\) for d in json.load\\(sys.stdin\\).get\\('docs',[]\\)]\")",
-      "Bash(python3 -c \"import json; print\\('volumes:', len\\(json.load\\(open\\('src/data/media.json'\\)\\)['books']['read'][-1]['volumes']\\)\\)\")"
+      "Bash(python3 -c \"import json; print\\('volumes:', len\\(json.load\\(open\\('src/data/media.json'\\)\\)['books']['read'][-1]['volumes']\\)\\)\")",
+      "WebFetch(domain:www.themoviedb.org)",
+      "Bash(node -e \"const d=require\\('./src/data/media.json'\\); console.log\\('valid JSON — watched count:', d.movies.watched.length\\)\")",
+      "Bash(cp __TRACKED_VAR__/shot.js ./_shot_tmp.js)",
+      "Bash(node ./_shot_tmp.js __TRACKED_VAR__/disc.html __TRACKED_VAR__/disc.png)",
+      "Bash(cp __TRACKED_VAR__/shot.js ./_shot_tmp.cjs)",
+      "Bash(node ./_shot_tmp.cjs __TRACKED_VAR__/disc.html __TRACKED_VAR__/disc.png)",
+      "Bash(node ./_shot_tmp.cjs __TRACKED_VAR__/disc.html __TRACKED_VAR__/disc2.png)",
+      "Bash(node ./_shot_tmp.cjs __TRACKED_VAR__/disc.html __TRACKED_VAR__/disc3.png)",
+      "Bash(md5 -q /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a17d9dd2-7267-4343-9016-c192c419a4da/scratchpad/disc2.png /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a17d9dd2-7267-4343-9016-c192c419a4da/scratchpad/disc3.png)",
+      "Bash(grep -n 'RIM_INNER =' __TRACKED_VAR__/disc.html)",
+      "Bash(grep -n RIM_BACKGROUND __TRACKED_VAR__/disc.html)",
+      "Bash(md5 -q /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a17d9dd2-7267-4343-9016-c192c419a4da/scratchpad/disc.png /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a17d9dd2-7267-4343-9016-c192c419a4da/scratchpad/disc2.png /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a17d9dd2-7267-4343-9016-c192c419a4da/scratchpad/disc3.png /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a17d9dd2-7267-4343-9016-c192c419a4da/scratchpad/disc4.png)",
+      "Bash(node -e \"console.log\\(require\\('puppeteer/package.json'\\).version\\)\")"
     ]
   }
 }

@@ -18,7 +18,6 @@ export type MediaBook = {
 
 export type MediaMovie = {
   title: string;
-  year?: number;
   image: string | null;
   post?: string;
   tmdbId?: number; // pins the TMDB entry when search guesses wrong
