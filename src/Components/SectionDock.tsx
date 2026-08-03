@@ -1,5 +1,5 @@
 import { NavigateFunction } from "react-router-dom";
-import MovieDisk from "./MovieDisk";
+import MoviePoster from "./MoviePoster";
 import CornerPile, { STICKER } from "./CornerPile";
 import { BlogPostMeta, ProjectMeta, Book } from "../Utils/markdownLoader";
 import {
@@ -109,7 +109,8 @@ const SectionDock = ({
             onClick: () => navigate(`/archive/${post.slug}`),
             node: (
               <div style={{ filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.6))" }}>
-                <MovieDisk post={post} tilt={0} diskClassName="w-28 h-28" />
+                {/* The pile supplies its own angle and click target. */}
+                <MoviePoster post={post} to={null} width={70} hoverPop={false} />
               </div>
             ),
           }))}

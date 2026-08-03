@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import MovieDisk from "./MovieDisk";
+import MoviePoster from "./MoviePoster";
 import ReaderShell, { LogoBox } from "./ReaderShell";
 import {
   loadMarkdownFileSync,
@@ -196,7 +196,7 @@ const BlogReader = () => {
   const section =
     entry.label === "Movie" ? SECTIONS.movie : SECTIONS.archive;
 
-  // Movies keep the poster disk beside the title; chapters keep their number
+  // Movies keep the poster beside the title; chapters keep their number
   // badge. Every other post (essays / life) with an image gets a 3:2 banner
   // shown between the title and the engagement row instead of a side thumbnail.
   const isMovie = entry.label === "Movie";
@@ -217,10 +217,11 @@ const BlogReader = () => {
       <div className="mb-8 pb-8 border-b border-editorial-divider">
         <div className="flex items-center gap-5">
           {isMovie && entry.image ? (
-            <MovieDisk
+            <MoviePoster
               post={{ slug: entry.slug, title: entry.title, date: entry.sortKey, image: entry.image }}
-              tilt={-5}
-              diskClassName="w-20 h-20 md:w-24 md:h-24 shrink-0"
+              width={76}
+              to={null}
+              hoverPop={false}
             />
           ) : entry.sublabel ? (
             <LogoBox logo={entry.sublabel} title={entry.title} size="lg" />

@@ -8,6 +8,7 @@
     "build": "tsc -b && npm run generate-rss && vite build && npm run prerender",
     "generate-rss": "node scripts/generate-rss.js",
     "generate-og": "node scripts/generate-og.js",
+    "fetch-media": "node scripts/fetch-media.js",
     "prerender": "node scripts/prerender.js",
     "lint": "eslint .",
     "preview": "vite preview"

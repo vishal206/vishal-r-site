@@ -8,6 +8,8 @@ type Props = {
   height: number | { base: number; md: number };
   /** Resting rotation in degrees — how far the book is turned toward its corner. */
   tiltDeg?: number;
+  /** Rotation while hovered. Defaults to easing 12° toward front-on. */
+  hoverTiltDeg?: number;
   className?: string;
 };
 
@@ -16,7 +18,13 @@ type Props = {
  * right and the spine (the `side` image) standing on the left, joined at a
  * shared vertical edge. Built with CSS 3D transforms — no flat illustration.
  */
-const Book3D = ({ book, height, tiltDeg = 34, className = "" }: Props) => {
+const Book3D = ({
+  book,
+  height,
+  tiltDeg = 34,
+  hoverTiltDeg,
+  className = "",
+}: Props) => {
   const [ratio, setRatio] = useState(2 / 3); // cover width ÷ height
   const [sideRatio, setSideRatio] = useState<number | null>(null); // spine w ÷ h
   const [hovered, setHovered] = useState(false);
@@ -73,7 +81,7 @@ const Book3D = ({ book, height, tiltDeg = 34, className = "" }: Props) => {
       ? Math.min(Math.max(Math.round(H * sideRatio), 12), Math.round(W * 0.5))
       : Math.max(14, Math.round(W * 0.16));
   const accent = book.accent ?? "#333";
-  const rot = hovered ? tiltDeg - 12 : tiltDeg;
+  const rot = hovered ? (hoverTiltDeg ?? tiltDeg - 12) : tiltDeg;
 
   return (
     <div

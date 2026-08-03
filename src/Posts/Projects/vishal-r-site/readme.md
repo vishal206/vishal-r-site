@@ -24,7 +24,7 @@ I started building this because I wanted a home on the web that actually felt li
 
 **The cursor car.** Move your mouse around the site and a little car follows it — complete with physics-based steering, lateral grip, skid marks on sharp turns, burnout smoke on acceleration, and full circle-drift mode if you go in circles long enough. It's completely unnecessary and I love it.
 
-**Movie disk archive.** Blog posts in the archive are displayed as vinyl/DVD discs — each one tilted slightly differently, with a real iridescent shimmer on hover and the post art printed on the surface like a film reel. It's a nod to my love of cinema.
+**The poster wall.** Films are a wall of posters, stacked in columns that drift up and down so nothing lines up into rows — the block tapers to a rough rhombus that rebuilds itself as the list grows, and it deliberately runs off both edges of the screen. Hover a poster and it springs forward over its neighbours. It's a nod to my love of cinema.
 
 **No database for content.** Every post is a flat markdown file. `import.meta.glob` pulls them all in at build time. No CMS, no admin panel, no hosted backend. The content lives right next to the code.
 
