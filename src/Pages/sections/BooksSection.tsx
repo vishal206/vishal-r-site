@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import BookCover from "../../components/BookCover";
+import FilterBar from "../../components/FilterBar";
 import { getBooksSync } from "../../Utils/markdownLoader";
 import type { Book as BookType } from "../../Utils/markdownLoader";
 import { media } from "../../Utils/media";
@@ -262,26 +263,12 @@ const BooksSection: React.FC = () => {
   return (
     <div className="flex-1 px-6 md:px-12 pb-10 max-w-screen-xl mx-auto w-full">
       {/* ── Filter bar ── */}
-      <div className="flex flex-wrap justify-center gap-2 pt-2">
-        {FILTERS.map(({ key, label }) => {
-          if (key !== "all" && counts[key] === 0) return null;
-          const active = filter === key;
-          return (
-            <button
-              key={key}
-              onClick={() => setFilter(key)}
-              className={`px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] transition-colors ${
-                active
-                  ? "bg-editorial-text text-editorial-bg"
-                  : "text-editorial-label hover:text-editorial-text"
-              }`}
-            >
-              {label}
-              <span className="ml-1.5 opacity-60">{counts[key]}</span>
-            </button>
-          );
-        })}
-      </div>
+      <FilterBar
+        options={FILTERS.map((f) => ({ ...f, count: counts[f.key] }))}
+        value={filter}
+        onChange={setFilter}
+        className="pt-2"
+      />
 
       {/* ── Grid ── */}
       {visible.length === 0 ? (

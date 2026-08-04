@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import FilterBar from "../../components/FilterBar";
 import MoviePoster from "../../components/MoviePoster";
 import { usePointerPan } from "../../hooks/usePointerPan";
 import { getBlogPostsSync } from "../../Utils/functions";
@@ -126,6 +127,16 @@ const columnPlan = (n: number, columns: number): number[] => {
   return plan.filter((size) => size > 0);
 };
 
+// ── Filter change choreography ───────────────────────────────────────────────
+// The old set drops off the wall before the new set goes up, so the two never
+// cross-fade through each other. Delays ripple out from the middle column.
+const EXIT_MS = 220;
+const ENTER_MS = 520;
+const exitDelay = (spread: number, depth: number) =>
+  Math.min(140, spread * 16 + depth * 10);
+const enterDelay = (spread: number, depth: number) =>
+  Math.min(420, spread * 42 + depth * 28);
+
 /** Splits the list into the columns described by `columnPlan`. */
 const toColumns = <T,>(items: T[], columns: number): T[][] => {
   const grouped: T[][] = [];
@@ -196,10 +207,23 @@ const MoviesSection: React.FC = () => {
     return c;
   }, [movies]);
 
+  // The wall renders `shown`, which lags `filter` by one exit animation: on a
+  // change the posters currently up drop off first, then the new set is
+  // mounted and goes back up.
+  const [shown, setShown] = useState<Filter>("all");
+  const leaving = shown !== filter;
+
+  useEffect(() => {
+    if (!leaving) return;
+    const id = setTimeout(() => setShown(filter), EXIT_MS + exitDelay(9, 9));
+    return () => clearTimeout(id);
+  }, [filter, leaving]);
+
   const visible =
-    filter === "all" ? movies : movies.filter((m) => m.category === filter);
+    shown === "all" ? movies : movies.filter((m) => m.category === shown);
 
   const wall = useMemo(() => toColumns(visible, columns), [visible, columns]);
+  const middle = (wall.length - 1) / 2;
 
   return (
     <div className="flex-1 w-full">
@@ -236,19 +260,33 @@ const MoviesSection: React.FC = () => {
                   transform: `translateY(${COLUMN_DRIFT[c % COLUMN_DRIFT.length]}px)`,
                 }}
               >
-                {column.map((item) => (
-                  <MoviePoster
-                    key={`${item.category}-${item.post.slug}`}
-                    post={item.post}
-                    to={item.to}
-                    width={Math.round(
-                      baseWidth *
-                        WIDTH_SCALES[
-                          slugHash(item.post.slug) % WIDTH_SCALES.length
-                        ],
-                    )}
-                  />
-                ))}
+                {column.map((item, r) => {
+                  const spread = Math.abs(c - middle);
+                  return (
+                    // The wrapper carries the drop-off / go-up animation, so it
+                    // never fights the poster's own hover transform.
+                    <div
+                      key={`${item.category}-${item.post.slug}`}
+                      className={leaving ? "animate-poster-out" : "animate-poster-in"}
+                      style={{
+                        animation: leaving
+                          ? `posterOut ${EXIT_MS}ms ease-in forwards ${exitDelay(spread, r)}ms`
+                          : `posterIn ${ENTER_MS}ms cubic-bezier(0.22, 1, 0.36, 1) backwards ${enterDelay(spread, r)}ms`,
+                      }}
+                    >
+                      <MoviePoster
+                        post={item.post}
+                        to={item.to}
+                        width={Math.round(
+                          baseWidth *
+                            WIDTH_SCALES[
+                              slugHash(item.post.slug) % WIDTH_SCALES.length
+                            ],
+                        )}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -256,40 +294,15 @@ const MoviesSection: React.FC = () => {
       </div>
 
       {/* ── Filter bar ──
-          Sits over the wall, and `data-no-pan` keeps the wall still while
-          you're aiming at it — otherwise reaching for a filter at the top of
-          the screen would send the posters sliding. */}
-      <div data-no-pan className="relative z-10 flex justify-center pt-2 px-6">
-        {/* Poster art runs right under the labels, so they need their own
-            surface to sit on rather than the page background. */}
-        <div
-          className="flex flex-wrap justify-center gap-2 p-1.5 rounded-[26px] backdrop-blur-md"
-          style={{
-            background: "rgba(17,17,17,0.72)",
-            boxShadow:
-              "inset 0 0 0 1px rgba(232,227,220,0.10), 0 10px 30px -12px rgba(0,0,0,0.9)",
-          }}
-        >
-          {FILTERS.map(({ key, label }) => {
-            if (key !== "all" && counts[key] === 0) return null;
-            const active = filter === key;
-            return (
-              <button
-                key={key}
-                onClick={() => setFilter(key)}
-                className={`px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] transition-colors ${
-                  active
-                    ? "bg-editorial-text text-editorial-bg"
-                    : "text-editorial-muted/70 hover:text-editorial-text"
-                }`}
-              >
-                {label}
-                <span className="ml-1.5 opacity-60">{counts[key]}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+          Sits over the wall; its own `data-no-pan` keeps the posters still
+          while you're aiming at it, since reaching for a filter at the top of
+          the screen would otherwise send them sliding. */}
+      <FilterBar
+        options={FILTERS.map((f) => ({ ...f, count: counts[f.key] }))}
+        value={filter}
+        onChange={setFilter}
+        className="pt-2"
+      />
     </div>
   );
 };
