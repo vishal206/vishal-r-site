@@ -1,5 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import FilterBar from "../../components/FilterBar";
 import MoviePoster from "../../components/MoviePoster";
+import { usePointerPan } from "../../hooks/usePointerPan";
 import { getBlogPostsSync } from "../../Utils/functions";
 import type { BlogPostMeta } from "../../Utils/markdownLoader";
 import { media } from "../../Utils/media";
@@ -69,10 +71,16 @@ const useWallScale = () => {
   return scale;
 };
 
+
 // How far each column slides up or down from centre. Posters stay shoulder to
 // shoulder horizontally, but nothing lines up across a column boundary — which
 // is what stops the wall reading as rows.
 const COLUMN_DRIFT = [-6, 26, -20, 12, 34, -14, 20, -28, 8];
+
+// The drift is a transform, so it doesn't grow the block's layout box. Padding
+// the block by the largest drift keeps the panning limits honest — otherwise
+// the outermost drifted poster sits just past where the pan can reach.
+const MAX_DRIFT = Math.max(...COLUMN_DRIFT.map(Math.abs));
 
 /**
  * How many posters go in each column, left to right: the middle columns run
@@ -119,6 +127,16 @@ const columnPlan = (n: number, columns: number): number[] => {
   return plan.filter((size) => size > 0);
 };
 
+// ── Filter change choreography ───────────────────────────────────────────────
+// The old set drops off the wall before the new set goes up, so the two never
+// cross-fade through each other. Delays ripple out from the middle column.
+const EXIT_MS = 220;
+const ENTER_MS = 520;
+const exitDelay = (spread: number, depth: number) =>
+  Math.min(140, spread * 16 + depth * 10);
+const enterDelay = (spread: number, depth: number) =>
+  Math.min(420, spread * 42 + depth * 28);
+
 /** Splits the list into the columns described by `columnPlan`. */
 const toColumns = <T,>(items: T[], columns: number): T[][] => {
   const grouped: T[][] = [];
@@ -133,6 +151,17 @@ const toColumns = <T,>(items: T[], columns: number): T[][] => {
 const MoviesSection: React.FC = () => {
   const [filter, setFilter] = useState<Filter>("all");
   const { width: baseWidth, columns } = useWallScale();
+
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  usePointerPan(viewportRef, contentRef);
+
+  // Touch has no pointer to read, so those devices get a plain scrollable
+  // viewport instead of the pan (scrollbars are hidden site-wide).
+  const canPan = useMemo(
+    () => window.matchMedia?.("(hover: hover)").matches ?? true,
+    [],
+  );
 
   // One flat list of every movie tagged by category. A watched entry whose
   // `post` points at a review is promoted to `reviewed`, so none is counted
@@ -178,76 +207,102 @@ const MoviesSection: React.FC = () => {
     return c;
   }, [movies]);
 
+  // The wall renders `shown`, which lags `filter` by one exit animation: on a
+  // change the posters currently up drop off first, then the new set is
+  // mounted and goes back up.
+  const [shown, setShown] = useState<Filter>("all");
+  const leaving = shown !== filter;
+
+  useEffect(() => {
+    if (!leaving) return;
+    const id = setTimeout(() => setShown(filter), EXIT_MS + exitDelay(9, 9));
+    return () => clearTimeout(id);
+  }, [filter, leaving]);
+
   const visible =
-    filter === "all" ? movies : movies.filter((m) => m.category === filter);
+    shown === "all" ? movies : movies.filter((m) => m.category === shown);
 
   const wall = useMemo(() => toColumns(visible, columns), [visible, columns]);
+  const middle = (wall.length - 1) / 2;
 
   return (
     <div className="flex-1 w-full">
-      {/* ── Filter bar ── */}
-      <div className="flex flex-wrap justify-center gap-2 pt-2 px-6">
-        {FILTERS.map(({ key, label }) => {
-          if (key !== "all" && counts[key] === 0) return null;
-          const active = filter === key;
-          return (
-            <button
-              key={key}
-              onClick={() => setFilter(key)}
-              className={`px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] transition-colors ${
-                active
-                  ? "bg-editorial-text text-editorial-bg"
-                  : "text-editorial-label hover:text-editorial-text"
-              }`}
-            >
-              {label}
-              <span className="ml-1.5 opacity-60">{counts[key]}</span>
-            </button>
-          );
-        })}
-      </div>
-
       {/* ── The wall ──
           Posters are stacked in columns rather than rows: each column is
           centred on the middle line and then drifts up or down, so posters sit
-          shoulder to shoulder while their tops and bottoms never line up. The
-          block runs wider than the viewport by design — the wall crops it
-          evenly on both sides instead of scrolling sideways, and `clip` (not
-          `hidden`) leaves a hovered poster free to lift out of the stack. */}
-      <div className="overflow-x-clip pt-12 md:pt-16 pb-10">
+          shoulder to shoulder while their tops and bottoms never line up.
+
+          It's pinned to the sheet itself (the nearest positioned ancestor), so
+          it covers the whole screen — behind the filter bar and on down past
+          the dock — rather than sitting in a band between them. The block runs
+          past every edge by design; this is a window onto it, panned by where
+          the cursor sits (usePointerPan). */}
+      <div
+        ref={viewportRef}
+        className={`absolute inset-0 flex items-center justify-center ${
+          canPan ? "overflow-clip" : "overflow-auto"
+        }`}
+      >
         {visible.length === 0 ? (
-          <div className="text-center text-editorial-label text-sm py-16">
-            No movies yet.
-          </div>
+          <div className="text-editorial-label text-sm">No movies yet.</div>
         ) : (
-          <div className="flex justify-center items-center" style={{ gap: GAP }}>
+          <div
+            ref={contentRef}
+            className="flex items-center justify-center shrink-0 will-change-transform"
+            style={{ gap: GAP, paddingBlock: MAX_DRIFT }}
+          >
             {wall.map((column, c) => (
               <div
                 key={c}
-                className="flex flex-col items-center"
+                className="flex flex-col items-center shrink-0"
                 style={{
                   gap: GAP,
                   transform: `translateY(${COLUMN_DRIFT[c % COLUMN_DRIFT.length]}px)`,
                 }}
               >
-                {column.map((item) => (
-                  <MoviePoster
-                    key={`${item.category}-${item.post.slug}`}
-                    post={item.post}
-                    to={item.to}
-                    width={Math.round(
-                      baseWidth *
-                        WIDTH_SCALES[
-                          slugHash(item.post.slug) % WIDTH_SCALES.length
-                        ],
-                    )}
-                  />
-                ))}
+                {column.map((item, r) => {
+                  const spread = Math.abs(c - middle);
+                  return (
+                    // The wrapper carries the drop-off / go-up animation, so it
+                    // never fights the poster's own hover transform.
+                    <div
+                      key={`${item.category}-${item.post.slug}`}
+                      className={leaving ? "animate-poster-out" : "animate-poster-in"}
+                      style={{
+                        animation: leaving
+                          ? `posterOut ${EXIT_MS}ms ease-in forwards ${exitDelay(spread, r)}ms`
+                          : `posterIn ${ENTER_MS}ms cubic-bezier(0.22, 1, 0.36, 1) backwards ${enterDelay(spread, r)}ms`,
+                      }}
+                    >
+                      <MoviePoster
+                        post={item.post}
+                        to={item.to}
+                        width={Math.round(
+                          baseWidth *
+                            WIDTH_SCALES[
+                              slugHash(item.post.slug) % WIDTH_SCALES.length
+                            ],
+                        )}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* ── Filter bar ──
+          Sits over the wall; its own `data-no-pan` keeps the posters still
+          while you're aiming at it, since reaching for a filter at the top of
+          the screen would otherwise send them sliding. */}
+      <FilterBar
+        options={FILTERS.map((f) => ({ ...f, count: counts[f.key] }))}
+        value={filter}
+        onChange={setFilter}
+        className="pt-2"
+      />
     </div>
   );
 };
