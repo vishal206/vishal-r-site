@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import MoviePoster from "../../components/MoviePoster";
+import { usePointerPan } from "../../hooks/usePointerPan";
 import { getBlogPostsSync } from "../../Utils/functions";
 import type { BlogPostMeta } from "../../Utils/markdownLoader";
 import { media } from "../../Utils/media";
@@ -69,10 +70,16 @@ const useWallScale = () => {
   return scale;
 };
 
+
 // How far each column slides up or down from centre. Posters stay shoulder to
 // shoulder horizontally, but nothing lines up across a column boundary — which
 // is what stops the wall reading as rows.
 const COLUMN_DRIFT = [-6, 26, -20, 12, 34, -14, 20, -28, 8];
+
+// The drift is a transform, so it doesn't grow the block's layout box. Padding
+// the block by the largest drift keeps the panning limits honest — otherwise
+// the outermost drifted poster sits just past where the pan can reach.
+const MAX_DRIFT = Math.max(...COLUMN_DRIFT.map(Math.abs));
 
 /**
  * How many posters go in each column, left to right: the middle columns run
@@ -134,6 +141,17 @@ const MoviesSection: React.FC = () => {
   const [filter, setFilter] = useState<Filter>("all");
   const { width: baseWidth, columns } = useWallScale();
 
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  usePointerPan(viewportRef, contentRef);
+
+  // Touch has no pointer to read, so those devices get a plain scrollable
+  // viewport instead of the pan (scrollbars are hidden site-wide).
+  const canPan = useMemo(
+    () => window.matchMedia?.("(hover: hover)").matches ?? true,
+    [],
+  );
+
   // One flat list of every movie tagged by category. A watched entry whose
   // `post` points at a review is promoted to `reviewed`, so none is counted
   // twice — mirroring how BooksSection folds `read` into `reviewed`.
@@ -185,46 +203,34 @@ const MoviesSection: React.FC = () => {
 
   return (
     <div className="flex-1 w-full">
-      {/* ── Filter bar ── */}
-      <div className="flex flex-wrap justify-center gap-2 pt-2 px-6">
-        {FILTERS.map(({ key, label }) => {
-          if (key !== "all" && counts[key] === 0) return null;
-          const active = filter === key;
-          return (
-            <button
-              key={key}
-              onClick={() => setFilter(key)}
-              className={`px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] transition-colors ${
-                active
-                  ? "bg-editorial-text text-editorial-bg"
-                  : "text-editorial-label hover:text-editorial-text"
-              }`}
-            >
-              {label}
-              <span className="ml-1.5 opacity-60">{counts[key]}</span>
-            </button>
-          );
-        })}
-      </div>
-
       {/* ── The wall ──
           Posters are stacked in columns rather than rows: each column is
           centred on the middle line and then drifts up or down, so posters sit
-          shoulder to shoulder while their tops and bottoms never line up. The
-          block runs wider than the viewport by design — the wall crops it
-          evenly on both sides instead of scrolling sideways, and `clip` (not
-          `hidden`) leaves a hovered poster free to lift out of the stack. */}
-      <div className="overflow-x-clip pt-12 md:pt-16 pb-10">
+          shoulder to shoulder while their tops and bottoms never line up.
+
+          It's pinned to the sheet itself (the nearest positioned ancestor), so
+          it covers the whole screen — behind the filter bar and on down past
+          the dock — rather than sitting in a band between them. The block runs
+          past every edge by design; this is a window onto it, panned by where
+          the cursor sits (usePointerPan). */}
+      <div
+        ref={viewportRef}
+        className={`absolute inset-0 flex items-center justify-center ${
+          canPan ? "overflow-clip" : "overflow-auto"
+        }`}
+      >
         {visible.length === 0 ? (
-          <div className="text-center text-editorial-label text-sm py-16">
-            No movies yet.
-          </div>
+          <div className="text-editorial-label text-sm">No movies yet.</div>
         ) : (
-          <div className="flex justify-center items-center" style={{ gap: GAP }}>
+          <div
+            ref={contentRef}
+            className="flex items-center justify-center shrink-0 will-change-transform"
+            style={{ gap: GAP, paddingBlock: MAX_DRIFT }}
+          >
             {wall.map((column, c) => (
               <div
                 key={c}
-                className="flex flex-col items-center"
+                className="flex flex-col items-center shrink-0"
                 style={{
                   gap: GAP,
                   transform: `translateY(${COLUMN_DRIFT[c % COLUMN_DRIFT.length]}px)`,
@@ -247,6 +253,42 @@ const MoviesSection: React.FC = () => {
             ))}
           </div>
         )}
+      </div>
+
+      {/* ── Filter bar ──
+          Sits over the wall, and `data-no-pan` keeps the wall still while
+          you're aiming at it — otherwise reaching for a filter at the top of
+          the screen would send the posters sliding. */}
+      <div data-no-pan className="relative z-10 flex justify-center pt-2 px-6">
+        {/* Poster art runs right under the labels, so they need their own
+            surface to sit on rather than the page background. */}
+        <div
+          className="flex flex-wrap justify-center gap-2 p-1.5 rounded-[26px] backdrop-blur-md"
+          style={{
+            background: "rgba(17,17,17,0.72)",
+            boxShadow:
+              "inset 0 0 0 1px rgba(232,227,220,0.10), 0 10px 30px -12px rgba(0,0,0,0.9)",
+          }}
+        >
+          {FILTERS.map(({ key, label }) => {
+            if (key !== "all" && counts[key] === 0) return null;
+            const active = filter === key;
+            return (
+              <button
+                key={key}
+                onClick={() => setFilter(key)}
+                className={`px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] transition-colors ${
+                  active
+                    ? "bg-editorial-text text-editorial-bg"
+                    : "text-editorial-muted/70 hover:text-editorial-text"
+                }`}
+              >
+                {label}
+                <span className="ml-1.5 opacity-60">{counts[key]}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
