@@ -14,7 +14,9 @@ type Props = {
 /**
  * A film's poster, rendered plain — no frame, no chrome, no tilt. On a wall of
  * these the hover is the only movement: the poster lifts and pops forward over
- * its neighbours. The title stays a tooltip, so the wall reads as artwork.
+ * its neighbours. Nothing labels it on screen, so the wall reads as artwork;
+ * the title lives in the image's `alt` for screen readers, deliberately not in
+ * a `title` — that would pop a browser tooltip over the art.
  */
 const MoviePoster = ({
   post,
@@ -67,11 +69,11 @@ const MoviePoster = ({
   }`;
 
   return to ? (
-    <Link to={to} className={className} style={{ width }} title={post.title}>
+    <Link to={to} className={className} style={{ width }} aria-label={post.title}>
       {inner}
     </Link>
   ) : (
-    <div className={className} style={{ width }} title={post.title}>
+    <div className={className} style={{ width }}>
       {inner}
     </div>
   );
