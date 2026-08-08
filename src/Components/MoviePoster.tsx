@@ -9,6 +9,12 @@ type Props = {
   to?: string | null;
   /** Off for the small standalone uses (reader header, dock pile). */
   hoverPop?: boolean;
+  /**
+   * Wall mode: the artwork is cropped to a standard 2:3 sheet instead of
+   * keeping its own proportions, so posters tile with no seams. Off elsewhere,
+   * where a poster stands alone and should keep its true shape.
+   */
+  tile?: boolean;
 };
 
 /**
@@ -23,13 +29,26 @@ const MoviePoster = ({
   width = 120,
   to = `/archive/${post.slug}`,
   hoverPop = true,
+  tile = false,
 }: Props) => {
   const art = post.image ? (
     <img
       src={post.image}
       alt={post.title}
       draggable={false}
-      className="block w-full h-auto"
+      className={tile ? "block w-full object-cover" : "block w-full h-auto"}
+      style={
+        tile
+          ? {
+              aspectRatio: "2 / 3",
+              // Tiles sit at fractional pixel offsets, so a hairline of
+              // background can otherwise show through the seams. Painting the
+              // artwork a whisker larger than its box closes them without
+              // touching the layout — it's already cropped, so nothing is lost.
+              transform: "scale(1.004)",
+            }
+          : undefined
+      }
     />
   ) : (
     // No artwork: a plain sheet carrying the title, so the wall never gaps.

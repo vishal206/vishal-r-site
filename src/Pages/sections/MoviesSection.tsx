@@ -33,19 +33,7 @@ const FILTERS: { key: Filter; label: string }[] = [
   { key: "wishlist", label: "To Be Watched" },
 ];
 
-// Posters come in four sizes so the cluster looks pinned up by hand rather than
-// laid out on a grid. The size is keyed off the slug, so a film always gets the
-// same one — no reshuffle on re-render or when the filter changes. Set this to
-// a single value for a uniform wall.
-const WIDTH_SCALES = [0.72, 0.86, 1, 1.16];
-
-const slugHash = (s: string) => {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-  return h;
-};
-
-const GAP = 10; // px between posters, both directions
+const POSTER_RATIO = 3 / 2; // poster height ÷ width — the standard sheet
 
 /**
  * Poster size and how many columns the wall runs to, stepped by viewport. The
@@ -72,59 +60,104 @@ const useWallScale = () => {
 };
 
 
-// How far each column slides up or down from centre. Posters stay shoulder to
-// shoulder horizontally, but nothing lines up across a column boundary — which
-// is what stops the wall reading as rows.
-const COLUMN_DRIFT = [-6, 26, -20, 12, 34, -14, 20, -28, 8];
-
-// The drift is a transform, so it doesn't grow the block's layout box. Padding
-// the block by the largest drift keeps the panning limits honest — otherwise
-// the outermost drifted poster sits just past where the pan can reach.
-const MAX_DRIFT = Math.max(...COLUMN_DRIFT.map(Math.abs));
-
 /**
- * How many posters go in each column, left to right: the middle columns run
- * tallest and the outer ones are shorter, so the block as a whole tapers to a
- * rough rhombus. Derived from the count alone, so the shape re-forms itself as
- * films are added or the filter narrows the list.
+ * How many posters go in each column, left to right: as even a split as the
+ * count allows, with the remainder handed out to alternating columns so the
+ * fuller and emptier columns interleave rather than bunching at one end.
+ *
+ * Neighbouring columns holding different numbers of posters is what keeps the
+ * wall from reading as rows — every column is the same height, so a column of
+ * four has its seams in different places than the column of three beside it.
  */
-const columnPlan = (n: number, columns: number): number[] => {
+const columnCounts = (n: number, columns: number): number[] => {
   const cols = Math.max(1, Math.min(columns, n));
-  if (cols <= 1) return n > 0 ? [n] : [];
+  const base = Math.floor(n / cols);
+  const extras = n - base * cols;
 
-  // Triangular weighting: the middle column is tallest, the outermost ~55% of
-  // it. Exact counts come from sharing out `n` by those weights.
-  const centre = (cols - 1) / 2;
-  const weights = Array.from(
-    { length: cols },
-    (_, i) => 1 - 0.45 * (Math.abs(i - centre) / centre),
-  );
-  const total = weights.reduce((a, b) => a + b, 0);
+  // Two columns holding the same number of posters share every seam, so they
+  // read as a little grid wherever they sit side by side. Handing the odd ones
+  // out to alternating columns keeps that from happening — and when the odd
+  // ones are the majority, it's the same trick upside down: start everything a
+  // poster taller and thin out alternating columns instead.
+  const majority = extras * 2 > cols;
+  const counts = Array<number>(cols).fill(majority ? base + 1 : base);
+  const step = majority ? -1 : 1;
+  let left = majority ? cols - extras : extras;
 
-  const raw = weights.map((w) => (w / total) * n);
-  const plan = raw.map((r) => Math.floor(r));
-
-  // Largest-remainder pass, so the columns always add up to exactly `n`.
-  let left = n - plan.reduce((a, b) => a + b, 0);
-  for (const { i } of raw
-    .map((r, i) => ({ i, frac: r - Math.floor(r) }))
-    .sort((a, b) => b.frac - a.frac)) {
-    if (left === 0) break;
-    plan[i] += 1;
-    left -= 1;
-  }
-
-  // No holes in the wall: an empty column borrows from the tallest one.
-  for (let i = 0; i < cols; i++) {
-    if (plan[i] > 0) continue;
-    const tallest = plan.indexOf(Math.max(...plan));
-    if (plan[tallest] > 1) {
-      plan[tallest] -= 1;
-      plan[i] += 1;
+  // Odd columns first, then even — the second pass only comes into play for
+  // the narrow walls where alternating alone can't absorb the remainder.
+  for (const start of [1, 0]) {
+    for (let i = start; i < cols && left > 0; i += 2) {
+      counts[i] += step;
+      left -= 1;
     }
   }
 
-  return plan.filter((size) => size > 0);
+  // Where the split came out even there was no remainder to alternate with, so
+  // the wall would be every column the same. Walk it and push a poster across
+  // any pair that still matches — between neighbours, so the total is
+  // untouched and the columns stay within one or two of even.
+  for (let i = 0; i + 1 < cols; i++) {
+    if (counts[i] !== counts[i + 1]) continue;
+    for (const dir of [1, -1]) {
+      const a = counts[i] + dir;
+      const b = counts[i + 1] - dir;
+      // Never empty a column, and never solve one matching pair by creating
+      // another with the column to the left.
+      if (a < 1 || b < 1 || (i > 0 && counts[i - 1] === a)) continue;
+      counts[i] = a;
+      counts[i + 1] = b;
+      break;
+    }
+  }
+
+  return counts;
+};
+
+type WallColumn = { items: Shelved[]; width: number };
+
+/**
+ * Packs the films into a wall with no seams anywhere in it.
+ *
+ * The one rule that gets there: every column is squared off to the same
+ * height. Fix that height and a column's width falls out of how many posters
+ * it holds — height ÷ count ÷ the poster ratio — so a column of four comes out
+ * narrower than a column of three. The width variety is a consequence of the
+ * packing rather than something sprinkled on top, which is why it tiles: no
+ * gaps between columns, none between posters, and a flat edge all the way
+ * round.
+ */
+const buildWall = (
+  items: Shelved[],
+  columns: number,
+  baseWidth: number,
+): { wall: WallColumn[]; height: number } => {
+  if (items.length === 0) return { wall: [], height: 0 };
+
+  const counts = columnCounts(items.length, columns);
+
+  // Start from the width the wall wants to be and let the equal-height
+  // constraint pick the height: Σ widthᵢ = Σ height ÷ (ratio × countᵢ).
+  const spread = counts.reduce((a, count) => a + 1 / count, 0);
+  let height = (baseWidth * counts.length * POSTER_RATIO) / spread;
+
+  // A column holding one or two posters would otherwise blow up to fill that
+  // height. Cap the widest column and let the whole wall come down with it.
+  const widest = height / (POSTER_RATIO * Math.min(...counts));
+  const cap = baseWidth * 1.35;
+  if (widest > cap) height *= cap / widest;
+
+  let cursor = 0;
+  const wall = counts.map((count) => {
+    const column = {
+      items: items.slice(cursor, cursor + count),
+      width: height / (POSTER_RATIO * count),
+    };
+    cursor += count;
+    return column;
+  });
+
+  return { wall, height };
 };
 
 // ── Filter change choreography ───────────────────────────────────────────────
@@ -136,17 +169,6 @@ const exitDelay = (spread: number, depth: number) =>
   Math.min(140, spread * 16 + depth * 10);
 const enterDelay = (spread: number, depth: number) =>
   Math.min(420, spread * 42 + depth * 28);
-
-/** Splits the list into the columns described by `columnPlan`. */
-const toColumns = <T,>(items: T[], columns: number): T[][] => {
-  const grouped: T[][] = [];
-  let cursor = 0;
-  for (const size of columnPlan(items.length, columns)) {
-    grouped.push(items.slice(cursor, cursor + size));
-    cursor += size;
-  }
-  return grouped;
-};
 
 const MoviesSection: React.FC = () => {
   const [filter, setFilter] = useState<Filter>("all");
@@ -222,15 +244,21 @@ const MoviesSection: React.FC = () => {
   const visible =
     shown === "all" ? movies : movies.filter((m) => m.category === shown);
 
-  const wall = useMemo(() => toColumns(visible, columns), [visible, columns]);
+  const { wall, height } = useMemo(
+    () => buildWall(visible, columns, baseWidth),
+    [visible, columns, baseWidth],
+  );
   const middle = (wall.length - 1) / 2;
 
   return (
     <div className="flex-1 w-full">
       {/* ── The wall ──
-          Posters are stacked in columns rather than rows: each column is
-          centred on the middle line and then drifts up or down, so posters sit
-          shoulder to shoulder while their tops and bottoms never line up.
+          Posters are stacked in columns rather than rows, packed edge to edge
+          with no gaps: every column runs to the same height, so the columns
+          butt up against each other and the block is a solid rectangle. What
+          keeps it from reading as a grid is that neighbouring columns hold
+          different numbers of posters, so no seam ever carries across (see
+          `buildWall`).
 
           It's pinned to the sheet itself (the nearest positioned ancestor), so
           it covers the whole screen — behind the filter bar and on down past
@@ -248,19 +276,16 @@ const MoviesSection: React.FC = () => {
         ) : (
           <div
             ref={contentRef}
-            className="flex items-center justify-center shrink-0 will-change-transform"
-            style={{ gap: GAP, paddingBlock: MAX_DRIFT }}
+            className="flex shrink-0 will-change-transform"
+            style={{ height }}
           >
             {wall.map((column, c) => (
               <div
                 key={c}
-                className="flex flex-col items-center shrink-0"
-                style={{
-                  gap: GAP,
-                  transform: `translateY(${COLUMN_DRIFT[c % COLUMN_DRIFT.length]}px)`,
-                }}
+                className="flex flex-col shrink-0"
+                style={{ width: column.width }}
               >
-                {column.map((item, r) => {
+                {column.items.map((item, r) => {
                   const spread = Math.abs(c - middle);
                   return (
                     // The wrapper carries the drop-off / go-up animation, so it
@@ -274,16 +299,7 @@ const MoviesSection: React.FC = () => {
                           : `posterIn ${ENTER_MS}ms cubic-bezier(0.22, 1, 0.36, 1) backwards ${enterDelay(spread, r)}ms`,
                       }}
                     >
-                      <MoviePoster
-                        post={item.post}
-                        to={item.to}
-                        width={Math.round(
-                          baseWidth *
-                            WIDTH_SCALES[
-                              slugHash(item.post.slug) % WIDTH_SCALES.length
-                            ],
-                        )}
-                      />
+                      <MoviePoster post={item.post} to={item.to} tile width={column.width} />
                     </div>
                   );
                 })}
