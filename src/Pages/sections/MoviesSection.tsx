@@ -236,7 +236,7 @@ const MoviesSection: React.FC = () => {
           it covers the whole screen — behind the filter bar and on down past
           the dock — rather than sitting in a band between them. The block runs
           past every edge by design; this is a window onto it, panned by where
-          the cursor sits (usePointerPan). */}
+          the cursor sits and by the wheel or trackpad (usePointerPan). */}
       <div
         ref={viewportRef}
         className={`absolute inset-0 flex items-center justify-center ${

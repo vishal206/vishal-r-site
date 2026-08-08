@@ -101,7 +101,9 @@
       "Bash(echo \"LINT_EXIT=$?\")",
       "Bash(git check-ignore *)",
       "Bash(git stash *)",
-      "Bash(echo \"LINT=$?\")"
+      "Bash(echo \"LINT=$?\")",
+      "Bash(node /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/978e67da-6b4e-4df5-95e7-4bef0d1df273/scratchpad/wheel-test.mjs)",
+      "Bash(node wheel-test.mjs)"
     ]
   }
 }
