@@ -242,7 +242,8 @@ const MoviesSection: React.FC = () => {
   usePointerPan(viewportRef, contentRef);
 
   // Touch has no pointer to read, so those devices get a plain scrollable
-  // viewport instead of the pan (scrollbars are hidden site-wide).
+  // viewport instead of the pan (scrollbars are hidden site-wide) — which is
+  // laid out differently, see the wall's auto margins below.
   const canPan = useMemo(
     () => window.matchMedia?.("(hover: hover)").matches ?? true,
     [],
@@ -322,6 +323,17 @@ const MoviesSection: React.FC = () => {
   );
   const middle = (wall.length - 1) / 2;
 
+  // Now that the wall starts at the top-left of the scrolling viewport, park
+  // the scroll in the middle of it — the same "dropped into the middle of the
+  // wall" first look the pan gives on desktop, with the edges a swipe away.
+  useEffect(() => {
+    if (canPan) return;
+    const el = viewportRef.current;
+    if (!el) return;
+    el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
+    el.scrollTop = (el.scrollHeight - el.clientHeight) / 2;
+  }, [canPan, wall, height]);
+
   return (
     <div className="flex-1 w-full">
       {/* ── The wall ──
@@ -339,8 +351,8 @@ const MoviesSection: React.FC = () => {
           the cursor sits and by the wheel or trackpad (usePointerPan). */}
       <div
         ref={viewportRef}
-        className={`absolute inset-0 flex items-center justify-center ${
-          canPan ? "overflow-clip" : "overflow-auto"
+        className={`absolute inset-0 flex ${
+          canPan ? "items-center justify-center overflow-clip" : "overflow-auto"
         }`}
       >
         {visible.length === 0 ? (
@@ -349,7 +361,13 @@ const MoviesSection: React.FC = () => {
           <div
             ref={contentRef}
             className="flex shrink-0 will-change-transform"
-            style={{ height }}
+            // On the scrolling viewport the wall is centred by auto margins
+            // rather than by the container: an auto margin takes only positive
+            // free space, so a wall bigger than the screen sits flush at the
+            // top-left and every part of it can be scrolled to. Centring it the
+            // other way puts its top and left edges outside the scrollable
+            // range, where nothing can reach them.
+            style={{ height, margin: canPan ? undefined : "auto" }}
           >
             {wall.map((column, c) => (
               <div
