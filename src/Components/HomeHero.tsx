@@ -178,7 +178,7 @@ const HomeHero = () => (
                 <span
                   key={label}
                   style={{ "--brand": `#${icon.hex}` } as React.CSSProperties}
-                  className="group relative flex cursor-pointer items-center gap-1.5 text-[10px] uppercase tracking-[0.15em] text-editorial-text border border-editorial-divider px-2 py-1 origin-center transition-[transform,border-color] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:z-10 hover:scale-115 hover:[border-color:var(--brand)]"
+                  className="peer group relative flex cursor-pointer items-center gap-1.5 text-[10px] uppercase tracking-[0.15em] text-editorial-text border border-editorial-divider px-2 py-1 origin-center transition-[scale,translate,border-color] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:z-10 hover:scale-115 hover:[border-color:var(--brand)] peer-hover:translate-x-2 [&:has(~*:hover)]:-translate-x-2"
                 >
                   <svg
                     viewBox={icon.viewBox ?? "0 0 24 24"}
