@@ -26,6 +26,9 @@ export const getBlogPostsSync = (): BlogPostMeta[] => {
         image,
         tags: post.frontmatter.tags || "",
         description: post.frontmatter.description || "",
+        // A review's own 1–10 verdict, which sizes its poster on the movie
+        // wall. Undefined for everything that isn't scored.
+        score: post.frontmatter.score,
       };
     })
     .filter((p) => p !== null) as BlogPostMeta[];
@@ -67,6 +70,7 @@ export const fetchBlogPosts = async (
         image: image,
         tags: post.frontmatter.tags || "",
         description: post.frontmatter.description || "",
+        score: post.frontmatter.score,
       };
     });
 

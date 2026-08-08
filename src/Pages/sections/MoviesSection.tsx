@@ -17,7 +17,29 @@ type Shelved = {
   post: BlogPostMeta;
   to: string | null;
   category: Category;
+  score: number;
 };
+
+// ── Scores ───────────────────────────────────────────────────────────────────
+// A film is scored 1–10 and the wall sizes it accordingly: the best films get
+// the biggest posters. Reviewed films take their score from the post's
+// frontmatter (`score: 9`), the rest from media.json. Anything unscored sits at
+// the middle size, so the wall reads the same as before until scores are added.
+const SCORE_MID = 5.5;
+
+// How far a score moves a poster off the middle size: a 10 comes out a fifth
+// bigger than the average, a 1 a fifth smaller. Turn this up for a wall with
+// more shout to it — past ~0.35 the crop on the biggest posters gets tight.
+const SCORE_AMP = 0.22;
+
+const toScore = (value: unknown): number =>
+  typeof value === "number" && Number.isFinite(value)
+    ? Math.min(10, Math.max(1, value))
+    : SCORE_MID;
+
+/** A poster's share of its column's height, from its score. */
+const scoreWeight = (score: number) =>
+  1 + SCORE_AMP * ((score - SCORE_MID) / (SCORE_MID - 1));
 
 /** A media.json entry dressed as a blog post so MoviePoster can render it. */
 const toPost = (m: MediaMovie): BlogPostMeta => ({
@@ -125,18 +147,26 @@ const columnCounts = (n: number, columns: number): number[] => {
   return counts;
 };
 
-type WallColumn = { items: Shelved[]; width: number };
+type WallCell = { item: Shelved; height: number };
+type WallColumn = { cells: WallCell[]; width: number };
 
 /**
- * Packs the films into a wall with no seams anywhere in it.
+ * Packs the films into a wall with no seams anywhere in it, biggest posters to
+ * the best-scored films.
  *
- * The one rule that gets there: every column is squared off to the same
- * height. Fix that height and a column's width falls out of how many posters
- * it holds — height ÷ count ÷ the poster ratio — so a column of four comes out
- * narrower than a column of three. The width variety is a consequence of the
- * packing rather than something sprinkled on top, which is why it tiles: no
- * gaps between columns, none between posters, and a flat edge all the way
- * round.
+ * The one rule that gets the seamless part: every column is squared off to the
+ * same height. Fix that height and a column's width falls out of how many
+ * posters it holds — height ÷ count ÷ the poster ratio — so a column of four
+ * comes out narrower than a column of three. The width variety is a
+ * consequence of the packing rather than something sprinkled on top, which is
+ * why it tiles: no gaps between columns, none between posters, and a flat edge
+ * all the way round.
+ *
+ * Scores ride on top of that in two ways, neither of which can open a gap. The
+ * films are ranked and dealt into the columns biggest-cell-first, so the top
+ * scores land in the wide columns; then within a column the fixed height is
+ * shared out by score rather than evenly, so a favourite is taller than what
+ * it sits above. Both are redistributions of space that's already spoken for.
  */
 const buildWall = (
   items: Shelved[],
@@ -158,15 +188,37 @@ const buildWall = (
   const cap = baseWidth * 1.35;
   if (widest > cap) height *= cap / widest;
 
+  // Best films first, and columns in the order of how big a poster they hold —
+  // fewest posters means the widest column and the tallest cells. Only what
+  // goes in each column changes; the columns themselves stay where they are,
+  // so the big posters end up scattered over the wall rather than bunched.
+  const ranked = [...items].sort((a, b) => b.score - a.score);
+  const byCell = counts
+    .map((count, i) => ({ count, i }))
+    .sort((a, b) => a.count - b.count || a.i - b.i);
+
+  const wall: WallColumn[] = Array(counts.length);
   let cursor = 0;
-  const wall = counts.map((count) => {
-    const column = {
-      items: items.slice(cursor, cursor + count),
-      width: height / (POSTER_RATIO * count),
-    };
+  for (const { count, i } of byCell) {
+    const slice = ranked.slice(cursor, cursor + count);
     cursor += count;
-    return column;
-  });
+
+    // The column's height is already fixed, so scores only decide how it's
+    // divided up — the shares always add back to exactly the same total.
+    const weights = slice.map((item) => scoreWeight(item.score));
+    const total = weights.reduce((a, b) => a + b, 0);
+    const cells = slice.map((item, j) => ({
+      item,
+      height: (height * weights[j]) / total,
+    }));
+
+    // Every column runs biggest-first otherwise, which puts a band of large
+    // posters along the top of the wall. Flipping every other column breaks
+    // that up.
+    if (i % 2) cells.reverse();
+
+    wall[i] = { cells, width: height / (POSTER_RATIO * count) };
+  }
 
   return { wall, height };
 };
@@ -205,10 +257,18 @@ const MoviesSection: React.FC = () => {
     const reviewed = getBlogPostsSync().filter((p) => p.tags === "Movie");
     const reviewedSlugs = new Set(reviewed.map((p) => p.slug));
 
+    // A reviewed film's score comes off the post's frontmatter; a media.json
+    // entry that also has a review can carry one either place, the post
+    // winning, since that's where the write-up passing judgement lives.
+    const scored = new Map(
+      media.movies.watched.map((m) => [m.post ?? m.title, m.score]),
+    );
+
     const reviewedShelf: Shelved[] = reviewed.map((p) => ({
       post: p,
       to: `/archive/${p.slug}`,
       category: "reviewed",
+      score: toScore(p.score ?? scored.get(p.slug)),
     }));
 
     const watchedShelf: Shelved[] = media.movies.watched
@@ -217,12 +277,16 @@ const MoviesSection: React.FC = () => {
         post: toPost(m),
         to: m.post ? `/archive/${m.post}` : null,
         category: "watched",
+        score: toScore(m.score),
       }));
 
+    // Nothing on the wishlist has been seen, so nothing there has a score —
+    // that wall comes out evenly sized, which is right.
     const wishlistShelf: Shelved[] = media.movies.wishlist.map((m) => ({
       post: toPost(m),
       to: null,
       category: "wishlist",
+      score: SCORE_MID,
     }));
 
     return [...reviewedShelf, ...watchedShelf, ...wishlistShelf];
@@ -293,7 +357,7 @@ const MoviesSection: React.FC = () => {
                 className="flex flex-col shrink-0"
                 style={{ width: column.width }}
               >
-                {column.items.map((item, r) => {
+                {column.cells.map(({ item, height: cell }, r) => {
                   const spread = Math.abs(c - middle);
                   return (
                     // The wrapper carries the drop-off / go-up animation, so it
@@ -307,7 +371,12 @@ const MoviesSection: React.FC = () => {
                           : `posterIn ${ENTER_MS}ms cubic-bezier(0.22, 1, 0.36, 1) backwards ${enterDelay(spread, r)}ms`,
                       }}
                     >
-                      <MoviePoster post={item.post} to={item.to} tile width={column.width} />
+                      <MoviePoster
+                        post={item.post}
+                        to={item.to}
+                        width={column.width}
+                        height={cell}
+                      />
                     </div>
                   );
                 })}

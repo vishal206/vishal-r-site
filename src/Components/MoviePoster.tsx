@@ -10,11 +10,12 @@ type Props = {
   /** Off for the small standalone uses (reader header, dock pile). */
   hoverPop?: boolean;
   /**
-   * Wall mode: the artwork is cropped to a standard 2:3 sheet instead of
-   * keeping its own proportions, so posters tile with no seams. Off elsewhere,
-   * where a poster stands alone and should keep its true shape.
+   * Wall mode: the poster fills a cell of exactly this height, cropping the
+   * artwork rather than keeping its own proportions, so posters tile with no
+   * seams and the wall can size a film by its score. Left off elsewhere, where
+   * a poster stands alone and should keep its true shape.
    */
-  tile?: boolean;
+  height?: number;
 };
 
 /**
@@ -29,32 +30,34 @@ const MoviePoster = ({
   width = 120,
   to = `/archive/${post.slug}`,
   hoverPop = true,
-  tile = false,
+  height,
 }: Props) => {
+  // A cell in the wall is filled exactly; a poster on its own keeps the
+  // artwork's own proportions.
+  const cell = height
+    ? {
+        height,
+        // Tiles sit at fractional pixel offsets, so a hairline of background
+        // can otherwise show through the seams. Painting the artwork a whisker
+        // larger than its box closes them without touching the layout — it's
+        // already cropped, so nothing is lost.
+        transform: "scale(1.004)",
+      }
+    : undefined;
+
   const art = post.image ? (
     <img
       src={post.image}
       alt={post.title}
       draggable={false}
-      className={tile ? "block w-full object-cover" : "block w-full h-auto"}
-      style={
-        tile
-          ? {
-              aspectRatio: "2 / 3",
-              // Tiles sit at fractional pixel offsets, so a hairline of
-              // background can otherwise show through the seams. Painting the
-              // artwork a whisker larger than its box closes them without
-              // touching the layout — it's already cropped, so nothing is lost.
-              transform: "scale(1.004)",
-            }
-          : undefined
-      }
+      className={height ? "block w-full object-cover" : "block w-full h-auto"}
+      style={cell}
     />
   ) : (
     // No artwork: a plain sheet carrying the title, so the wall never gaps.
     <div
       className="flex items-center justify-center bg-[#1b1a18] p-2 text-center"
-      style={{ aspectRatio: "2 / 3" }}
+      style={cell ?? { aspectRatio: "2 / 3" }}
     >
       <span className="font-display font-bold text-editorial-text/75 leading-tight text-[11px]">
         {post.title}
