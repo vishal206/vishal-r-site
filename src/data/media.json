@@ -167,8 +167,25 @@
       {
         "title": "Gladiator",
         "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/wN2xWp1eIwCKOD0BHTcErTBv1Uq.jpg"
+      },
+      {
+        "title": "The Odyssey",
+        "image": "https://www.themoviedb.org/t/p/w1280/5rhTDKUhPYvpdQIijFIs5VoWsON.jpg"
       }
     ],
-    "wishlist": []
+    "wishlist": [
+      {
+        "title": "Troy",
+        "image": "https://www.themoviedb.org/t/p/w1280/a07wLy4ONfpsjnBqMwhlWTJTcm.jpg"
+      },
+      {
+        "title": "Banana Fish",
+        "image": "https://www.themoviedb.org/t/p/w1280/d2TW5Rtd0uCasHlQygsDfWCROl2.jpg"
+      },
+      {
+        "title": "Lazarus",
+        "image": "https://www.themoviedb.org/t/p/w1280/8ViqUWPWh6aPZGQA57FMRVmaXZ1.jpg"
+      }
+    ]
   }
 }

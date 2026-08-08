@@ -23,7 +23,8 @@ type Props<K extends string> = {
  * still while you're aiming at a button.
  *
  * Options after the first are dropped when their count is zero; the first is
- * always shown, since it's the "everything" case.
+ * always shown, since it's the section's default and can't be allowed to
+ * vanish out from under the marker.
  */
 function FilterBar<K extends string>({
   options,

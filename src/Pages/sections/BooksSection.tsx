@@ -7,8 +7,11 @@ import type { Book as BookType } from "../../Utils/markdownLoader";
 import { media } from "../../Utils/media";
 import type { MediaBook } from "../../Utils/media";
 
+// What a book is shelved as. `reviewed` is a kind of read — a book finished
+// that also has a write-up — so it sits inside the Read filter as well as
+// having a filter of its own.
 type Category = "reviewed" | "read" | "wishlist";
-type Filter = "all" | Category;
+type Filter = Category;
 
 type Shelved = {
   book: BookType;
@@ -28,12 +31,21 @@ const toBook = (m: MediaBook): BookType => ({
   cover: m.image ?? undefined,
 });
 
+// Read leads and is the shelf you land on: everything finished, reviews
+// included.
 const FILTERS: { key: Filter; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "reviewed", label: "Reviewed" },
   { key: "read", label: "Read" },
-  { key: "wishlist", label: "To Be Read" },
+  { key: "reviewed", label: "Reviewed" },
+  { key: "wishlist", label: "Wishlist" },
 ];
+
+const DEFAULT_FILTER: Filter = "read";
+
+/** Read is the wide shelf: a reviewed book is a read book too. */
+const inFilter = (category: Category, filter: Filter) =>
+  filter === "read"
+    ? category === "read" || category === "reviewed"
+    : category === filter;
 
 // Each book gets a random display size for a livelier, less uniform grid. It's
 // derived from the slug (not Math.random) so a given book always lands the same
@@ -206,10 +218,12 @@ const BookCard: React.FC<{ item: Shelved }> = ({ item }) => {
 };
 
 const BooksSection: React.FC = () => {
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filter, setFilter] = useState<Filter>(DEFAULT_FILTER);
 
   // One flat list of every book tagged by category. A read entry whose `post`
-  // points at a review is promoted to `reviewed`, so no book is counted twice.
+  // points at a review is promoted to `reviewed` and dropped from the read
+  // shelf — otherwise, now that Read carries the reviews too, a reviewed book
+  // would appear on that shelf twice.
   const books = useMemo<Shelved[]>(() => {
     const reviewed = getBooksSync();
     const reviewedSlugs = new Set(reviewed.map((b) => b.slug));
@@ -244,21 +258,17 @@ const BooksSection: React.FC = () => {
 
   // Tallies count total volumes, so a 20-volume set adds 20 rather than 1.
   const counts = useMemo(() => {
-    const c: Record<Filter, number> = {
-      all: 0,
-      reviewed: 0,
-      read: 0,
-      wishlist: 0,
-    };
-    for (const b of books) {
-      c[b.category] += b.volumes;
-      c.all += b.volumes;
-    }
+    const c: Record<Filter, number> = { read: 0, reviewed: 0, wishlist: 0 };
+    for (const b of books)
+      for (const f of FILTERS)
+        if (inFilter(b.category, f.key)) c[f.key] += b.volumes;
     return c;
   }, [books]);
 
-  const visible =
-    filter === "all" ? books : books.filter((b) => b.category === filter);
+  const visible = useMemo(
+    () => books.filter((b) => inFilter(b.category, filter)),
+    [books, filter],
+  );
 
   return (
     <div className="flex-1 px-6 md:px-12 pb-10 max-w-screen-xl mx-auto w-full">

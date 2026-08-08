@@ -7,8 +7,11 @@ import type { BlogPostMeta } from "../../Utils/markdownLoader";
 import { media } from "../../Utils/media";
 import type { MediaMovie } from "../../Utils/media";
 
+// What a film is shelved as. `reviewed` is a kind of watched — it's a film seen
+// that also has a write-up — so it sits inside the Watched filter as well as
+// having a filter of its own.
 type Category = "reviewed" | "watched" | "wishlist";
-type Filter = "all" | Category;
+type Filter = Category;
 
 type Shelved = {
   post: BlogPostMeta;
@@ -26,12 +29,20 @@ const toPost = (m: MediaMovie): BlogPostMeta => ({
   description: "",
 });
 
+// Watched leads and is the wall you land on: everything seen, reviews included.
 const FILTERS: { key: Filter; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "reviewed", label: "Reviewed" },
   { key: "watched", label: "Watched" },
-  { key: "wishlist", label: "To Be Watched" },
+  { key: "reviewed", label: "Reviewed" },
+  { key: "wishlist", label: "Wishlist" },
 ];
+
+const DEFAULT_FILTER: Filter = "watched";
+
+/** Watched is the wide shelf: a reviewed film is a watched film too. */
+const inFilter = (category: Category, filter: Filter) =>
+  filter === "watched"
+    ? category === "watched" || category === "reviewed"
+    : category === filter;
 
 const POSTER_RATIO = 3 / 2; // poster height ÷ width — the standard sheet
 
@@ -171,7 +182,7 @@ const enterDelay = (spread: number, depth: number) =>
   Math.min(420, spread * 42 + depth * 28);
 
 const MoviesSection: React.FC = () => {
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filter, setFilter] = useState<Filter>(DEFAULT_FILTER);
   const { width: baseWidth, columns } = useWallScale();
 
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -186,8 +197,10 @@ const MoviesSection: React.FC = () => {
   );
 
   // One flat list of every movie tagged by category. A watched entry whose
-  // `post` points at a review is promoted to `reviewed`, so none is counted
-  // twice — mirroring how BooksSection folds `read` into `reviewed`.
+  // `post` points at a review is promoted to `reviewed` and dropped from the
+  // watched shelf — otherwise, now that Watched carries the reviews too, a
+  // reviewed film would go up on that wall twice. Mirrors how BooksSection
+  // folds `read` into `reviewed`.
   const movies = useMemo<Shelved[]>(() => {
     const reviewed = getBlogPostsSync().filter((p) => p.tags === "Movie");
     const reviewedSlugs = new Set(reviewed.map((p) => p.slug));
@@ -216,23 +229,16 @@ const MoviesSection: React.FC = () => {
   }, []);
 
   const counts = useMemo(() => {
-    const c: Record<Filter, number> = {
-      all: 0,
-      reviewed: 0,
-      watched: 0,
-      wishlist: 0,
-    };
-    for (const m of movies) {
-      c[m.category] += 1;
-      c.all += 1;
-    }
+    const c: Record<Filter, number> = { watched: 0, reviewed: 0, wishlist: 0 };
+    for (const m of movies)
+      for (const f of FILTERS) if (inFilter(m.category, f.key)) c[f.key] += 1;
     return c;
   }, [movies]);
 
   // The wall renders `shown`, which lags `filter` by one exit animation: on a
   // change the posters currently up drop off first, then the new set is
   // mounted and goes back up.
-  const [shown, setShown] = useState<Filter>("all");
+  const [shown, setShown] = useState<Filter>(DEFAULT_FILTER);
   const leaving = shown !== filter;
 
   useEffect(() => {
@@ -241,8 +247,10 @@ const MoviesSection: React.FC = () => {
     return () => clearTimeout(id);
   }, [filter, leaving]);
 
-  const visible =
-    shown === "all" ? movies : movies.filter((m) => m.category === shown);
+  const visible = useMemo(
+    () => movies.filter((m) => inFilter(m.category, shown)),
+    [movies, shown],
+  );
 
   const { wall, height } = useMemo(
     () => buildWall(visible, columns, baseWidth),
