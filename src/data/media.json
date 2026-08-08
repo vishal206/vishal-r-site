@@ -68,107 +68,153 @@
       {
         "title": "Kamome Diner",
         "image": null,
-        "post": "Kamome-Diner"
+        "post": "Kamome-Diner",
+        "score": null
       },
       {
         "title": "It's a Wonderful Life",
         "image": null,
-        "post": "Its-a-Wonderful-Life"
+        "post": "Its-a-Wonderful-Life",
+        "score": 9
       },
       {
         "title": "The Goldfinch",
         "image": null,
-        "post": "The-Goldfinch"
+        "post": "The-Goldfinch",
+        "score": 7
       },
       {
         "title": "The Shawshank Redemption",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
+        "score": 9
       },
       {
         "title": "Project Hail Mary",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/yihdXomYb5kTeSivtFndMy5iDmf.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/yihdXomYb5kTeSivtFndMy5iDmf.jpg",
+        "score": 9
       },
       {
         "title": "Schindler's List",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg",
+        "score": 9
       },
       {
         "title": "12 Angry Men",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/zhG3vKWyDRaZYoaww1UVAi29T9h.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/zhG3vKWyDRaZYoaww1UVAi29T9h.jpg",
+        "score": 9
       },
       {
         "title": "Spirited Away",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg",
+        "score": 8
       },
       {
         "title": "The Green Mile",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/8VG8fDNiy50H4FedGwdSVUPoaJe.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/8VG8fDNiy50H4FedGwdSVUPoaJe.jpg",
+        "score": 7
       },
       {
         "title": "Parasite",
-        "image": "https://www.themoviedb.org/t/p/w1280/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"
+        "image": "https://www.themoviedb.org/t/p/w1280/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+        "score": 10
       },
       {
         "title": "Interstellar",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg",
+        "score": 8
       },
       {
         "title": "Your Name.",
-        "image": "https://www.themoviedb.org/t/p/w1280/q719jXXEzOoYaps6babgKnONONX.jpg"
+        "image": "https://www.themoviedb.org/t/p/w1280/q719jXXEzOoYaps6babgKnONONX.jpg",
+        "score": 10
       },
       {
         "title": "Pulp Fiction",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg",
+        "score": 8
       },
       {
         "title": "The Good, the Bad and the Ugly",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/bX2xnavhMYjWDoZp1VM6VnU1xwe.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/bX2xnavhMYjWDoZp1VM6VnU1xwe.jpg",
+        "score": 5
       },
       {
         "title": "Forrest Gump",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/Cw4hIUIAmSYfK9QfaUW5igp9La.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/Cw4hIUIAmSYfK9QfaUW5igp9La.jpg",
+        "score": 7
       },
       {
         "title": "Goodfellas",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/9OkCLM73MIU2CrKZbqiT8Ln1wY2.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/9OkCLM73MIU2CrKZbqiT8Ln1wY2.jpg",
+        "score": 5
       },
       {
         "title": "Fight Club",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg",
+        "score": 9
       },
       {
         "title": "A Silent Voice: The Movie",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/tuFaWiqX0TXoWu7DGNcmX3UW7sT.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/tuFaWiqX0TXoWu7DGNcmX3UW7sT.jpg",
+        "score": 4
       },
       {
         "title": "Se7en",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/191nKfP0ehp3uIvWqgPbFmI4lv9.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/191nKfP0ehp3uIvWqgPbFmI4lv9.jpg",
+        "score": 8
       },
       {
         "title": "Inception",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg",
+        "score": 10
       },
       {
         "title": "The Silence of the Lambs",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/uS9m8OBk1A8eM9I042bx8XXpqAq.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/uS9m8OBk1A8eM9I042bx8XXpqAq.jpg",
+        "score": 5
       },
       {
         "title": "Back to the Future",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/vN5B5WgYscRGcQpVhHl6p9DDTP0.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/vN5B5WgYscRGcQpVhHl6p9DDTP0.jpg",
+        "score": 10
       },
       {
         "title": "Dead Poets Society",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/erzbMlcNHOdx24AXOcn2ZKA7R1q.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/erzbMlcNHOdx24AXOcn2ZKA7R1q.jpg",
+        "score": 9
       },
       {
         "title": "The Matrix",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg",
+        "score": 7
       },
       {
         "title": "Gladiator",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/wN2xWp1eIwCKOD0BHTcErTBv1Uq.jpg"
+        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/wN2xWp1eIwCKOD0BHTcErTBv1Uq.jpg",
+        "score": 6
+      },
+      {
+        "title": "The Odyssey",
+        "image": "https://www.themoviedb.org/t/p/w1280/5rhTDKUhPYvpdQIijFIs5VoWsON.jpg",
+        "score": 10
       }
     ],
-    "wishlist": []
+    "wishlist": [
+      {
+        "title": "Troy",
+        "image": "https://www.themoviedb.org/t/p/w1280/a07wLy4ONfpsjnBqMwhlWTJTcm.jpg",
+        "score": null
+      },
+      {
+        "title": "Banana Fish",
+        "image": "https://www.themoviedb.org/t/p/w1280/d2TW5Rtd0uCasHlQygsDfWCROl2.jpg",
+        "score": null
+      },
+      {
+        "title": "Lazarus",
+        "image": "https://www.themoviedb.org/t/p/w1280/8ViqUWPWh6aPZGQA57FMRVmaXZ1.jpg",
+        "score": null
+      }
+    ]
   }
 }

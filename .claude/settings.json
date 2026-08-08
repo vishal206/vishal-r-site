@@ -103,7 +103,13 @@
       "Bash(git stash *)",
       "Bash(echo \"LINT=$?\")",
       "Bash(node /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/978e67da-6b4e-4df5-95e7-4bef0d1df273/scratchpad/wheel-test.mjs)",
-      "Bash(node wheel-test.mjs)"
+      "Bash(node wheel-test.mjs)",
+      "Bash(node wall-shot.mjs)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5174/movies)",
+      "Bash(node /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/978e67da-6b4e-4df5-95e7-4bef0d1df273/scratchpad/filters.mjs)",
+      "Bash(python3 - /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/978e67da-6b4e-4df5-95e7-4bef0d1df273/scratchpad/probe/src/data/media.json)",
+      "Bash(unlink /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/978e67da-6b4e-4df5-95e7-4bef0d1df273/scratchpad/probe/node_modules)",
+      "Bash(python3 -c \"import json;d=json.load\\(open\\('src/data/media.json'\\)\\);print\\([ \\(e['title'],e.get\\('score'\\)\\) for e in d['movies']['watched'] if e.get\\('score'\\) is not None]\\)\")"
     ]
   }
 }

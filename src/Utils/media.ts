@@ -21,6 +21,7 @@ export type MediaMovie = {
   image: string | null;
   post?: string;
   tmdbId?: number; // pins the TMDB entry when search guesses wrong
+  score?: number | null; // 1–10; the higher it is, the bigger the poster on the wall. Reviewed films take theirs from the post's frontmatter instead. Null (how new entries start) sits a film at the middle size.
 };
 
 export type MediaLists = {
