@@ -96,7 +96,12 @@
       "Bash(grep -n 'RIM_INNER =' __TRACKED_VAR__/disc.html)",
       "Bash(grep -n RIM_BACKGROUND __TRACKED_VAR__/disc.html)",
       "Bash(md5 -q /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a17d9dd2-7267-4343-9016-c192c419a4da/scratchpad/disc.png /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a17d9dd2-7267-4343-9016-c192c419a4da/scratchpad/disc2.png /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a17d9dd2-7267-4343-9016-c192c419a4da/scratchpad/disc3.png /private/tmp/claude-501/-Users-vishalr-Documents-projects-vishal-r-site/a17d9dd2-7267-4343-9016-c192c419a4da/scratchpad/disc4.png)",
-      "Bash(node -e \"console.log\\(require\\('puppeteer/package.json'\\).version\\)\")"
+      "Bash(node -e \"console.log\\(require\\('puppeteer/package.json'\\).version\\)\")",
+      "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('simple-icons/package.json'\\).exports,null,1\\)\\)\")",
+      "Bash(echo \"LINT_EXIT=$?\")",
+      "Bash(git check-ignore *)",
+      "Bash(git stash *)",
+      "Bash(echo \"LINT=$?\")"
     ]
   }
 }

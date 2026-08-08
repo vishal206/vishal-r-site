@@ -1,3 +1,14 @@
+import { faAws } from "@fortawesome/free-brands-svg-icons";
+import {
+  siDocker,
+  siFastapi,
+  siLanggraph,
+  siNextdotjs,
+  siPostgresql,
+  siPython,
+  siReact,
+  siTypescript,
+} from "simple-icons";
 import Vishal_Resume from "../assets/Vishal_Resume.pdf";
 
 const SOCIALS = [
@@ -25,19 +36,32 @@ const SOCIALS = [
   path?: string;
 }[];
 
+// Logos are raw path data so they can inherit currentColor: the chips read as
+// monochrome type until hovered, when the brand colour comes through. Most come
+// from simple-icons (24×24 viewBox); AWS is the exception — Amazon pulled its
+// marks from that set, so we fall back to Font Awesome's brand icon.
 const TECH_STACK = [
-  "React JS",
-  "TailwindCSS",
-  "Langchain",
-  "OpenAI",
-  "Node JS",
-  "Python",
-  "Qlik Sense",
-  "RAG Systems",
-  "LLM Orchestration",
-  "Vite",
-  "Firebase",
-];
+  { label: "React JS", icon: siReact },
+  { label: "TypeScript", icon: siTypescript },
+  // simple-icons ships Next.js as pure black, which vanishes on our dark sheet.
+  { label: "Next.JS", icon: { ...siNextdotjs, hex: "FFFFFF" } },
+  { label: "Python", icon: siPython },
+  { label: "FastAPI", icon: siFastapi },
+  { label: "LangGraph", icon: siLanggraph },
+  { label: "PostgreSQL", icon: siPostgresql },
+  { label: "Docker", icon: siDocker },
+  {
+    label: "AWS",
+    icon: {
+      path: faAws.icon[4] as string,
+      hex: "FF9900",
+      viewBox: `0 0 ${faAws.icon[0]} ${faAws.icon[1]}`,
+    },
+  },
+] as {
+  label: string;
+  icon: { path: string; hex: string; viewBox?: string };
+}[];
 
 // The home backdrop that always sits behind the section sheet. It now carries
 // the full "about" narrative — the name hero, the latest chapter, and the
@@ -150,12 +174,21 @@ const HomeHero = () => (
               Skills / Tech Stack
             </div>
             <div className="flex flex-wrap gap-2">
-              {TECH_STACK.map((skill) => (
+              {TECH_STACK.map(({ label, icon }) => (
                 <span
-                  key={skill}
-                  className="text-[10px] uppercase tracking-[0.15em] text-editorial-text border border-editorial-divider px-2 py-1 hover:border-editorial-label transition-colors"
+                  key={label}
+                  style={{ "--brand": `#${icon.hex}` } as React.CSSProperties}
+                  className="peer group relative flex cursor-pointer items-center gap-1.5 text-[10px] uppercase tracking-[0.15em] text-editorial-text border border-editorial-divider px-2 py-1 origin-center transition-[scale,translate,border-color] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:z-10 hover:scale-115 hover:[border-color:var(--brand)] peer-hover:translate-x-2 [&:has(~*:hover)]:-translate-x-2"
                 >
-                  {skill}
+                  <svg
+                    viewBox={icon.viewBox ?? "0 0 24 24"}
+                    fill="currentColor"
+                    aria-hidden="true"
+                    className="h-3 w-3 shrink-0 text-editorial-label transition-colors duration-300 group-hover:[color:var(--brand)]"
+                  >
+                    <path d={icon.path} />
+                  </svg>
+                  {label}
                 </span>
               ))}
             </div>
