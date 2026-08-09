@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 import { BlogPostMeta } from "../Utils/markdownLoader";
 
 // The hover pop, as numbers as well as classes: the nudge below has to predict
@@ -29,8 +30,8 @@ type Props = {
   /**
    * A line worth keeping from the film — usually a bit of dialogue. Shows
    * along the bottom of the poster on hover, and only then, so the wall stays
-   * artwork until you look at something. Optional: without it the hover is
-   * just the frame.
+   * artwork until you look at something. Markdown, so it can carry its own
+   * emphasis (`*like this*`). Optional: without it the hover is just the frame.
    */
   note?: string | null;
 };
@@ -184,7 +185,19 @@ const MoviePoster = ({
             className="text-center font-body text-editorial-bg line-clamp-2"
             style={{ fontSize: ink, lineHeight: 1.3 }}
           >
-            {note}
+            {/* Markdown, so a note can carry its own emphasis — but rendered
+                inline: the clamp needs the text as direct children, and a
+                block <p> here would also break the centring. Links are
+                flattened to their text, since the whole poster is already a
+                link and one can't sit inside another. */}
+            <ReactMarkdown
+              components={{
+                p: ({ children }) => <>{children}</>,
+                a: ({ children }) => <>{children}</>,
+              }}
+            >
+              {note}
+            </ReactMarkdown>
           </span>
         </span>
       ) : null}
