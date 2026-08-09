@@ -16,14 +16,22 @@ type Props = {
    * a poster stands alone and should keep its true shape.
    */
   height?: number;
+  /**
+   * A line worth keeping from the film — usually a bit of dialogue. Shows
+   * along the bottom of the poster on hover, and only then, so the wall stays
+   * artwork until you look at something. Optional: without it the hover is
+   * just the frame.
+   */
+  note?: string | null;
 };
 
 /**
  * A film's poster, rendered plain — no frame, no chrome, no tilt. On a wall of
  * these the hover is the only movement: the poster lifts and pops forward over
- * its neighbours. Nothing labels it on screen, so the wall reads as artwork;
- * the title lives in the image's `alt` for screen readers, deliberately not in
- * a `title` — that would pop a browser tooltip over the art.
+ * its neighbours, picks up a stone-white frame, and shows its `note` if it has
+ * one. Nothing labels it at rest, so the wall reads as artwork; the title
+ * lives in the image's `alt` for screen readers, deliberately not in a `title`
+ * — that would pop a browser tooltip over the art.
  */
 const MoviePoster = ({
   post,
@@ -31,6 +39,7 @@ const MoviePoster = ({
   to = `/archive/${post.slug}`,
   hoverPop = true,
   height,
+  note,
 }: Props) => {
   // A cell in the wall is filled exactly; a poster on its own keeps the
   // artwork's own proportions.
@@ -65,20 +74,85 @@ const MoviePoster = ({
     </div>
   );
 
-  // Transform and shadow only — no filter animation, which is what makes a wall
-  // of large images feel heavy on hover. Coming in, the curve overshoots and
-  // settles back (the bounce); going out it's a plain glide, since a poster
-  // springing on its way *down* reads as a glitch rather than as weight.
+  // The frame and the note, both held back until hover. One layer carries the
+  // pair so they arrive together, and it sits inside the scaling wrapper so the
+  // frame tracks the poster's edge as it grows. `pointer-events-none` keeps it
+  // out of the way of the link underneath.
+  //
+  // The frame is heavy on purpose — a painting in a gallery, not a CSS
+  // outline. It's a share of the poster's width rather than a fixed number of
+  // pixels, so the small posters on the wall get the same look as the big ones
+  // instead of a hairline. Flat opaque white the whole way through: no inner
+  // line, no shadow, nothing darker anywhere against the art.
+  const frame = Math.round(Math.min(24, Math.max(10, width * 0.075)));
+
+  // The foot of the mount is always deeper than the other three sides — that's
+  // how a picture is actually mounted, and it's what stops the frame reading as
+  // a plain box. Where there's a note it deepens further, enough to hold two
+  // lines, so the label sits under the picture rather than on it. Both the type
+  // and the plate scale with the poster, so a narrow one doesn't end up with
+  // unreadable type or a plate that swamps the art.
+  const ink = Math.round(Math.min(13, Math.max(9, width * 0.05)));
+  const plate = Math.max(
+    Math.round(frame * 1.9),
+    note ? Math.round(ink * 4.4) : 0,
+  );
+
+  const overlay = (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute
+        opacity-0 transition-opacity duration-300 ease-out
+        group-hover/poster:opacity-100"
+      style={{
+        // Hung *around* the poster, not over it: the offsets put the frame's
+        // inner edge exactly on the artwork's edge, so the whole poster stays
+        // visible and the mount takes its space from the neighbours instead.
+        // The lifted poster is already raised above them, so it sits on top.
+        top: -frame,
+        left: -frame,
+        right: -frame,
+        bottom: -plate,
+        border: `${frame}px solid #f2efe9`,
+        borderBottomWidth: plate,
+      }}
+    >
+      {note ? (
+        // Sits over the plate the border already paints — an absolutely
+        // positioned child is laid out against the padding box, so the
+        // negative offset is what carries it out onto the frame itself and
+        // leaves the artwork above it uncovered.
+        <span
+          className="absolute inset-x-0 flex items-center justify-center px-1.5"
+          style={{ bottom: -plate, height: plate }}
+        >
+          <span
+            className="text-center font-body text-editorial-bg line-clamp-2"
+            style={{ fontSize: ink, lineHeight: 1.3 }}
+          >
+            {note}
+          </span>
+        </span>
+      ) : null}
+    </div>
+  );
+
+  // Transform only — no shadow, and no filter animation. The lift used to cast
+  // a heavy drop shadow, but a wide blur at near-black rings the frame on every
+  // side and reads as a dark border around the white; the frame is the whole
+  // effect now. Coming in, the curve overshoots and settles back (the bounce);
+  // going out it's a plain glide, since a poster springing on its way *down*
+  // reads as a glitch rather than as weight.
   const inner = hoverPop ? (
     <div
       className="relative w-full transform-gpu
-        transition-[transform,box-shadow] duration-[750ms] ease-[cubic-bezier(0.22,1,0.36,1)]
+        transition-transform duration-[750ms] ease-[cubic-bezier(0.22,1,0.36,1)]
         group-hover/poster:duration-[900ms] group-hover/poster:ease-[cubic-bezier(0.34,1.44,0.5,1)]
-        group-hover/poster:scale-[1.08] group-hover/poster:-translate-y-2
-        group-hover/poster:shadow-[0_26px_50px_-18px_rgba(0,0,0,0.95)]"
+        group-hover/poster:scale-[1.08] group-hover/poster:-translate-y-2"
       style={{ willChange: "transform", backfaceVisibility: "hidden" }}
     >
       {art}
+      {overlay}
     </div>
   ) : (
     art
