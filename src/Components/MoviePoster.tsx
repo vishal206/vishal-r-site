@@ -93,6 +93,10 @@ const MoviePoster = ({
   // frame tracks the poster's edge as it grows. `pointer-events-none` keeps it
   // out of the way of the link underneath.
   //
+  // Only a film with something to say gets mounted: the frame exists to carry
+  // the note, so a poster without one just pops, and the wall stays artwork.
+  const framed = hoverPop && Boolean(note);
+
   // The frame is heavy on purpose — a painting in a gallery, not a CSS
   // outline. It's a share of the poster's width rather than a fixed number of
   // pixels, so the small posters on the wall get the same look as the big ones
@@ -100,17 +104,13 @@ const MoviePoster = ({
   // line, no shadow, nothing darker anywhere against the art.
   const frame = Math.round(Math.min(24, Math.max(10, width * 0.075)));
 
-  // The foot of the mount is always deeper than the other three sides — that's
-  // how a picture is actually mounted, and it's what stops the frame reading as
-  // a plain box. Where there's a note it deepens further, enough to hold two
-  // lines, so the label sits under the picture rather than on it. Both the type
+  // The foot of the mount is deeper than the other three sides — that's how a
+  // picture is actually mounted, and it's also what holds the two lines of the
+  // note, so the label sits under the picture rather than on it. Both the type
   // and the plate scale with the poster, so a narrow one doesn't end up with
   // unreadable type or a plate that swamps the art.
   const ink = Math.round(Math.min(13, Math.max(9, width * 0.05)));
-  const plate = Math.max(
-    Math.round(frame * 1.9),
-    note ? Math.round(ink * 4.4) : 0,
-  );
+  const plate = Math.max(Math.round(frame * 1.9), Math.round(ink * 4.4));
 
   // A poster at the edge of the screen would hang its frame off it, so the pop
   // moves inward by however much of the frame won't fit. Worked out from where
@@ -119,7 +119,7 @@ const MoviePoster = ({
   // never moves out from under the cursor and the hover can't flicker.
   const measure = useCallback(() => {
     const el = rootRef.current;
-    if (!el || !hoverPop) return;
+    if (!el || !framed) return;
     const r = el.getBoundingClientRect();
     const halfW = r.width / 2;
     const halfH = r.height / 2;
@@ -151,9 +151,9 @@ const MoviePoster = ({
     );
 
     setNudge(x || y ? { x, y } : null);
-  }, [hoverPop, frame, plate]);
+  }, [framed, frame, plate]);
 
-  const overlay = (
+  const overlay = framed ? (
     <div
       aria-hidden
       className="pointer-events-none absolute
@@ -172,37 +172,35 @@ const MoviePoster = ({
         borderBottomWidth: plate,
       }}
     >
-      {note ? (
-        // Sits over the plate the border already paints — an absolutely
-        // positioned child is laid out against the padding box, so the
-        // negative offset is what carries it out onto the frame itself and
-        // leaves the artwork above it uncovered.
+      {/* Sits over the plate the border already paints — an absolutely
+          positioned child is laid out against the padding box, so the negative
+          offset is what carries it out onto the frame itself and leaves the
+          artwork above it uncovered. */}
+      <span
+        className="absolute inset-x-0 flex items-center justify-center px-1.5"
+        style={{ bottom: -plate, height: plate }}
+      >
         <span
-          className="absolute inset-x-0 flex items-center justify-center px-1.5"
-          style={{ bottom: -plate, height: plate }}
+          className="text-center font-body text-editorial-bg line-clamp-2"
+          style={{ fontSize: ink, lineHeight: 1.3 }}
         >
-          <span
-            className="text-center font-body text-editorial-bg line-clamp-2"
-            style={{ fontSize: ink, lineHeight: 1.3 }}
+          {/* Markdown, so a note can carry its own emphasis — but rendered
+              inline: the clamp needs the text as direct children, and a block
+              <p> here would also break the centring. Links are flattened to
+              their text, since the whole poster is already a link and one
+              can't sit inside another. */}
+          <ReactMarkdown
+            components={{
+              p: ({ children }) => <>{children}</>,
+              a: ({ children }) => <>{children}</>,
+            }}
           >
-            {/* Markdown, so a note can carry its own emphasis — but rendered
-                inline: the clamp needs the text as direct children, and a
-                block <p> here would also break the centring. Links are
-                flattened to their text, since the whole poster is already a
-                link and one can't sit inside another. */}
-            <ReactMarkdown
-              components={{
-                p: ({ children }) => <>{children}</>,
-                a: ({ children }) => <>{children}</>,
-              }}
-            >
-              {note}
-            </ReactMarkdown>
-          </span>
+            {note}
+          </ReactMarkdown>
         </span>
-      ) : null}
+      </span>
     </div>
-  );
+  ) : null;
 
   // Transform only — no shadow, and no filter animation. The lift used to cast
   // a heavy drop shadow, but a wide blur at near-black rings the frame on every
