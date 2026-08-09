@@ -1,5 +1,15 @@
+import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { BlogPostMeta } from "../Utils/markdownLoader";
+
+// The hover pop, as numbers as well as classes: the nudge below has to predict
+// where the frame will land before the transition runs, so these have to stay
+// in step with the `scale-[1.08]` and `-translate-y-2` on the inner element.
+const POP = 1.08;
+const LIFT = 8;
+
+/** How close the frame may come to the edge of the screen before it's moved. */
+const EDGE = 6;
 
 type Props = {
   post: BlogPostMeta;
@@ -41,6 +51,9 @@ const MoviePoster = ({
   height,
   note,
 }: Props) => {
+  const rootRef = useRef<HTMLElement | null>(null);
+  const [nudge, setNudge] = useState<{ x: number; y: number } | null>(null);
+
   // A cell in the wall is filled exactly; a poster on its own keeps the
   // artwork's own proportions.
   const cell = height
@@ -98,6 +111,47 @@ const MoviePoster = ({
     note ? Math.round(ink * 4.4) : 0,
   );
 
+  // A poster at the edge of the screen would hang its frame off it, so the pop
+  // moves inward by however much of the frame won't fit. Worked out from where
+  // the frame is *about* to land — the transition hasn't run yet at this point
+  // — and applied to the same element that scales, so the poster's own hit box
+  // never moves out from under the cursor and the hover can't flicker.
+  const measure = useCallback(() => {
+    const el = rootRef.current;
+    if (!el || !hoverPop) return;
+    const r = el.getBoundingClientRect();
+    const halfW = r.width / 2;
+    const halfH = r.height / 2;
+    const cx = r.left + halfW;
+    const cy = r.top + halfH - LIFT;
+
+    // How far off the screen the frame lands, capped at the thickness of the
+    // mount itself: this is here to rescue a frame that's clipped, not to haul
+    // a poster that's half below the fold into view — that would read as a
+    // teleport and tear a hole in the wall behind it. `transform` composes
+    // inside the scale, so the shift is divided back out of it.
+    const shift = (low: number, high: number, limit: number, cap: number) => {
+      const raw =
+        (Math.max(0, EDGE - low) - Math.max(0, high - (limit - EDGE))) / POP;
+      return Math.max(-cap, Math.min(cap, raw));
+    };
+
+    const x = shift(
+      cx - (halfW + frame) * POP,
+      cx + (halfW + frame) * POP,
+      window.innerWidth,
+      frame,
+    );
+    const y = shift(
+      cy - (halfH + frame) * POP,
+      cy + (halfH + plate) * POP,
+      window.innerHeight,
+      plate,
+    );
+
+    setNudge(x || y ? { x, y } : null);
+  }, [hoverPop, frame, plate]);
+
   const overlay = (
     <div
       aria-hidden
@@ -149,7 +203,16 @@ const MoviePoster = ({
         transition-transform duration-[750ms] ease-[cubic-bezier(0.22,1,0.36,1)]
         group-hover/poster:duration-[900ms] group-hover/poster:ease-[cubic-bezier(0.34,1.44,0.5,1)]
         group-hover/poster:scale-[1.08] group-hover/poster:-translate-y-2"
-      style={{ willChange: "transform", backfaceVisibility: "hidden" }}
+      style={{
+        willChange: "transform",
+        backfaceVisibility: "hidden",
+        // Scale and lift come from the classes above as their own `scale` and
+        // `translate` properties, so this composes with them rather than
+        // replacing them. `transition-transform` covers all three.
+        transform: nudge
+          ? `translate3d(${nudge.x.toFixed(1)}px, ${nudge.y.toFixed(1)}px, 0)`
+          : undefined,
+      }}
     >
       {art}
       {overlay}
@@ -164,12 +227,24 @@ const MoviePoster = ({
     hoverPop ? "hover:z-10" : ""
   }`;
 
+  const bind = {
+    className,
+    style: { width },
+    onMouseEnter: measure,
+    onMouseLeave: () => setNudge(null),
+  };
+
   return to ? (
-    <Link to={to} className={className} style={{ width }} aria-label={post.title}>
+    <Link
+      {...bind}
+      ref={(el) => (rootRef.current = el)}
+      to={to}
+      aria-label={post.title}
+    >
       {inner}
     </Link>
   ) : (
-    <div className={className} style={{ width }}>
+    <div {...bind} ref={(el) => (rootRef.current = el)}>
       {inner}
     </div>
   );
