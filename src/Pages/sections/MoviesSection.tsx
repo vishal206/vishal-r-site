@@ -18,6 +18,7 @@ type Shelved = {
   to: string | null;
   category: Category;
   score: number;
+  note?: string | null;
 };
 
 // ── Scores ───────────────────────────────────────────────────────────────────
@@ -258,18 +259,19 @@ const MoviesSection: React.FC = () => {
     const reviewed = getBlogPostsSync().filter((p) => p.tags === "Movie");
     const reviewedSlugs = new Set(reviewed.map((p) => p.slug));
 
-    // A reviewed film's score comes off the post's frontmatter; a media.json
-    // entry that also has a review can carry one either place, the post
+    // A reviewed film's score and note come off the post's frontmatter; when it
+    // also has a media.json entry either can live in either place, the post
     // winning, since that's where the write-up passing judgement lives.
-    const scored = new Map(
-      media.movies.watched.map((m) => [m.post ?? m.title, m.score]),
+    const entries = new Map(
+      media.movies.watched.map((m) => [m.post ?? m.title, m]),
     );
 
     const reviewedShelf: Shelved[] = reviewed.map((p) => ({
       post: p,
       to: `/archive/${p.slug}`,
       category: "reviewed",
-      score: toScore(p.score ?? scored.get(p.slug)),
+      score: toScore(p.score ?? entries.get(p.slug)?.score),
+      note: p.note ?? entries.get(p.slug)?.note,
     }));
 
     const watchedShelf: Shelved[] = media.movies.watched
@@ -279,6 +281,7 @@ const MoviesSection: React.FC = () => {
         to: m.post ? `/archive/${m.post}` : null,
         category: "watched",
         score: toScore(m.score),
+        note: m.note,
       }));
 
     // Nothing on the wishlist has been seen, so nothing there has a score —
@@ -288,6 +291,7 @@ const MoviesSection: React.FC = () => {
       to: null,
       category: "wishlist",
       score: SCORE_MID,
+      note: m.note,
     }));
 
     return [...reviewedShelf, ...watchedShelf, ...wishlistShelf];
@@ -394,6 +398,7 @@ const MoviesSection: React.FC = () => {
                         to={item.to}
                         width={column.width}
                         height={cell}
+                        note={item.note}
                       />
                     </div>
                   );
