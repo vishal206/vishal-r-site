@@ -235,6 +235,13 @@
         "image": "https://www.themoviedb.org/t/p/w1280/tl3WcNY41um1OOsjr3z6eqK31yN.jpg",
         "score": 9,
         "note": null
+      },
+
+      {
+        "title": "Daddy's Home",
+        "image": "https://www.themoviedb.org/t/p/w1280/fB9lALk9zKsMYWvf0bJSkJN219Z.jpg",
+        "score": 2,
+        "note": "Eat my dust, Dusty!"
       }
     ],
     "wishlist": [
@@ -257,8 +264,14 @@
         "note": null
       },
       {
-        "title": "Daddy's Home",
-        "image": "https://www.themoviedb.org/t/p/w1280/fB9lALk9zKsMYWvf0bJSkJN219Z.jpg",
+        "title": "Inu-Oh",
+        "image": "https://www.themoviedb.org/t/p/w1280/67WmijqW7fjmLcc0eKZtW59Hf4d.jpg",
+        "score": null,
+        "note": null
+      },
+      {
+        "title": "Poltergeist",
+        "image": "https://www.themoviedb.org/t/p/w1280/4eMN3GANH5GG4kXdHkrTZEUuQ9M.jpg",
         "score": null,
         "note": null
       }
