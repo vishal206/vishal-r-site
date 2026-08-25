@@ -254,6 +254,20 @@
         "image": "https://www.themoviedb.org/t/p/w1280/a07wLy4ONfpsjnBqMwhlWTJTcm.jpg",
         "score": 2,
         "note": null
+      },
+
+      {
+        "title": "A Letter to Momo",
+        "image": "https://www.themoviedb.org/t/p/w1280/uH4c5t3Wzzv41Wq9ws2Q47N1Dzo.jpg",
+        "score": 3,
+        "note": "*“Dear Momo”*"
+      },
+
+      {
+        "title": "100 METERS",
+        "image": "https://www.themoviedb.org/t/p/w1280/kQyS2UrSbkd5AF0seuTSvRqWIdh.jpg",
+        "score": null,
+        "note": "*“Running the 100m faster than anyone else can solve almost anything.”*"
       }
     ],
     "wishlist": [
@@ -284,18 +298,6 @@
       {
         "title": "CJ7",
         "image": "https://www.themoviedb.org/t/p/w1280/sRzSfpSb3wYYshbaiMRIuFCJJGU.jpg",
-        "score": null,
-        "note": null
-      },
-      {
-        "title": "A Letter to Momo",
-        "image": "https://www.themoviedb.org/t/p/w1280/uH4c5t3Wzzv41Wq9ws2Q47N1Dzo.jpg",
-        "score": null,
-        "note": null
-      },
-      {
-        "title": "100 METERS",
-        "image": "https://www.themoviedb.org/t/p/w1280/kQyS2UrSbkd5AF0seuTSvRqWIdh.jpg",
         "score": null,
         "note": null
       },
