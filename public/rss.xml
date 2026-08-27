@@ -4,9 +4,9 @@
         <description><![CDATA[Blogs, movies, books, and project writing from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Tue, 25 Aug 2026 04:10:20 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 27 Aug 2026 18:03:05 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Tue, 25 Aug 2026 04:10:20 GMT</pubDate>
+        <pubDate>Thu, 27 Aug 2026 18:03:05 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
         <item>
             <title><![CDATA[Teardown: Hermes Agent]]></title>
