@@ -44,6 +44,12 @@ body {
   --color-editorial-label: #6b7280;
   --color-editorial-divider: #2a2a2a;
   --color-editorial-muted: #c4bfb6;
+  /* Mat board and the type set on it: what a poster is mounted and framed on.
+     A warm grey paper rather than white, and charcoal rather than black —
+     flat #fff against artwork reads as a hole punched in the wall, and true
+     black type on it reads harder than anything in the picture above. */
+  --color-editorial-mount: #e3e0da;
+  --color-editorial-mount-ink: #3d3b38;
   --color-available: #4ade80;
   --font-display: "Playfair Display";
   --font-body: "Lora";

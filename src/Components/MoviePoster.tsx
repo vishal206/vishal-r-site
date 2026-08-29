@@ -156,7 +156,7 @@ const MoviePoster = ({
   const label = caption ?? (
     note ? (
       <span
-        className="text-center font-body text-editorial-bg line-clamp-2"
+        className="text-center font-body text-editorial-mount-ink line-clamp-2"
         style={{ fontSize: ink, lineHeight: 1.3 }}
       >
         {/* Markdown, so a note can carry its own emphasis — but rendered
@@ -243,7 +243,7 @@ const MoviePoster = ({
         left: -frame,
         right: -frame,
         bottom: -plate,
-        border: `${frame}px solid #f2efe9`,
+        border: `${frame}px solid var(--color-editorial-mount, #e3e0da)`,
         borderBottomWidth: plate,
       }}
     >
@@ -272,7 +272,7 @@ const MoviePoster = ({
         <div
           className="flex h-full flex-col overflow-hidden"
           style={{
-            backgroundColor: "#f2efe9",
+            backgroundColor: "var(--color-editorial-mount, #e3e0da)",
             padding: `${frame}px ${frame}px 0`,
           }}
         >

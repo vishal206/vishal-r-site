@@ -267,12 +267,12 @@ const buildWall = (
 };
 
 // What a character of each plate line actually measures, taken from the widest
-// line of its kind on the wall and rounded up. The two are set in different
-// faces — the facts in the display serif, the genres in tracked caps — so they
-// measure nothing like each other. Erring high costs a point of type size or
-// one genre; erring low clips, which is the one thing a plate must never do.
-const EM_FACTS = 0.58;
-const EM_CAPS = 1.18;
+// line of its kind on the wall and rounded up. Both are set in the site's own
+// face now, but the genres are uppercase and tracked, which costs about half
+// as much again per character. Erring high costs a point of type size or one
+// genre; erring low clips, which is the one thing a plate must never do.
+const EM_FACTS = 0.85;
+const EM_CAPS = 1.3;
 
 /** How small the plate's type may be driven before legibility gives out. */
 const INK_FLOOR = 8;
@@ -300,14 +300,14 @@ const GENRE_SHORT: Record<string, string> = {
 const captionLines = (facts: TmdbFacts) => {
   const runtime = runtimeLabel(facts);
   const rating = facts.rating ? `★ ${facts.rating.toFixed(1)}` : null;
-  // En spaces around the divider: HTML collapses ordinary ones, and the two
-  // facts want more air between them than a single space gives.
-  const line = [runtime, rating].filter(Boolean).join("\u2002·\u2002");
+  // Handed over as parts rather than one string: how much air goes between
+  // them is the plate's business, and it depends on how much room it has.
+  const parts = [runtime, rating].filter((v): v is string => Boolean(v));
   // TMDB lists genres most-defining first, and a third never fits — how many
   // of the two remaining are shown is left to the plate, which knows how much
   // room it has.
   const genres = facts.genres.slice(0, 2).map((g) => GENRE_SHORT[g] ?? g);
-  return line || genres.length ? { line, genres } : null;
+  return parts.length || genres.length ? { parts, genres } : null;
 };
 
 /**
@@ -331,7 +331,7 @@ const PosterCaption = ({
   chrome,
 }: {
   /** Null while TMDB hasn't answered, or for a film with no link to ask with. */
-  lines: { line: string; genres: string[] } | null;
+  lines: { parts: string[]; genres: string[] } | null;
   title: string;
   /** The cell's width — only the fit test needs it, and that varies by column. */
   width: number;
@@ -340,8 +340,11 @@ const PosterCaption = ({
   // Sized off the wall's own chrome rather than the column's width, so every
   // plate on the wall is set identically — they're all the same depth, and
   // type that changed size inside them would only look like a mistake.
-  const wallInk = Math.min(15, Math.max(11, chrome.plate * 0.31));
-  const wallLabel = Math.max(8, wallInk * 0.62);
+  const wallInk = Math.min(11, Math.max(9, chrome.plate * 0.22));
+  // Set off the plate's own depth rather than off the facts above it, so the
+  // two sizes can be turned independently — the genres are already at the
+  // smallest tracked caps that stay readable.
+  const wallLabel = Math.max(8, Math.min(11, chrome.plate * 0.192));
 
   // The room a line of type has: the cell, less the gap the mount stands off
   // its neighbours, the frame inside that, and the two px-1 paddings between
@@ -354,7 +357,7 @@ const PosterCaption = ({
   if (!lines)
     return (
       <span
-        className="max-w-full truncate px-1 font-display font-bold text-editorial-bg/70"
+        className="max-w-full truncate px-1 font-primary font-bold text-editorial-mount-ink/75"
         style={{
           fontSize: Math.max(
             INK_FLOOR,
@@ -382,28 +385,49 @@ const PosterCaption = ({
   // The narrowest mounts can't hold it, though, and those step down to the
   // size that does: `ANIMATION` entire at a point smaller beats a uniform
   // `ANIMATIO…` that says less than the word it was cut from.
-  const ink = Math.max(INK_FLOOR, fitted(lines.line, wallInk, EM_FACTS, room));
+  // Three ways to set the facts, roomiest first, taking the first that holds at
+  // a size worth reading. Air around the divider where there's room for it —
+  // HTML collapses ordinary spaces, and the pair wants more than one gives.
+  // Then the pair tight, with the star left to do the separating on its own.
+  // Then, on a mount too narrow for both, the rating alone: it's the shorter
+  // of the two, and it's the one a wishlist is really asking about.
+  //
+  // Giving up space, and then a fact, both beat driving the type down to
+  // something nobody can read.
+  const forms = [
+    lines.parts.join("\u2002·\u2002"),
+    lines.parts.join(" "),
+    lines.parts[lines.parts.length - 1] ?? "",
+  ];
+  const line =
+    forms.find((f) => fitted(f, wallInk, EM_FACTS, room) >= INK_FLOOR) ??
+    forms[forms.length - 1];
+
+  const ink = Math.max(INK_FLOOR, fitted(line, wallInk, EM_FACTS, room));
 
   // Tracked caps are wide, and the smallest mounts on a phone can't hold even
   // one genre at a size worth reading. Those drop the line rather than set it
   // at five points or clip it — the facts above are the half worth keeping,
   // and a plate with one line on it still looks deliberate.
-  const label = fitted(genres, wallLabel, EM_CAPS, room);
+  // Never larger than the facts above them. On a narrow mount the facts are
+  // driven down by how much room the line needs, while a one-word genre isn't
+  // — left alone the secondary line would end up the bigger of the two.
+  const label = Math.min(fitted(genres, wallLabel, EM_CAPS, room), ink);
   const genreLine = label >= LABEL_FLOOR ? genres : "";
 
   return (
     <span className="flex w-full flex-col items-center justify-center gap-0.5 px-1">
-      {lines.line && (
+      {line && (
         <span
-          className="max-w-full truncate font-display font-bold text-editorial-bg"
+          className="max-w-full truncate font-primary font-bold text-editorial-mount-ink"
           style={{ fontSize: ink, lineHeight: 1.25 }}
         >
-          {lines.line}
+          {line}
         </span>
       )}
       {genreLine && (
         <span
-          className="max-w-full truncate uppercase text-editorial-bg/55"
+          className="max-w-full truncate font-primary uppercase text-editorial-mount-ink/65"
           style={{
             fontSize: label,
             lineHeight: 1.3,
