@@ -1,11 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import FilterBar from "../../components/FilterBar";
 import MoviePoster from "../../components/MoviePoster";
+import { MOUNT_GAP, mountChrome } from "../../components/posterMount";
+import type { MountChrome } from "../../components/posterMount";
 import { usePointerPan } from "../../hooks/usePointerPan";
 import { getBlogPostsSync } from "../../Utils/functions";
 import type { BlogPostMeta } from "../../Utils/markdownLoader";
 import { media } from "../../Utils/media";
 import type { MediaMovie } from "../../Utils/media";
+import { runtimeLabel, useTmdbFacts } from "../../Utils/tmdb";
+import type { TmdbFacts } from "../../Utils/tmdb";
 
 // What a film is shelved as. `reviewed` is a kind of watched — it's a film seen
 // that also has a write-up — so it sits inside the Watched filter as well as
@@ -16,9 +20,13 @@ type Filter = Category;
 type Shelved = {
   post: BlogPostMeta;
   to: string | null;
+  /** Off-site link, for a film with nothing on this site to point at. */
+  href?: string | null;
   category: Category;
   score: number;
   note?: string | null;
+  /** The film's TMDB link, where a wishlist poster goes and its caption comes from. */
+  url?: string;
 };
 
 // ── Scores ───────────────────────────────────────────────────────────────────
@@ -148,6 +156,9 @@ const columnCounts = (n: number, columns: number): number[] => {
   return counts;
 };
 
+// `height` is the whole cell; `poster` is what's left of it once the caption
+// strip under the artwork has taken its slice. They're the same on an
+// uncaptioned wall.
 type WallCell = { item: Shelved; height: number };
 type WallColumn = { cells: WallCell[]; width: number };
 
@@ -168,26 +179,50 @@ type WallColumn = { cells: WallCell[]; width: number };
  * scores land in the wide columns; then within a column the fixed height is
  * shared out by score rather than evenly, so a favourite is taller than what
  * it sits above. Both are redistributions of space that's already spoken for.
+ *
+ * `mount` hangs the whole wall in frames (the wishlist — see PosterCaption).
+ * That's the one thing that changes the sums: a bare cell *is* the poster, so
+ * a cell at the poster's proportions is all it takes, but a mounted cell is
+ * the poster plus the gap, the frame and the plate. Those are constants across
+ * the wall, so they come off the cell first and the packing solves for what's
+ * left — which is how the artwork still lands at exactly 3:2 and is never
+ * cropped to fit.
  */
 const buildWall = (
   items: Shelved[],
   columns: number,
   baseWidth: number,
+  mount: MountChrome | null = null,
 ): { wall: WallColumn[]; height: number } => {
   if (items.length === 0) return { wall: [], height: 0 };
 
   const counts = columnCounts(items.length, columns);
 
+  // What a mount takes out of its cell before the artwork sees any of it: the
+  // gap and a frame on either side across, and the gap, one frame and the
+  // plate down (the foot is the plate, not another frame).
+  const across = mount ? MOUNT_GAP + 2 * mount.frame : 0;
+  const down = mount ? MOUNT_GAP + mount.frame + mount.plate : 0;
+
+  /** The column width that puts a `count`-poster column at exactly `h` tall. */
+  const widthAt = (h: number, count: number) =>
+    (h / count - down) / POSTER_RATIO + across;
+
   // Start from the width the wall wants to be and let the equal-height
-  // constraint pick the height: Σ widthᵢ = Σ height ÷ (ratio × countᵢ).
+  // constraint pick the height: Σ widthᵢ = Σ (height ÷ countᵢ − down) ÷ ratio
+  // + across, solved for height.
   const spread = counts.reduce((a, count) => a + 1 / count, 0);
-  let height = (baseWidth * counts.length * POSTER_RATIO) / spread;
+  let height =
+    (counts.length * (POSTER_RATIO * (baseWidth - across) + down)) / spread;
 
   // A column holding one or two posters would otherwise blow up to fill that
-  // height. Cap the widest column and let the whole wall come down with it.
-  const widest = height / (POSTER_RATIO * Math.min(...counts));
+  // height. Cap the widest column and let the whole wall come down with it —
+  // solved for the height that puts the fewest-poster column exactly on the
+  // cap, since with the chrome in the way the two aren't in proportion.
+  const fewest = Math.min(...counts);
   const cap = baseWidth * 1.35;
-  if (widest > cap) height *= cap / widest;
+  if (widthAt(height, fewest) > cap)
+    height = fewest * (POSTER_RATIO * (cap - across) + down);
 
   // Best films first, and columns in the order of how big a poster they hold —
   // fewest posters means the widest column and the tallest cells. Only what
@@ -206,7 +241,14 @@ const buildWall = (
 
     // The column's height is already fixed, so scores only decide how it's
     // divided up — the shares always add back to exactly the same total.
-    const weights = slice.map((item) => scoreWeight(item.score));
+    //
+    // Except in a mounted column: the chrome is the same depth under every
+    // picture, so cells of different heights would leave artwork of different
+    // proportions in one column, and only one of them could be 3:2. Mounted
+    // walls split evenly. Nothing is lost — the wishlist is the only wall that
+    // hangs in frames, and nothing on it has been seen, so there are no scores
+    // there to size it by.
+    const weights = slice.map((item) => (mount ? 1 : scoreWeight(item.score)));
     const total = weights.reduce((a, b) => a + b, 0);
     const cells = slice.map((item, j) => ({
       item,
@@ -218,10 +260,164 @@ const buildWall = (
     // that up.
     if (i % 2) cells.reverse();
 
-    wall[i] = { cells, width: height / (POSTER_RATIO * count) };
+    wall[i] = { cells, width: widthAt(height, count) };
   }
 
   return { wall, height };
+};
+
+// What a character of each plate line actually measures, taken from the widest
+// line of its kind on the wall and rounded up. The two are set in different
+// faces — the facts in the display serif, the genres in tracked caps — so they
+// measure nothing like each other. Erring high costs a point of type size or
+// one genre; erring low clips, which is the one thing a plate must never do.
+const EM_FACTS = 0.58;
+const EM_CAPS = 1.18;
+
+/** How small the plate's type may be driven before legibility gives out. */
+const INK_FLOOR = 8;
+const LABEL_FLOOR = 7;
+
+/** The largest size up to `size` that holds `text` within `room`. */
+const fitted = (text: string, size: number, em: number, room: number) =>
+  Math.min(size, room / Math.max(1, text.length * em));
+
+// TMDB's own names for a few genres are far longer than a mount is wide, and
+// truncate into something unreadable (`SCIENCE FIC…`). These are the ones that
+// actually turn up on the wishlist; everything else is short enough as it is.
+const GENRE_SHORT: Record<string, string> = {
+  "Science Fiction": "Sci-Fi",
+  "Sci-Fi & Fantasy": "Sci-Fi",
+  "Action & Adventure": "Action",
+  "War & Politics": "War",
+};
+
+/**
+ * The two lines a wishlist film is labelled with, or null when TMDB gave back
+ * nothing worth setting. Split out from the rendering so the wall can tell an
+ * empty label from a full one *before* it decides whether to hang a frame.
+ */
+const captionLines = (facts: TmdbFacts) => {
+  const runtime = runtimeLabel(facts);
+  const rating = facts.rating ? `★ ${facts.rating.toFixed(1)}` : null;
+  // En spaces around the divider: HTML collapses ordinary ones, and the two
+  // facts want more air between them than a single space gives.
+  const line = [runtime, rating].filter(Boolean).join("\u2002·\u2002");
+  // TMDB lists genres most-defining first, and a third never fits — how many
+  // of the two remaining are shown is left to the plate, which knows how much
+  // room it has.
+  const genres = facts.genres.slice(0, 2).map((g) => GENRE_SHORT[g] ?? g);
+  return line || genres.length ? { line, genres } : null;
+};
+
+/**
+ * A wishlist film's facts, set on the mount plate under its poster: how long
+ * it runs, what TMDB makes of it, and what kind of thing it is. Fetched from
+ * the entry's TMDB link when the wall goes up — nothing here is typed into
+ * media.json.
+ *
+ * It's set on the mount the poster hangs in — the same frame a reviewed film
+ * gets for its note, but permanent here rather than hover-only. The frame and
+ * its plate come out of the poster's own cell, so a wall of them tiles exactly
+ * as a wall of bare posters does.
+ *
+ * Set like the hero's headings — the film's measurements in the display serif,
+ * its genres in the small tracked caps the site labels everything else with.
+ */
+const PosterCaption = ({
+  lines,
+  title,
+  width,
+  chrome,
+}: {
+  /** Null while TMDB hasn't answered, or for a film with no link to ask with. */
+  lines: { line: string; genres: string[] } | null;
+  title: string;
+  /** The cell's width — only the fit test needs it, and that varies by column. */
+  width: number;
+  chrome: MountChrome;
+}) => {
+  // Sized off the wall's own chrome rather than the column's width, so every
+  // plate on the wall is set identically — they're all the same depth, and
+  // type that changed size inside them would only look like a mistake.
+  const wallInk = Math.min(15, Math.max(11, chrome.plate * 0.31));
+  const wallLabel = Math.max(8, wallInk * 0.62);
+
+  // The room a line of type has: the cell, less the gap the mount stands off
+  // its neighbours, the frame inside that, and the two px-1 paddings between
+  // the frame and the type.
+  const room = width - MOUNT_GAP - 2 * chrome.frame - 16;
+
+  // A film whose facts haven't arrived, or that has no link to fetch them
+  // with, still hangs in a mount — so its plate carries its title rather than
+  // nothing. The wall never shows an empty frame.
+  if (!lines)
+    return (
+      <span
+        className="max-w-full truncate px-1 font-display font-bold text-editorial-bg/70"
+        style={{
+          fontSize: Math.max(
+            INK_FLOOR,
+            fitted(title, wallInk, EM_FACTS, room),
+          ),
+          lineHeight: 1.25,
+        }}
+      >
+        {title}
+      </span>
+    );
+
+  // Two genres on a narrow mount come out as a stub — `FANTASY · A…` — which
+  // says less than one whole genre does, so the pair is measured against the
+  // plate before it's set and the second dropped when it won't make it.
+  //
+  const pair = lines.genres.join(" · ");
+  const genres =
+    lines.genres.length > 1 && pair.length * wallLabel * EM_CAPS > room
+      ? lines.genres[0]
+      : pair;
+
+  // Type is uniform across the wall wherever it fits — every plate is the same
+  // depth, and type that changed size inside them would only look like a slip.
+  // The narrowest mounts can't hold it, though, and those step down to the
+  // size that does: `ANIMATION` entire at a point smaller beats a uniform
+  // `ANIMATIO…` that says less than the word it was cut from.
+  const ink = Math.max(INK_FLOOR, fitted(lines.line, wallInk, EM_FACTS, room));
+
+  // Tracked caps are wide, and the smallest mounts on a phone can't hold even
+  // one genre at a size worth reading. Those drop the line rather than set it
+  // at five points or clip it — the facts above are the half worth keeping,
+  // and a plate with one line on it still looks deliberate.
+  const label = fitted(genres, wallLabel, EM_CAPS, room);
+  const genreLine = label >= LABEL_FLOOR ? genres : "";
+
+  return (
+    <span className="flex w-full flex-col items-center justify-center gap-0.5 px-1">
+      {lines.line && (
+        <span
+          className="max-w-full truncate font-display font-bold text-editorial-bg"
+          style={{ fontSize: ink, lineHeight: 1.25 }}
+        >
+          {lines.line}
+        </span>
+      )}
+      {genreLine && (
+        <span
+          className="max-w-full truncate uppercase text-editorial-bg/55"
+          style={{
+            fontSize: label,
+            lineHeight: 1.3,
+            letterSpacing: "0.14em",
+            // The tracking is applied to the right of every letter, the last
+            // one included, which throws a centred line visibly off-centre.
+            textIndent: "0.14em",
+          }}
+        >
+          {genreLine}
+        </span>
+      )}
+    </span>
+  );
 };
 
 // ── Filter change choreography ───────────────────────────────────────────────
@@ -285,13 +481,18 @@ const MoviesSection: React.FC = () => {
       }));
 
     // Nothing on the wishlist has been seen, so nothing there has a score —
-    // that wall comes out evenly sized, which is right.
+    // that wall comes out evenly sized, which is right. There's no write-up to
+    // click through to either, so a poster goes to the film's TMDB page: where
+    // its caption is read from, and where you'd go next to decide whether to
+    // watch it.
     const wishlistShelf: Shelved[] = media.movies.wishlist.map((m) => ({
       post: toPost(m),
       to: null,
+      href: m.url ?? null,
       category: "wishlist",
       score: SCORE_MID,
       note: m.note,
+      url: m.url,
     }));
 
     return [...reviewedShelf, ...watchedShelf, ...wishlistShelf];
@@ -321,9 +522,47 @@ const MoviesSection: React.FC = () => {
     [movies, shown],
   );
 
+  // Every TMDB link on the wishlist, in one stable array — the hook fetches on
+  // its identity, and this list never changes after the first render.
+  const wishlistUrls = useMemo(
+    () =>
+      media.movies.wishlist
+        .map((m) => m.url)
+        .filter((url): url is string => Boolean(url)),
+    [],
+  );
+
+  // Held back until the wishlist has actually been opened: most visits never
+  // get to it, and there's no reason to spend a round trip per film on a wall
+  // nobody is looking at. Once it's been opened it stays on, so coming back to
+  // it doesn't refetch — and the session cache means a reload usually doesn't
+  // either.
+  const [wanted, setWanted] = useState(false);
+  useEffect(() => {
+    if (filter === "wishlist") setWanted(true);
+  }, [filter]);
+
+  const facts = useTmdbFacts(wishlistUrls, wanted);
+
+  // The wishlist hangs in frames; the other walls are bare posters. Worked out
+  // once for the whole wall, because the packing has to know what the chrome
+  // takes before it can size a column — and because one frame thickness across
+  // the wall is how a room of pictures is hung.
+  //
+  // Only once there's a link somewhere on the shelf: with nothing to fetch,
+  // there's nothing to put on a plate, and the wall is better as the seamless
+  // block it has always been than as a grid of empty mounts.
+  const mount = useMemo(
+    () =>
+      shown === "wishlist" && visible.some((m) => m.url)
+        ? mountChrome(baseWidth)
+        : null,
+    [shown, visible, baseWidth],
+  );
+
   const { wall, height } = useMemo(
-    () => buildWall(visible, columns, baseWidth),
-    [visible, columns, baseWidth],
+    () => buildWall(visible, columns, baseWidth, mount),
+    [visible, columns, baseWidth, mount],
   );
   const middle = (wall.length - 1) / 2;
 
@@ -381,6 +620,12 @@ const MoviesSection: React.FC = () => {
               >
                 {column.cells.map(({ item, height: cell }, r) => {
                   const spread = Math.abs(c - middle);
+                  const filmFacts = item.url ? facts.get(item.url) : null;
+                  const lines = filmFacts ? captionLines(filmFacts) : null;
+                  // Every poster on a mounted wall is mounted — the packing
+                  // already sized its cell for a frame, so leaving one bare
+                  // would hand it a cell it doesn't fit.
+                  const hung = Boolean(mount) && item.category === "wishlist";
                   return (
                     // The wrapper carries the drop-off / go-up animation, so it
                     // never fights the poster's own hover transform.
@@ -396,9 +641,28 @@ const MoviesSection: React.FC = () => {
                       <MoviePoster
                         post={item.post}
                         to={item.to}
+                        href={item.href}
                         width={column.width}
                         height={cell}
                         note={item.note}
+                        // The pop is there to bring a poster forward and show
+                        // what's written under it. A wishlist film is already
+                        // hung in its mount with its facts on show, so there's
+                        // nothing left for a hover to reveal and the wall is
+                        // better still.
+                        hoverPop={item.category !== "wishlist"}
+                        caption={
+                          hung && mount ? (
+                            <PosterCaption
+                              lines={lines}
+                              title={item.post.title}
+                              width={column.width}
+                              chrome={mount}
+                            />
+                          ) : null
+                        }
+                        mounted={hung}
+                        chrome={mount ?? undefined}
                       />
                     </div>
                   );

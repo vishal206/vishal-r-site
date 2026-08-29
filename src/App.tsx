@@ -120,15 +120,20 @@ const App = () => {
       </div>
 
       {/* ── Scrim so sheet content doesn't peek through the sticker gaps.
-          Only ~3/4 the height of the shrunk stickers, and only while a
-          section is open. ── */}
+          Only while a section is open.
+
+          Kept as shallow as the job allows: a section's own content runs right
+          down to the dock — the movies wall hangs its bottom row of mounts
+          there — and every pixel this reaches up is a pixel of that content
+          greyed out. So the solid part is only the strip actually below the
+          stickers, and the rest is a quick fade rather than a long wash. ── */}
       <div
         className={`absolute bottom-0 inset-x-0 z-30 pointer-events-none transition-all duration-500 ${
-          active ? "h-[68px]" : "h-0"
+          active ? "h-[40px]" : "h-0"
         }`}
         style={{
           backgroundImage:
-            "linear-gradient(to top, var(--color-editorial-bg, #111111) 30%, transparent)",
+            "linear-gradient(to top, var(--color-editorial-bg, #111111) 0%, rgba(17,17,17,0.55) 45%, transparent 100%)",
         }}
       />
 

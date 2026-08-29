@@ -1,7 +1,9 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { BlogPostMeta } from "../Utils/markdownLoader";
+import { MOUNT_GAP, mountChrome } from "./posterMount";
+import type { MountChrome } from "./posterMount";
 
 // The hover pop, as numbers as well as classes: the nudge below has to predict
 // where the frame will land before the transition runs, so these have to stay
@@ -16,8 +18,14 @@ type Props = {
   post: BlogPostMeta;
   /** Poster width in px; height follows the artwork's own proportions. */
   width?: number;
-  /** Where the poster links. `null` for an unwatched entry with no review. */
+  /** Where the poster links, on this site. `null` for a poster that goes nowhere. */
   to?: string | null;
+  /**
+   * An off-site link — TMDB, for a wishlist film with no review of its own to
+   * point at. Wins over `to`, and opens in a new tab: the wall is a place you
+   * browse, and clicking a poster shouldn't cost you your place in it.
+   */
+  href?: string | null;
   /** Off for the small standalone uses (reader header, dock pile). */
   hoverPop?: boolean;
   /**
@@ -34,6 +42,32 @@ type Props = {
    * emphasis (`*like this*`). Optional: without it the hover is just the frame.
    */
   note?: string | null;
+  /**
+   * What to set on the mount plate instead of a `note` — the wishlist wall's
+   * facts (see PosterCaption). Passing it hangs the frame on hover exactly as
+   * a note does, so a film with something to say gets the same treatment
+   * whether that's a line of dialogue or its running time.
+   */
+  caption?: ReactNode;
+  /**
+   * Hang the picture in its mount permanently rather than on hover.
+   *
+   * The hover frame is drawn *around* the poster, overlapping the neighbours
+   * it's briefly raised above — fine for one poster at a time, impossible for
+   * a whole wall of them at once. A mounted poster takes the frame and the
+   * plate out of its own cell instead, so the artwork is what's left over and
+   * the mounts tile against each other exactly as bare posters did.
+   *
+   * Wall mode only: without a `height` there's no cell to take them out of.
+   */
+  mounted?: boolean;
+  /**
+   * The frame/plate measurements to hang by, when a wall has worked them out
+   * for every one of its mounts at once. Left off, a poster sizes its own from
+   * its width — which is what the hover frame does, since those posters are
+   * each a different width and are only ever seen one at a time.
+   */
+  chrome?: MountChrome;
 };
 
 /**
@@ -48,23 +82,44 @@ const MoviePoster = ({
   post,
   width = 120,
   to = `/archive/${post.slug}`,
+  href,
   hoverPop = true,
   height,
   note,
+  caption,
+  mounted = false,
+  chrome,
 }: Props) => {
   const rootRef = useRef<HTMLElement | null>(null);
   const [nudge, setNudge] = useState<{ x: number; y: number } | null>(null);
 
+  // The frame is heavy on purpose — a painting in a gallery, not a CSS outline.
+  // Flat opaque white the whole way through: no inner line, no shadow, nothing
+  // darker anywhere against the art. The foot is deeper than the other three
+  // sides, as a mount actually is, and that depth is what holds the label.
+  // A mount stands its gap off its neighbours, so anything it has to size for
+  // itself is set against what's left of the cell rather than the whole of it.
+  const { frame, ink, plate } =
+    chrome ?? mountChrome(mounted ? width - MOUNT_GAP : width);
+
   // A cell in the wall is filled exactly; a poster on its own keeps the
-  // artwork's own proportions.
-  const cell = height
+  // artwork's own proportions. Mounted, the frame and the plate are taken off
+  // the cell first and the artwork gets what's left.
+  const artHeight =
+    height && mounted
+      ? Math.max(1, height - MOUNT_GAP - frame - plate)
+      : height;
+
+  const cell = artHeight
     ? {
-        height,
+        height: artHeight,
         // Tiles sit at fractional pixel offsets, so a hairline of background
         // can otherwise show through the seams. Painting the artwork a whisker
         // larger than its box closes them without touching the layout — it's
-        // already cropped, so nothing is lost.
-        transform: "scale(1.004)",
+        // already cropped, so nothing is lost. A mounted poster has a frame
+        // between it and its neighbours, so it has no seams to close and would
+        // only bleed over its own mount.
+        transform: mounted ? undefined : "scale(1.004)",
       }
     : undefined;
 
@@ -73,7 +128,15 @@ const MoviePoster = ({
       src={post.image}
       alt={post.title}
       draggable={false}
-      className={height ? "block w-full object-cover" : "block w-full h-auto"}
+      className={
+        artHeight
+          ? // A mounted wall sizes its cells so this box comes out at the
+            // poster's own proportions, so `contain` has nothing to letterbox
+            // — it's here to guarantee that a poster that isn't quite the
+            // standard sheet is shown whole rather than cropped to fit.
+            `block w-full ${mounted ? "object-contain" : "object-cover"}`
+          : "block w-full h-auto"
+      }
       style={cell}
     />
   ) : (
@@ -88,29 +151,41 @@ const MoviePoster = ({
     </div>
   );
 
-  // The frame and the note, both held back until hover. One layer carries the
+  // What's set on the plate under the picture: the wishlist's facts where it
+  // has them, the film's own note otherwise.
+  const label = caption ?? (
+    note ? (
+      <span
+        className="text-center font-body text-editorial-bg line-clamp-2"
+        style={{ fontSize: ink, lineHeight: 1.3 }}
+      >
+        {/* Markdown, so a note can carry its own emphasis — but rendered
+            inline: the clamp needs the text as direct children, and a block
+            <p> here would also break the centring. Links are flattened to
+            their text, since the whole poster is already a link and one can't
+            sit inside another. */}
+        <ReactMarkdown
+          components={{
+            p: ({ children }) => <>{children}</>,
+            a: ({ children }) => <>{children}</>,
+          }}
+        >
+          {note}
+        </ReactMarkdown>
+      </span>
+    ) : null
+  );
+
+  // The frame and the label, both held back until hover. One layer carries the
   // pair so they arrive together, and it sits inside the scaling wrapper so the
   // frame tracks the poster's edge as it grows. `pointer-events-none` keeps it
   // out of the way of the link underneath.
   //
-  // Only a film with something to say gets mounted: the frame exists to carry
-  // the note, so a poster without one just pops, and the wall stays artwork.
-  const framed = hoverPop && Boolean(note);
-
-  // The frame is heavy on purpose — a painting in a gallery, not a CSS
-  // outline. It's a share of the poster's width rather than a fixed number of
-  // pixels, so the small posters on the wall get the same look as the big ones
-  // instead of a hairline. Flat opaque white the whole way through: no inner
-  // line, no shadow, nothing darker anywhere against the art.
-  const frame = Math.round(Math.min(24, Math.max(10, width * 0.075)));
-
-  // The foot of the mount is deeper than the other three sides — that's how a
-  // picture is actually mounted, and it's also what holds the two lines of the
-  // note, so the label sits under the picture rather than on it. Both the type
-  // and the plate scale with the poster, so a narrow one doesn't end up with
-  // unreadable type or a plate that swamps the art.
-  const ink = Math.round(Math.min(13, Math.max(9, width * 0.05)));
-  const plate = Math.max(Math.round(frame * 1.9), Math.round(ink * 4.4));
+  // Only a film with something to say gets a frame: it exists to carry what's
+  // below the picture, so a poster with nothing to put there just pops, and
+  // the wall stays artwork. A mounted poster is already framed and skips this
+  // entirely — its frame is in the layout, not hung over it.
+  const framed = hoverPop && Boolean(label) && !mounted;
 
   // A poster at the edge of the screen would hang its frame off it, so the pop
   // moves inward by however much of the frame won't fit. Worked out from where
@@ -180,27 +255,39 @@ const MoviePoster = ({
         className="absolute inset-x-0 flex items-center justify-center px-1.5"
         style={{ bottom: -plate, height: plate }}
       >
-        <span
-          className="text-center font-body text-editorial-bg line-clamp-2"
-          style={{ fontSize: ink, lineHeight: 1.3 }}
-        >
-          {/* Markdown, so a note can carry its own emphasis — but rendered
-              inline: the clamp needs the text as direct children, and a block
-              <p> here would also break the centring. Links are flattened to
-              their text, since the whole poster is already a link and one
-              can't sit inside another. */}
-          <ReactMarkdown
-            components={{
-              p: ({ children }) => <>{children}</>,
-              a: ({ children }) => <>{children}</>,
-            }}
-          >
-            {note}
-          </ReactMarkdown>
-        </span>
+        {label}
       </span>
     </div>
   ) : null;
+
+  // Hung for good: the cell *is* the mount, and the artwork sits inside it.
+  // The three even sides come off as padding and the deeper foot is the plate,
+  // so frame + artwork + plate adds back to exactly the cell's height and a
+  // wall of these tiles as tightly as a wall of bare posters.
+  const picture =
+    mounted && height ? (
+      // The outer box still fills the cell exactly — it's transparent, and the
+      // padding is what holds the mount off its neighbours.
+      <div style={{ height, padding: MOUNT_GAP / 2 }}>
+        <div
+          className="flex h-full flex-col overflow-hidden"
+          style={{
+            backgroundColor: "#f2efe9",
+            padding: `${frame}px ${frame}px 0`,
+          }}
+        >
+          {art}
+          <span
+            className="flex items-center justify-center overflow-hidden px-1"
+            style={{ height: plate }}
+          >
+            {label}
+          </span>
+        </div>
+      </div>
+    ) : (
+      art
+    );
 
   // Transform only — no shadow, and no filter animation. The lift used to cast
   // a heavy drop shadow, but a wide blur at near-black rings the frame on every
@@ -225,11 +312,11 @@ const MoviePoster = ({
           : undefined,
       }}
     >
-      {art}
+      {picture}
       {overlay}
     </div>
   ) : (
-    art
+    picture
   );
 
   // The wrapper keeps its layout box while the poster inside scales, so a pop
@@ -244,6 +331,20 @@ const MoviePoster = ({
     onMouseEnter: measure,
     onMouseLeave: () => setNudge(null),
   };
+
+  if (href)
+    return (
+      <a
+        {...bind}
+        ref={(el) => (rootRef.current = el)}
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`${post.title} — on The Movie Database`}
+      >
+        {inner}
+      </a>
+    );
 
   return to ? (
     <Link
