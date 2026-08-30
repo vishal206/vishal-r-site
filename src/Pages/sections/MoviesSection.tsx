@@ -179,14 +179,6 @@ type WallColumn = { cells: WallCell[]; width: number };
  * scores land in the wide columns; then within a column the fixed height is
  * shared out by score rather than evenly, so a favourite is taller than what
  * it sits above. Both are redistributions of space that's already spoken for.
- *
- * `mount` hangs the whole wall in frames (the wishlist — see PosterCaption).
- * That's the one thing that changes the sums: a bare cell *is* the poster, so
- * a cell at the poster's proportions is all it takes, but a mounted cell is
- * the poster plus the gap, the frame and the plate. Those are constants across
- * the wall, so they come off the cell first and the packing solves for what's
- * left — which is how the artwork still lands at exactly 3:2 and is never
- * cropped to fit.
  */
 const buildWall = (
   items: Shelved[],
@@ -199,8 +191,9 @@ const buildWall = (
   const counts = columnCounts(items.length, columns);
 
   // What a mount takes out of its cell before the artwork sees any of it: the
-  // gap and a frame on either side across, and the gap, one frame and the
-  // plate down (the foot is the plate, not another frame).
+  // gap and a frame either side across, and the gap, one frame and the plate
+  // down (the foot of a mount is the plate, not another frame). Zero on a bare
+  // wall, where the cell simply *is* the poster.
   const across = mount ? MOUNT_GAP + 2 * mount.frame : 0;
   const down = mount ? MOUNT_GAP + mount.frame + mount.plate : 0;
 
@@ -224,11 +217,15 @@ const buildWall = (
   if (widthAt(height, fewest) > cap)
     height = fewest * (POSTER_RATIO * (cap - across) + down);
 
-  // Best films first, and columns in the order of how big a poster they hold —
-  // fewest posters means the widest column and the tallest cells. Only what
-  // goes in each column changes; the columns themselves stay where they are,
-  // so the big posters end up scattered over the wall rather than bunched.
-  const ranked = [...items].sort((a, b) => b.score - a.score);
+  // What goes in the widest columns first, then on down. On a bare wall that's
+  // the best-scored films; on a mounted one it's simply the order the list is
+  // written in, so the entries at the top of the wishlist hang biggest.
+  //
+  // Columns are taken in the order of how big a poster they hold — fewest
+  // posters means the widest column. Only what goes in each column changes;
+  // the columns themselves stay where they are, so the big pictures end up
+  // scattered over the wall rather than bunched down one end.
+  const ranked = mount ? items : [...items].sort((a, b) => b.score - a.score);
   const byCell = counts
     .map((count, i) => ({ count, i }))
     .sort((a, b) => a.count - b.count || a.i - b.i);
@@ -242,12 +239,10 @@ const buildWall = (
     // The column's height is already fixed, so scores only decide how it's
     // divided up — the shares always add back to exactly the same total.
     //
-    // Except in a mounted column: the chrome is the same depth under every
-    // picture, so cells of different heights would leave artwork of different
-    // proportions in one column, and only one of them could be 3:2. Mounted
-    // walls split evenly. Nothing is lost — the wishlist is the only wall that
-    // hangs in frames, and nothing on it has been seen, so there are no scores
-    // there to size it by.
+    // Not in a mounted column, though: the chrome is the same depth under
+    // every picture, so cells of different heights would leave artwork of
+    // different proportions in one column, and only one of them could be 3:2.
+    // Size varies between columns there instead of within them.
     const weights = slice.map((item) => (mount ? 1 : scoreWeight(item.score)));
     const total = weights.reduce((a, b) => a + b, 0);
     const cells = slice.map((item, j) => ({
@@ -255,10 +250,11 @@ const buildWall = (
       height: (height * weights[j]) / total,
     }));
 
-    // Every column runs biggest-first otherwise, which puts a band of large
-    // posters along the top of the wall. Flipping every other column breaks
-    // that up.
-    if (i % 2) cells.reverse();
+    // A bare column runs biggest-first otherwise, which puts a band of large
+    // posters along the top of the wall; flipping every other column breaks
+    // that up. A mounted column is all one size, so there's no band to break
+    // — and flipping it would only scramble the order the list is written in.
+    if (i % 2 && !mount) cells.reverse();
 
     wall[i] = { cells, width: widthAt(height, count) };
   }
@@ -268,8 +264,8 @@ const buildWall = (
 
 // What a character of each plate line actually measures, taken from the widest
 // line of its kind on the wall and rounded up. Both are set in the site's own
-// face now, but the genres are uppercase and tracked, which costs about half
-// as much again per character. Erring high costs a point of type size or one
+// face, but the genres are uppercase and tracked, which costs about half as
+// much again per character. Erring high costs a point of type size or one
 // genre; erring low clips, which is the one thing a plate must never do.
 const EM_FACTS = 0.85;
 const EM_CAPS = 1.3;
@@ -293,7 +289,7 @@ const GENRE_SHORT: Record<string, string> = {
 };
 
 /**
- * The two lines a wishlist film is labelled with, or null when TMDB gave back
+ * The lines a wishlist film is labelled with, or null when TMDB gave back
  * nothing worth setting. Split out from the rendering so the wall can tell an
  * empty label from a full one *before* it decides whether to hang a frame.
  */
@@ -320,9 +316,6 @@ const captionLines = (facts: TmdbFacts) => {
  * gets for its note, but permanent here rather than hover-only. The frame and
  * its plate come out of the poster's own cell, so a wall of them tiles exactly
  * as a wall of bare posters does.
- *
- * Set like the hero's headings — the film's measurements in the display serif,
- * its genres in the small tracked caps the site labels everything else with.
  */
 const PosterCaption = ({
   lines,
@@ -333,13 +326,10 @@ const PosterCaption = ({
   /** Null while TMDB hasn't answered, or for a film with no link to ask with. */
   lines: { parts: string[]; genres: string[] } | null;
   title: string;
-  /** The cell's width — only the fit test needs it, and that varies by column. */
+  /** The cell's width — only the fit tests need it. */
   width: number;
   chrome: MountChrome;
 }) => {
-  // Sized off the wall's own chrome rather than the column's width, so every
-  // plate on the wall is set identically — they're all the same depth, and
-  // type that changed size inside them would only look like a mistake.
   const wallInk = Math.min(11, Math.max(9, chrome.plate * 0.22));
   // Set off the plate's own depth rather than off the facts above it, so the
   // two sizes can be turned independently — the genres are already at the
@@ -359,10 +349,7 @@ const PosterCaption = ({
       <span
         className="max-w-full truncate px-1 font-primary font-bold text-editorial-mount-ink/75"
         style={{
-          fontSize: Math.max(
-            INK_FLOOR,
-            fitted(title, wallInk, EM_FACTS, room),
-          ),
+          fontSize: Math.max(INK_FLOOR, fitted(title, wallInk, EM_FACTS, room)),
           lineHeight: 1.25,
         }}
       >
@@ -370,21 +357,6 @@ const PosterCaption = ({
       </span>
     );
 
-  // Two genres on a narrow mount come out as a stub — `FANTASY · A…` — which
-  // says less than one whole genre does, so the pair is measured against the
-  // plate before it's set and the second dropped when it won't make it.
-  //
-  const pair = lines.genres.join(" · ");
-  const genres =
-    lines.genres.length > 1 && pair.length * wallLabel * EM_CAPS > room
-      ? lines.genres[0]
-      : pair;
-
-  // Type is uniform across the wall wherever it fits — every plate is the same
-  // depth, and type that changed size inside them would only look like a slip.
-  // The narrowest mounts can't hold it, though, and those step down to the
-  // size that does: `ANIMATION` entire at a point smaller beats a uniform
-  // `ANIMATIO…` that says less than the word it was cut from.
   // Three ways to set the facts, roomiest first, taking the first that holds at
   // a size worth reading. Air around the divider where there's room for it —
   // HTML collapses ordinary spaces, and the pair wants more than one gives.
@@ -405,13 +377,23 @@ const PosterCaption = ({
 
   const ink = Math.max(INK_FLOOR, fitted(line, wallInk, EM_FACTS, room));
 
+  // Two genres on a narrow mount come out as a stub — `FANTASY · A…` — which
+  // says less than one whole genre does, so the pair is measured against the
+  // plate before it's set and the second dropped when it won't make it.
+  const pair = lines.genres.join(" · ");
+  const genres =
+    lines.genres.length > 1 && pair.length * wallLabel * EM_CAPS > room
+      ? lines.genres[0]
+      : pair;
+
+  // Never larger than the facts above them. On a narrow mount the facts are
+  // driven down by how much room the line needs, while a one-word genre isn't
+  // — left alone the secondary line would end up the bigger of the two.
+  //
   // Tracked caps are wide, and the smallest mounts on a phone can't hold even
   // one genre at a size worth reading. Those drop the line rather than set it
   // at five points or clip it — the facts above are the half worth keeping,
   // and a plate with one line on it still looks deliberate.
-  // Never larger than the facts above them. On a narrow mount the facts are
-  // driven down by how much room the line needs, while a one-word genre isn't
-  // — left alone the secondary line would end up the bigger of the two.
   const label = Math.min(fitted(genres, wallLabel, EM_CAPS, room), ink);
   const genreLine = label >= LABEL_FLOOR ? genres : "";
 
