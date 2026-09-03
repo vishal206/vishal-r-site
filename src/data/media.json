@@ -266,18 +266,17 @@
       {
         "title": "100 METERS",
         "image": "https://www.themoviedb.org/t/p/w1280/kQyS2UrSbkd5AF0seuTSvRqWIdh.jpg",
-        "score": null,
+        "score": 7,
         "note": "*“Running the 100m faster than anyone else can solve almost anything.”*"
-      }
-    ],
-    "wishlist": [
+      },
       {
         "title": "Inu-Oh",
         "image": "https://www.themoviedb.org/t/p/w1280/67WmijqW7fjmLcc0eKZtW59Hf4d.jpg",
-        "score": null,
-        "note": null,
-        "url": "https://www.themoviedb.org/movie/642538"
-      },
+        "score": 3,
+        "note": "*“Inu-oh! Tomoari!”*"
+      }
+    ],
+    "wishlist": [
       {
         "title": "Poltergeist",
         "image": "https://www.themoviedb.org/t/p/w1280/4eMN3GANH5GG4kXdHkrTZEUuQ9M.jpg",
