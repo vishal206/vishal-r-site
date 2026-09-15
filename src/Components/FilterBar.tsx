@@ -80,13 +80,24 @@ function FilterBar<K extends string>({
     <div
       className={`z-10 flex ${
         placement === "corner"
-          ? "absolute right-3 top-3 justify-end sm:right-4 sm:top-4"
+          ? // On a phone the corner is the bottom-right one, just above the
+            // dock's stickers (and above the home indicator, where there is
+            // one); from sm up it's the top-right.
+            "absolute right-3 bottom-[calc(88px+env(safe-area-inset-bottom,0px))] justify-end sm:bottom-auto sm:right-4 sm:top-4"
           : "relative justify-center px-3 sm:px-6"
       } ${className}`}
     >
       <div
         ref={barRef}
-        className="relative flex flex-wrap justify-center gap-1 p-1 sm:gap-2 sm:p-1.5 rounded-[26px] backdrop-blur-md"
+        className={`relative flex justify-center gap-1 p-1 sm:gap-2 sm:p-1.5 backdrop-blur-md ${
+          // In the corner of a phone there's no room for a row, so the
+          // filters stack, one under another; a row again from sm up. The
+          // stack's corners are rounded to the pill inside plus the padding
+          // round it, so the box and the marker share one curve.
+          placement === "corner"
+            ? "flex-col rounded-[14px] sm:flex-row sm:rounded-[26px]"
+            : "flex-wrap rounded-[26px]"
+        }`}
         style={{
           background: "rgba(17,17,17,0.72)",
           boxShadow:
