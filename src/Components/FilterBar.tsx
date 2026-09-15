@@ -67,12 +67,10 @@ function FilterBar<K extends string>({
   const EASE = "cubic-bezier(0.22,1,0.36,1)";
 
   return (
-    <div
-      className={`relative z-10 flex justify-center px-6 ${className}`}
-    >
+    <div className={`relative z-10 flex justify-center px-3 sm:px-6 ${className}`}>
       <div
         ref={barRef}
-        className="relative flex flex-wrap justify-center gap-2 p-1.5 rounded-[26px] backdrop-blur-md"
+        className="relative flex flex-wrap justify-center gap-1 p-1 sm:gap-2 sm:p-1.5 rounded-[26px] backdrop-blur-md"
         style={{
           background: "rgba(17,17,17,0.72)",
           boxShadow:
@@ -101,7 +99,7 @@ function FilterBar<K extends string>({
               else buttonRefs.current.delete(key);
             }}
             onClick={() => onChange(key)}
-            className={`relative z-10 px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+            className={`relative z-10 px-2.5 py-1 text-[8px] tracking-[0.1em] sm:px-4 sm:py-1.5 sm:text-[11px] sm:tracking-[0.2em] rounded-full uppercase transition-colors duration-300 ${
               value === key
                 ? "text-editorial-bg"
                 : "text-editorial-muted/70 hover:text-editorial-text"

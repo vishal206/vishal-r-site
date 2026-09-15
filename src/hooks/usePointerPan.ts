@@ -29,6 +29,11 @@ export const usePointerPan = (
   const remeasure = useRef<() => void>(() => {});
   useEffect(() => remeasure.current(), [zoomLevel]);
 
+  // Handed back to the caller: jump the block to an offset (screen px from
+  // centred), clamped to its limits. A no-op until the pan is running.
+  const noop: (x: number, y: number) => void = () => {};
+  const controls = useRef({ panTo: noop });
+
   useEffect(() => {
     const viewport = viewportRef.current;
     const content = contentRef.current;
@@ -116,8 +121,7 @@ export const usePointerPan = (
       if (!limitX && !limitY) return;
 
       // Firefox reports lines, and page-mode deltas are a viewport at a time.
-      const step =
-        e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.height : 1;
+      const step = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.height : 1;
       let dx = e.deltaX * step;
       let dy = e.deltaY * step;
 
@@ -142,6 +146,13 @@ export const usePointerPan = (
 
     measure();
     remeasure.current = measure;
+    controls.current.panTo = (nx, ny) => {
+      x = clamp(nx, -limitX, limitX);
+      y = clamp(ny, -limitY, limitY);
+      pendingX = 0;
+      pendingY = 0;
+      apply();
+    };
     document.addEventListener("wheel", onWheel, { passive: false });
     last = performance.now();
     frame = requestAnimationFrame(tick);
@@ -152,11 +163,15 @@ export const usePointerPan = (
     observer.observe(viewport);
     observer.observe(content);
 
+    const c = controls.current;
     return () => {
       remeasure.current = () => {};
+      c.panTo = noop;
       cancelAnimationFrame(frame);
       observer.disconnect();
       document.removeEventListener("wheel", onWheel);
     };
   }, [viewportRef, contentRef, onZoom]);
+
+  return controls.current;
 };

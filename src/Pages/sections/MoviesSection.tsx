@@ -90,10 +90,13 @@ const inFilter = (category: Category, filter: Filter) =>
 
 const POSTER_RATIO = 3 / 2; // poster height ÷ width — the standard sheet
 
-// How far the wall may be zoomed, and by how much per button press.
+// How far the wall may be zoomed by pinch or ctrl+wheel.
 const ZOOM_MIN = 0.2;
 const ZOOM_MAX = 2.5;
-const ZOOM_STEP = 1.25;
+
+// The strip along the bottom the dock's stickers stand in, which the fitted
+// wall keeps clear of so its bottom row isn't hung behind them.
+const DOCK_RESERVE = 96;
 
 /**
  * What a middling poster measures across, by the standard screen breakpoints
@@ -471,7 +474,7 @@ const MoviesSection: React.FC = () => {
     [],
   );
   const contentRef = useRef<HTMLDivElement>(null);
-  usePointerPan(viewportRef, contentRef, zoomBy, scale);
+  const pan = usePointerPan(viewportRef, contentRef, zoomBy, scale);
 
   // Touch has no wheel to read, so those devices get a plain scrollable
   // viewport instead of the pan (scrollbars are hidden site-wide) — which is
@@ -609,31 +612,94 @@ const MoviesSection: React.FC = () => {
   );
 
   // The first look at a wall is the whole of it: zoomed out until it fits the
-  // viewport, edge to edge on whichever axis binds. Never zoomed *in* to fit
-  // — a wall of three posters is hung at its own size, not blown up. Refitted
-  // whenever the wall or the window changes; zooming by hand overrides it
-  // until then.
-  useEffect(() => {
-    if (!width || !height) return;
-    const fit = Math.min(1, viewport.width / width, viewport.height / height);
-    setScale(Math.max(ZOOM_MIN, fit));
+  // viewport, edge to edge on whichever axis binds, clear of the dock. Never
+  // zoomed *in* to fit — a wall of three posters is hung at its own size, not
+  // blown up. Refitted whenever the wall or the window changes; zooming by
+  // hand overrides it until then.
+  const fitScale = useMemo(() => {
+    if (!width || !height) return 1;
+    const room = Math.max(viewport.height / 2, viewport.height - DOCK_RESERVE);
+    return Math.max(
+      ZOOM_MIN,
+      Math.min(1, viewport.width / width, room / height),
+    );
   }, [width, height, viewport.width, viewport.height]);
+
+  // Where the wall should be looked at after a zoom: a point on it (in the
+  // block's own px) to bring to the middle of the screen, or nothing, for the
+  // wall centred. Set alongside the scale and acted on once both have landed
+  // — see below.
+  type Look = { px: number; py: number } | null;
+  const [look, setLook] = useState<{ at: Look; n: number }>({ at: null, n: 0 });
+  const lookAt = useCallback(
+    (at: Look) => setLook((l) => ({ at, n: l.n + 1 })),
+    [],
+  );
+
+  useEffect(() => {
+    setScale(fitScale);
+    lookAt(null);
+  }, [fitScale, lookAt]);
+
+  // Zooming by pointing: the cursor says which way a click will go. Zoomed
+  // out, everything is small and a click anywhere — a poster included —
+  // brings that spot up to full size. At full size the posters are links
+  // again, and a click on the wall between them drops back out to the whole
+  // wall. Pinch and ctrl+wheel still zoom freely on top of this.
+  const zoomedOut = scale < 1;
+  const cursor = zoomedOut
+    ? "zoom-in"
+    : scale > fitScale + 0.001
+      ? "zoom-out"
+      : undefined;
+  const onWallClick = (e: React.MouseEvent) => {
+    const block = contentRef.current;
+    if (!block) return;
+    if (zoomedOut) {
+      e.preventDefault();
+      e.stopPropagation();
+      const r = block.getBoundingClientRect();
+      lookAt({
+        px: ((e.clientX - r.left) / r.width) * width,
+        py: ((e.clientY - r.top) / r.height) * height,
+      });
+      setScale(1);
+    } else if (!(e.target as Element).closest("a, button")) {
+      lookAt(null);
+      setScale(fitScale);
+    }
+  };
+
+  // Acted on after the zoom has been applied and the pan has re-measured
+  // for it (that effect is registered first, so it runs first). On the
+  // panning viewport the offset is from centred, in screen px; on the
+  // scrolling one it's a scroll position.
+  const scaleRef = useRef(scale);
+  scaleRef.current = scale;
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const s = scaleRef.current;
+    const { at } = look;
+    if (canPan) {
+      pan.panTo(
+        at ? (width / 2 - at.px) * s : 0,
+        at ? (height / 2 - at.py) * s : 0,
+      );
+    } else {
+      el.scrollLeft = at
+        ? at.px * s - el.clientWidth / 2
+        : (el.scrollWidth - el.clientWidth) / 2;
+      el.scrollTop = at
+        ? at.py * s - el.clientHeight / 2
+        : (el.scrollHeight - el.clientHeight) / 2;
+    }
+  }, [look, canPan, pan, width, height]);
 
   // The stagger on the filter change ripples out from the middle of the wall,
   // in poster-widths from the centre.
   const ring = (x: number, y: number) =>
     Math.hypot(x - width / 2, y - height / 2) / base;
-
-  // Now that the wall starts at the top-left of the scrolling viewport, park
-  // the scroll in the middle of it — the same "dropped into the middle of the
-  // wall" first look the pan gives on desktop, with the edges a swipe away.
-  useEffect(() => {
-    if (canPan) return;
-    const el = viewportRef.current;
-    if (!el) return;
-    el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
-    el.scrollTop = (el.scrollHeight - el.clientHeight) / 2;
-  }, [canPan, wall, height]);
 
   return (
     <div className="flex-1 w-full">
@@ -659,7 +725,9 @@ const MoviesSection: React.FC = () => {
           backgroundImage:
             "radial-gradient(rgba(0,0,0,0.09) 1.3px, transparent 1.3px)",
           backgroundSize: "24px 24px",
+          cursor,
         }}
+        onClickCapture={onWallClick}
       >
         {visible.length === 0 ? (
           <div className="text-editorial-label text-sm">No movies yet.</div>
@@ -746,32 +814,6 @@ const MoviesSection: React.FC = () => {
         onChange={setFilter}
         className="pt-2"
       />
-
-      {/* ── Zoom ── The same surface as the filter bar, tucked in the corner. */}
-      <div
-        className="absolute right-4 top-3 z-10 flex gap-1 rounded-full p-1 backdrop-blur-md"
-        style={{
-          background: "rgba(17,17,17,0.72)",
-          boxShadow:
-            "inset 0 0 0 1px rgba(232,227,220,0.10), 0 10px 30px -12px rgba(0,0,0,0.9)",
-        }}
-      >
-        {[
-          { label: "−", title: "Zoom out", factor: 1 / ZOOM_STEP },
-          { label: "+", title: "Zoom in", factor: ZOOM_STEP },
-        ].map(({ label, title, factor }) => (
-          <button
-            key={label}
-            type="button"
-            title={title}
-            aria-label={title}
-            onClick={() => zoomBy(factor)}
-            className="h-8 w-8 rounded-full font-primary text-base text-editorial-text/80 transition-colors hover:bg-white/10 hover:text-editorial-text"
-          >
-            {label}
-          </button>
-        ))}
-      </div>
     </div>
   );
 };
