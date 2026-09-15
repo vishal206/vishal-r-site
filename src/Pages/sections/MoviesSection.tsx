@@ -95,8 +95,15 @@ const ZOOM_MIN = 0.2;
 const ZOOM_MAX = 2.5;
 
 // The strip along the bottom the dock's stickers stand in, which the fitted
-// wall keeps clear of so its bottom row isn't hung behind them.
-const DOCK_RESERVE = 96;
+// wall keeps clear of so its bottom row isn't hung behind them. Stepped by
+// the same breakpoints the dock scales itself by (see SectionDock): the row
+// is about 200px tall at full size, and stands at 0.36 of that on a phone,
+// 0.55 from sm, 0.72 from md and 0.6 from lg — plus a little air.
+const dockReserveFor = (width: number) =>
+  width >= 1024 ? 130 : width >= 768 ? 152 : width >= 640 ? 118 : 80;
+
+/** A hair of paper kept between the fitted wall and the edge of the screen. */
+const FIT_PAD = 8;
 
 /**
  * What a middling poster measures across, by the standard screen breakpoints
@@ -190,11 +197,18 @@ const overlaps = (a: Rect, b: Rect) =>
  * Each poster is the standard 2:3 sheet, shown whole, at the width its score
  * gives it. The first film takes the centre; every one after it goes in the
  * spot closest to the centre that butts up against something already hung
- * and overlaps nothing — so the wall grows outward in rings, the list order
- * reading as distance from the middle. Candidate spots are every position
- * flush against a hung poster's side with an edge lined up to some poster's
- * edge, which is what keeps the packing tight; where sizes don't tile the
+ * and overlaps nothing — so the wall grows outward, the list order reading
+ * as distance from the middle. Candidate spots are every position flush
+ * against a hung poster's side with an edge lined up to some poster's edge,
+ * which is what keeps the packing tight; where sizes don't tile the
  * difference is left as a hole, and those come out small.
+ *
+ * "Closest" is measured as a walk along the two axes rather than as the
+ * crow flies, so the wall grows as a rhombus rather than a disc; and the
+ * sideways leg is priced by the screen's shape (`aspect`, width over
+ * height), so on a landscape screen the rhombus spreads wide and on a
+ * portrait one it runs tall — the wall fills the screen it's on rather than
+ * leaving bare paper down the sides or above and below.
  *
  * Returned in coordinates from the wall's top-left, on a block sized so the
  * centre of the first poster is the centre of the block.
@@ -203,6 +217,7 @@ const buildWall = (
   items: Shelved[],
   base: number,
   mount: MountChrome | null = null,
+  aspect = 1,
 ): { wall: WallCell[]; width: number; height: number } => {
   if (items.length === 0) return { wall: [], width: 0, height: 0 };
 
@@ -243,7 +258,10 @@ const buildWall = (
     const consider = (x: number, y: number) => {
       const cx = x + w / 2;
       const cy = y + h / 2;
-      const dist = cx * cx + cy * cy;
+      // A rhombus contour has many spots at the same distance; among those,
+      // the one nearest as the crow flies keeps the packing compact.
+      const dist =
+        Math.abs(cx) / aspect + Math.abs(cy) + (cx * cx + cy * cy) * 1e-6;
       if (dist >= bestDist) return;
       const rect = { x, y, w, h };
       if (placed.some((r) => overlaps(rect, r))) return;
@@ -462,6 +480,13 @@ const MoviesSection: React.FC = () => {
   const viewportRef = useRef<HTMLDivElement>(null);
   const viewport = useViewportSize(viewportRef);
   const base = baseWidthFor(viewport.width);
+  const dockReserve = dockReserveFor(viewport.width);
+  // The screen's shape, which the wall takes on (see `buildWall`). Stepped
+  // coarsely so an ordinary window resize doesn't rehang the whole wall.
+  const aspect = Math.max(
+    0.25,
+    Math.round((viewport.width / viewport.height) * 4) / 4,
+  );
 
   // Zoom, as a plain scale on the block: pinch or ctrl+wheel on the wall, or
   // the buttons in the corner. CSS `zoom` rather than a transform so the block
@@ -607,8 +632,8 @@ const MoviesSection: React.FC = () => {
   const mount = useMemo(() => mountChrome(base), [base]);
 
   const { wall, width, height } = useMemo(
-    () => buildWall(visible, base, mount),
-    [visible, base, mount],
+    () => buildWall(visible, base, mount, aspect),
+    [visible, base, mount, aspect],
   );
 
   // The first look at a wall is the whole of it: zoomed out until it fits the
@@ -616,14 +641,22 @@ const MoviesSection: React.FC = () => {
   // zoomed *in* to fit — a wall of three posters is hung at its own size, not
   // blown up. Refitted whenever the wall or the window changes; zooming by
   // hand overrides it until then.
+  //
+  // The block is hung in the middle of the viewport less the dock's strip
+  // (the viewport carries that strip as bottom padding, so its centre is the
+  // centre of what's above the stickers), and fitted to that same room — so
+  // the wall comes out as big as it can with its top tip up near the top of
+  // the screen and its bottom tip clear of the dock. The filter bar sits in
+  // the corner, out of the tip's way.
   const fitScale = useMemo(() => {
     if (!width || !height) return 1;
-    const room = Math.max(viewport.height / 2, viewport.height - DOCK_RESERVE);
-    return Math.max(
-      ZOOM_MIN,
-      Math.min(1, viewport.width / width, room / height),
+    const roomW = viewport.width - 2 * FIT_PAD;
+    const roomH = Math.max(
+      viewport.height / 2,
+      viewport.height - dockReserve - 2 * FIT_PAD,
     );
-  }, [width, height, viewport.width, viewport.height]);
+    return Math.max(ZOOM_MIN, Math.min(1, roomW / width, roomH / height));
+  }, [width, height, viewport.width, viewport.height, dockReserve]);
 
   // Where the wall should be looked at after a zoom: a point on it (in the
   // block's own px) to bring to the middle of the screen, or nothing, for the
@@ -725,6 +758,8 @@ const MoviesSection: React.FC = () => {
           backgroundImage:
             "radial-gradient(rgba(0,0,0,0.09) 1.3px, transparent 1.3px)",
           backgroundSize: "24px 24px",
+          // The dock's strip, so the wall is centred in what's above it.
+          paddingBottom: dockReserve,
           cursor,
         }}
         onClickCapture={onWallClick}
@@ -807,12 +842,14 @@ const MoviesSection: React.FC = () => {
         )}
       </div>
 
-      {/* ── Filter bar ── Sits over the wall. */}
+      {/* ── Filter bar ── Small, in the top-right corner of the sheet, so
+          the wall's top tip has the top of the screen to itself. */}
       <FilterBar
         options={FILTERS.map((f) => ({ ...f, count: counts[f.key] }))}
         value={filter}
         onChange={setFilter}
-        className="pt-2"
+        placement="corner"
+        compact
       />
     </div>
   );

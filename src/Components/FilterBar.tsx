@@ -11,6 +11,14 @@ type Props<K extends string> = {
   value: K;
   onChange: (key: K) => void;
   className?: string;
+  /**
+   * Where the bar sits: across the top of the section, centred (the
+   * default), or pinned in the top-right corner of its nearest positioned
+   * ancestor, out of the way of what's behind it.
+   */
+  placement?: "center" | "corner";
+  /** Smaller type and tighter padding at every breakpoint. */
+  compact?: boolean;
 };
 
 /**
@@ -30,6 +38,8 @@ function FilterBar<K extends string>({
   value,
   onChange,
   className = "",
+  placement = "center",
+  compact = false,
 }: Props<K>) {
   const barRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef(new Map<K, HTMLButtonElement>());
@@ -67,7 +77,13 @@ function FilterBar<K extends string>({
   const EASE = "cubic-bezier(0.22,1,0.36,1)";
 
   return (
-    <div className={`relative z-10 flex justify-center px-3 sm:px-6 ${className}`}>
+    <div
+      className={`z-10 flex ${
+        placement === "corner"
+          ? "absolute right-3 top-3 justify-end sm:right-4 sm:top-4"
+          : "relative justify-center px-3 sm:px-6"
+      } ${className}`}
+    >
       <div
         ref={barRef}
         className="relative flex flex-wrap justify-center gap-1 p-1 sm:gap-2 sm:p-1.5 rounded-[26px] backdrop-blur-md"
@@ -99,7 +115,11 @@ function FilterBar<K extends string>({
               else buttonRefs.current.delete(key);
             }}
             onClick={() => onChange(key)}
-            className={`relative z-10 px-2.5 py-1 text-[8px] tracking-[0.1em] sm:px-4 sm:py-1.5 sm:text-[11px] sm:tracking-[0.2em] rounded-full uppercase transition-colors duration-300 ${
+            className={`relative z-10 rounded-full uppercase transition-colors duration-300 ${
+              compact
+                ? "px-2.5 py-1 text-[8px] tracking-[0.1em] sm:px-3 sm:text-[9px] sm:tracking-[0.14em]"
+                : "px-2.5 py-1 text-[8px] tracking-[0.1em] sm:px-4 sm:py-1.5 sm:text-[11px] sm:tracking-[0.2em]"
+            } ${
               value === key
                 ? "text-editorial-bg"
                 : "text-editorial-muted/70 hover:text-editorial-text"
