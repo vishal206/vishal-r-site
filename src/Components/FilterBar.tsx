@@ -106,7 +106,7 @@ function FilterBar<K extends string>({
       >
         <span
           aria-hidden
-          className="absolute left-0 top-0 rounded-full bg-editorial-text"
+          className="absolute left-0 top-0 rounded-full bg-available"
           style={{
             width: pill.width,
             height: pill.height,

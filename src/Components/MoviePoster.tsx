@@ -309,7 +309,14 @@ const MoviePoster = ({
         <div
           className="relative flex h-full flex-col overflow-hidden"
           style={{
-            backgroundColor: "var(--color-editorial-mount, #e3e0da)",
+            // Stone only where there's a frame or plate to be stone. A bare
+            // mount paints nothing: at a fractional zoom the artwork can
+            // fall a sub-pixel short of its box, and a painted box shows
+            // through as a hairline along the foot.
+            backgroundColor:
+              frame || plate
+                ? "var(--color-editorial-mount, #e3e0da)"
+                : "transparent",
             border: `${edge}px solid ${MOUNT_EDGE_COLOR}`,
             padding: `${frame}px ${frame}px 0`,
           }}

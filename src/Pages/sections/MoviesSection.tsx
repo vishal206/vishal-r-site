@@ -5,6 +5,8 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlassPlus } from "@fortawesome/free-solid-svg-icons";
 import FilterBar from "../../components/FilterBar";
 import MoviePoster from "../../components/MoviePoster";
 import { mountChrome } from "../../components/posterMount";
@@ -642,12 +644,14 @@ const MoviesSection: React.FC = () => {
   // blown up. Refitted whenever the wall or the window changes; zooming by
   // hand overrides it until then.
   //
-  // The block is hung in the middle of the viewport less the dock's strip
-  // (the viewport carries that strip as bottom padding, so its centre is the
-  // centre of what's above the stickers), and fitted to that same room — so
-  // the wall comes out as big as it can with its top tip up near the top of
-  // the screen and its bottom tip clear of the dock. The filter bar sits in
-  // the corner, out of the tip's way.
+  // Fitted along the screen's long side only: on a landscape screen the
+  // wall's widest points reach the edges and its tips run off the top and
+  // bottom; on a portrait one its tips reach the top and the dock (the
+  // viewport carries the dock's strip as bottom padding, so the block is
+  // centred in what's above the stickers) and its sides run off the edges.
+  // What runs off is a pan away. The wall's shape follows the screen's, so
+  // this fills the screen with posters where fitting both axes left the
+  // corners bare.
   const fitScale = useMemo(() => {
     if (!width || !height) return 1;
     const roomW = viewport.width - 2 * FIT_PAD;
@@ -655,7 +659,9 @@ const MoviesSection: React.FC = () => {
       viewport.height / 2,
       viewport.height - dockReserve - 2 * FIT_PAD,
     );
-    return Math.max(ZOOM_MIN, Math.min(1, roomW / width, roomH / height));
+    const landscape = viewport.width >= viewport.height;
+    const fit = landscape ? roomW / width : roomH / height;
+    return Math.max(ZOOM_MIN, Math.min(1, fit));
   }, [width, height, viewport.width, viewport.height, dockReserve]);
 
   // Where the wall should be looked at after a zoom: a point on it (in the
@@ -673,35 +679,6 @@ const MoviesSection: React.FC = () => {
     setScale(fitScale);
     lookAt(null);
   }, [fitScale, lookAt]);
-
-  // Zooming by pointing: the cursor says which way a click will go. Zoomed
-  // out, everything is small and a click anywhere — a poster included —
-  // brings that spot up to full size. At full size the posters are links
-  // again, and a click on the wall between them drops back out to the whole
-  // wall. Pinch and ctrl+wheel still zoom freely on top of this.
-  const zoomedOut = scale < 1;
-  const cursor = zoomedOut
-    ? "zoom-in"
-    : scale > fitScale + 0.001
-      ? "zoom-out"
-      : undefined;
-  const onWallClick = (e: React.MouseEvent) => {
-    const block = contentRef.current;
-    if (!block) return;
-    if (zoomedOut) {
-      e.preventDefault();
-      e.stopPropagation();
-      const r = block.getBoundingClientRect();
-      lookAt({
-        px: ((e.clientX - r.left) / r.width) * width,
-        py: ((e.clientY - r.top) / r.height) * height,
-      });
-      setScale(1);
-    } else if (!(e.target as Element).closest("a, button")) {
-      lookAt(null);
-      setScale(fitScale);
-    }
-  };
 
   // Acted on after the zoom has been applied and the pan has re-measured
   // for it (that effect is registered first, so it runs first). On the
@@ -749,20 +726,15 @@ const MoviesSection: React.FC = () => {
           wheel or trackpad (usePointerPan) and never on its own. */}
       <div
         ref={viewportRef}
-        // The one light room in the house: a paper wall behind the mounts,
-        // with the same dot grid the dark sheet carries, in ink instead.
-        className={`absolute inset-0 flex bg-editorial-paper ${
+        // No surface of its own: the sheet's dark dot grid shows through,
+        // the same as behind every other section.
+        className={`absolute inset-0 flex ${
           canPan ? "items-center justify-center overflow-clip" : "overflow-auto"
         }`}
         style={{
-          backgroundImage:
-            "radial-gradient(rgba(0,0,0,0.09) 1.3px, transparent 1.3px)",
-          backgroundSize: "24px 24px",
           // The dock's strip, so the wall is centred in what's above it.
           paddingBottom: dockReserve,
-          cursor,
         }}
-        onClickCapture={onWallClick}
       >
         {visible.length === 0 ? (
           <div className="text-editorial-label text-sm">No movies yet.</div>
@@ -840,6 +812,16 @@ const MoviesSection: React.FC = () => {
             })}
           </div>
         )}
+      </div>
+
+      {/* ── Zoom hint ── Top-left, in the label grey: the wall zooms by
+          pinch (or ctrl+wheel), and nothing on screen says so otherwise. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-4 top-4 z-10 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-editorial-label sm:left-5 sm:top-5"
+      >
+        <FontAwesomeIcon icon={faMagnifyingGlassPlus} className="text-[12px]" />
+        Pinch to zoom
       </div>
 
       {/* ── Filter bar ── Small, in the top-right corner of the sheet, so
