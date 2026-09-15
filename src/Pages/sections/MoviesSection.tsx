@@ -18,6 +18,14 @@ type Category = "reviewed" | "watched" | "wishlist";
 type Filter = Category;
 
 type Shelved = {
+  /**
+   * The React key its poster hangs by. Unique across the whole shelf, whatever
+   * the data says: two entries for one film would otherwise share a key, and
+   * React then loses track of one of them — its wrapper is left behind in the
+   * column's DOM every time the wall re-renders, invisible after the exit
+   * animation but still holding its height, and the gaps pile up.
+   */
+  key: string;
   post: BlogPostMeta;
   to: string | null;
   /** Off-site link, for a film with nothing on this site to point at. */
@@ -28,6 +36,9 @@ type Shelved = {
   /** The film's TMDB link, where a wishlist poster goes and its caption comes from. */
   url?: string;
 };
+
+/** A shelf entry before it's been numbered — the key is stamped on last. */
+type Unkeyed = Omit<Shelved, "key">;
 
 // ── Scores ───────────────────────────────────────────────────────────────────
 // A film is scored 1–10 and the wall sizes it accordingly: the best films get
@@ -468,7 +479,7 @@ const MoviesSection: React.FC = () => {
       media.movies.watched.map((m) => [m.post ?? m.title, m]),
     );
 
-    const reviewedShelf: Shelved[] = reviewed.map((p) => ({
+    const reviewedShelf: Unkeyed[] = reviewed.map((p) => ({
       post: p,
       to: `/archive/${p.slug}`,
       category: "reviewed",
@@ -476,7 +487,7 @@ const MoviesSection: React.FC = () => {
       note: p.note ?? entries.get(p.slug)?.note,
     }));
 
-    const watchedShelf: Shelved[] = media.movies.watched
+    const watchedShelf: Unkeyed[] = media.movies.watched
       .filter((m) => !(m.post && reviewedSlugs.has(m.post)))
       .map((m) => ({
         post: toPost(m),
@@ -491,7 +502,7 @@ const MoviesSection: React.FC = () => {
     // click through to either, so a poster goes to the film's TMDB page: where
     // its caption is read from, and where you'd go next to decide whether to
     // watch it.
-    const wishlistShelf: Shelved[] = media.movies.wishlist.map((m) => ({
+    const wishlistShelf: Unkeyed[] = media.movies.wishlist.map((m) => ({
       post: toPost(m),
       to: null,
       href: m.url ?? null,
@@ -501,7 +512,11 @@ const MoviesSection: React.FC = () => {
       url: m.url,
     }));
 
-    return [...reviewedShelf, ...watchedShelf, ...wishlistShelf];
+    // Numbered down the whole shelf so the key can't collide even where the
+    // data lists a film twice (see `Shelved.key`).
+    return [...reviewedShelf, ...watchedShelf, ...wishlistShelf].map(
+      (m, i) => ({ ...m, key: `${m.category}-${m.post.slug}-${i}` }),
+    );
   }, []);
 
   const counts = useMemo(() => {
@@ -619,8 +634,11 @@ const MoviesSection: React.FC = () => {
             style={{ height, margin: canPan ? undefined : "auto" }}
           >
             {wall.map((column, c) => (
+              // Keyed by wall as well as position, so a column div is never
+              // carried over from one wall to the next: whatever one wall
+              // leaves in it can't turn up as a gap in another.
               <div
-                key={c}
+                key={`${shown}-${c}`}
                 className="flex flex-col shrink-0"
                 style={{ width: column.width }}
               >
@@ -636,7 +654,7 @@ const MoviesSection: React.FC = () => {
                     // The wrapper carries the drop-off / go-up animation, so it
                     // never fights the poster's own hover transform.
                     <div
-                      key={`${item.category}-${item.post.slug}`}
+                      key={item.key}
                       className={leaving ? "animate-poster-out" : "animate-poster-in"}
                       style={{
                         animation: leaving
