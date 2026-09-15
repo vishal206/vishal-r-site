@@ -2,7 +2,7 @@ import { useCallback, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { BlogPostMeta } from "../Utils/markdownLoader";
-import { MOUNT_GAP, mountChrome } from "./posterMount";
+import { MOUNT_EDGE_COLOR, MOUNT_GAP, mountChrome } from "./posterMount";
 import type { MountChrome } from "./posterMount";
 
 // The hover pop, as numbers as well as classes: the nudge below has to predict
@@ -99,15 +99,15 @@ const MoviePoster = ({
   // sides, as a mount actually is, and that depth is what holds the label.
   // A mount stands its gap off its neighbours, so anything it has to size for
   // itself is set against what's left of the cell rather than the whole of it.
-  const { frame, ink, plate } =
+  const { gap, edge, frame, ink, plate } =
     chrome ?? mountChrome(mounted ? width - MOUNT_GAP : width);
 
   // A cell in the wall is filled exactly; a poster on its own keeps the
-  // artwork's own proportions. Mounted, the frame and the plate are taken off
-  // the cell first and the artwork gets what's left.
+  // artwork's own proportions. Mounted, the gap, the edge, the frame and the
+  // plate are taken off the cell first and the artwork gets what's left.
   const artHeight =
     height && mounted
-      ? Math.max(1, height - MOUNT_GAP - frame - plate)
+      ? Math.max(1, height - gap - 2 * edge - frame - plate)
       : height;
 
   const cell = artHeight
@@ -153,8 +153,9 @@ const MoviePoster = ({
 
   // What's set on the plate under the picture: the wishlist's facts where it
   // has them, the film's own note otherwise.
-  const label = caption ?? (
-    note ? (
+  const label =
+    caption ??
+    (note ? (
       <span
         className="text-center font-body text-editorial-mount-ink line-clamp-2"
         style={{ fontSize: ink, lineHeight: 1.3 }}
@@ -173,8 +174,7 @@ const MoviePoster = ({
           {note}
         </ReactMarkdown>
       </span>
-    ) : null
-  );
+    ) : null);
 
   // The frame and the label, both held back until hover. One layer carries the
   // pair so they arrive together, and it sits inside the scaling wrapper so the
@@ -261,28 +261,69 @@ const MoviePoster = ({
   ) : null;
 
   // Hung for good: the cell *is* the mount, and the artwork sits inside it.
-  // The three even sides come off as padding and the deeper foot is the plate,
-  // so frame + artwork + plate adds back to exactly the cell's height and a
-  // wall of these tiles as tightly as a wall of bare posters.
+  // A black edge runs evenly round the outside; inside it the three even
+  // sides come off as padding and the deeper foot is the plate, so edge +
+  // frame + artwork + plate + edge adds back to exactly the cell's height and
+  // a wall of these tiles as tightly as a wall of bare posters.
+  //
+  // With no plate (a watched film's mount is the black edge alone), whatever
+  // the poster has to say is held back for the hover instead: a band along
+  // the foot of the artwork, dark so the type reads over any picture, that
+  // grows to the note rather than clipping it.
+  const hoverNote =
+    mounted && !plate && !caption && note ? (
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-2 pb-1.5 pt-6
+          opacity-0 transition-opacity duration-300 ease-out group-hover/poster:opacity-100"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.82) 55%, rgba(0,0,0,0))",
+        }}
+      >
+        <span
+          className="text-center font-body text-editorial-text"
+          style={{
+            fontSize: Math.max(10, ink * 1.3),
+            lineHeight: 1.3,
+            overflowWrap: "anywhere",
+          }}
+        >
+          <ReactMarkdown
+            components={{
+              p: ({ children }) => <>{children}</>,
+              a: ({ children }) => <>{children}</>,
+            }}
+          >
+            {note}
+          </ReactMarkdown>
+        </span>
+      </span>
+    ) : null;
+
   const picture =
     mounted && height ? (
       // The outer box still fills the cell exactly — it's transparent, and the
       // padding is what holds the mount off its neighbours.
-      <div style={{ height, padding: MOUNT_GAP / 2 }}>
+      <div style={{ height, padding: gap / 2 }}>
         <div
-          className="flex h-full flex-col overflow-hidden"
+          className="relative flex h-full flex-col overflow-hidden"
           style={{
             backgroundColor: "var(--color-editorial-mount, #e3e0da)",
+            border: `${edge}px solid ${MOUNT_EDGE_COLOR}`,
             padding: `${frame}px ${frame}px 0`,
           }}
         >
           {art}
-          <span
-            className="flex items-center justify-center overflow-hidden px-1"
-            style={{ height: plate }}
-          >
-            {label}
-          </span>
+          {plate > 0 && (
+            <span
+              className="flex items-center justify-center overflow-hidden px-1"
+              style={{ height: plate }}
+            >
+              {label}
+            </span>
+          )}
+          {hoverNote}
         </div>
       </div>
     ) : (

@@ -1,7 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import FilterBar from "../../components/FilterBar";
 import MoviePoster from "../../components/MoviePoster";
-import { MOUNT_GAP, mountChrome } from "../../components/posterMount";
+import { mountChrome } from "../../components/posterMount";
 import type { MountChrome } from "../../components/posterMount";
 import { usePointerPan } from "../../hooks/usePointerPan";
 import { getBlogPostsSync } from "../../Utils/functions";
@@ -85,7 +91,7 @@ const inFilter = (category: Category, filter: Filter) =>
 const POSTER_RATIO = 3 / 2; // poster height ÷ width — the standard sheet
 
 // How far the wall may be zoomed, and by how much per button press.
-const ZOOM_MIN = 0.4;
+const ZOOM_MIN = 0.2;
 const ZOOM_MAX = 2.5;
 const ZOOM_STEP = 1.25;
 
@@ -119,19 +125,26 @@ const posterWidth = (score: number, base: number) => {
   return Math.round(base * SIZE_STEPS[step]);
 };
 
-/** The viewport's width, live — what the wall is built to fill. */
-const useWallWidth = (viewportRef: React.RefObject<HTMLDivElement | null>) => {
-  const [width, setWidth] = useState(() => window.innerWidth);
+/** The viewport's size, live — what sets poster size, and what the wall is
+ * fitted into. */
+const useViewportSize = (
+  viewportRef: React.RefObject<HTMLDivElement | null>,
+) => {
+  const [size, setSize] = useState(() => ({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  }));
   useEffect(() => {
     const el = viewportRef.current;
     if (!el) return;
-    const measure = () => setWidth(el.clientWidth);
+    const measure = () =>
+      setSize({ width: el.clientWidth, height: el.clientHeight });
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(el);
     return () => observer.disconnect();
   }, [viewportRef]);
-  return width;
+  return size;
 };
 
 /** Where a poster hangs: its cell on the wall, in px from the top-left. */
@@ -144,6 +157,22 @@ type WallCell = {
 };
 
 type Rect = { x: number; y: number; w: number; h: number };
+
+/**
+ * The mount a film hangs in. A wishlist film gets the full stone mount with
+ * its facts on the plate; a watched film hangs bare — no edge, no stone, no
+ * plate, just a wider gap off its neighbours — and keeps its note for the
+ * hover.
+ */
+const chromeFor = (item: Shelved, mount: MountChrome): MountChrome =>
+  item.category === "wishlist"
+    ? mount
+    : { ...mount, gap: WATCHED_GAP * mount.frame, edge: 0, frame: 0, plate: 0 };
+
+// How far apart bare posters hang, as a multiple of the stone frame the
+// wishlist's mounts get: with no frame to hold them apart, the space itself
+// has to do it.
+const WATCHED_GAP = 1.6;
 
 const overlaps = (a: Rect, b: Rect) =>
   a.x < b.x + b.w - 0.5 &&
@@ -175,18 +204,22 @@ const buildWall = (
   if (items.length === 0) return { wall: [], width: 0, height: 0 };
 
   // What a mount takes out of its cell before the artwork sees any of it: the
-  // gap and a frame either side across, and the gap, one frame and the plate
-  // down (the foot of a mount is the plate, not another frame). Zero on a bare
-  // wall, where the cell simply *is* the poster.
-  const across = mount ? MOUNT_GAP + 2 * mount.frame : 0;
-  const down = mount ? MOUNT_GAP + mount.frame + mount.plate : 0;
-  const cellHeight = (width: number) =>
-    Math.round(POSTER_RATIO * (width - across) + down);
+  // gap, the edge and a frame either side across, and the gap, both edges,
+  // one frame and the plate down — per film, since a watched film's mount
+  // has no stone in it (see `chromeFor`). Zero on a bare wall, where the
+  // cell simply *is* the poster.
+  const cellHeight = (item: Shelved, width: number) => {
+    if (!mount) return Math.round(POSTER_RATIO * width);
+    const c = chromeFor(item, mount);
+    const across = c.gap + 2 * (c.edge + c.frame);
+    const down = c.gap + 2 * c.edge + c.frame + c.plate;
+    return Math.round(POSTER_RATIO * (width - across) + down);
+  };
 
   const placed: Rect[] = [];
   for (const item of items) {
     const w = posterWidth(item.score, base);
-    const h = cellHeight(w);
+    const h = cellHeight(item, w);
     if (placed.length === 0) {
       placed.push({ x: -w / 2, y: -h / 2, w, h });
       continue;
@@ -322,9 +355,9 @@ const PosterCaption = ({
   const wallLabel = Math.max(8, Math.min(11, chrome.plate * 0.192));
 
   // The room a line of type has: the cell, less the gap the mount stands off
-  // its neighbours, the frame inside that, and the two px-1 paddings between
-  // the frame and the type.
-  const room = width - MOUNT_GAP - 2 * chrome.frame - 16;
+  // its neighbours, the edge and frame inside that, and the two px-1 paddings
+  // between the frame and the type.
+  const room = width - chrome.gap - 2 * (chrome.edge + chrome.frame) - 16;
 
   // A film whose facts haven't arrived, or that has no link to fetch them
   // with, still hangs in a mount — so its plate carries its title rather than
@@ -424,8 +457,8 @@ const enterDelay = (spread: number, depth: number) =>
 const MoviesSection: React.FC = () => {
   const [filter, setFilter] = useState<Filter>(DEFAULT_FILTER);
   const viewportRef = useRef<HTMLDivElement>(null);
-  const wallWidth = useWallWidth(viewportRef);
-  const base = baseWidthFor(wallWidth);
+  const viewport = useViewportSize(viewportRef);
+  const base = baseWidthFor(viewport.width);
 
   // Zoom, as a plain scale on the block: pinch or ctrl+wheel on the wall, or
   // the buttons in the corner. CSS `zoom` rather than a transform so the block
@@ -564,26 +597,27 @@ const MoviesSection: React.FC = () => {
 
   const facts = useTmdbFacts(wishlistUrls, wanted);
 
-  // The wishlist hangs in frames; the other walls are bare posters. Worked out
-  // once for the whole wall, because the packing has to know what the chrome
-  // takes before it can size a column — and because one frame thickness across
-  // the wall is how a room of pictures is hung.
-  //
-  // Only once there's a link somewhere on the shelf: with nothing to fetch,
-  // there's nothing to put on a plate, and the wall is better as the seamless
-  // block it has always been than as a grid of empty mounts.
-  const mount = useMemo(
-    () =>
-      shown === "wishlist" && visible.some((m) => m.url)
-        ? mountChrome(base)
-        : null,
-    [shown, visible, base],
-  );
+  // Every wall hangs its pictures in mounts, a gap apart. Worked out once for
+  // the whole wall, because the packing has to know what the chrome takes
+  // before it can size a cell — and because one frame thickness across the
+  // wall is how a room of pictures is hung.
+  const mount = useMemo(() => mountChrome(base), [base]);
 
   const { wall, width, height } = useMemo(
     () => buildWall(visible, base, mount),
     [visible, base, mount],
   );
+
+  // The first look at a wall is the whole of it: zoomed out until it fits the
+  // viewport, edge to edge on whichever axis binds. Never zoomed *in* to fit
+  // — a wall of three posters is hung at its own size, not blown up. Refitted
+  // whenever the wall or the window changes; zooming by hand overrides it
+  // until then.
+  useEffect(() => {
+    if (!width || !height) return;
+    const fit = Math.min(1, viewport.width / width, viewport.height / height);
+    setScale(Math.max(ZOOM_MIN, fit));
+  }, [width, height, viewport.width, viewport.height]);
 
   // The stagger on the filter change ripples out from the middle of the wall,
   // in poster-widths from the centre.
@@ -616,9 +650,16 @@ const MoviesSection: React.FC = () => {
           wheel or trackpad (usePointerPan) and never on its own. */}
       <div
         ref={viewportRef}
-        className={`absolute inset-0 flex ${
+        // The one light room in the house: a paper wall behind the mounts,
+        // with the same dot grid the dark sheet carries, in ink instead.
+        className={`absolute inset-0 flex bg-editorial-paper ${
           canPan ? "items-center justify-center overflow-clip" : "overflow-auto"
         }`}
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(0,0,0,0.09) 1.3px, transparent 1.3px)",
+          backgroundSize: "24px 24px",
+        }}
       >
         {visible.length === 0 ? (
           <div className="text-editorial-label text-sm">No movies yet.</div>
@@ -647,10 +688,9 @@ const MoviesSection: React.FC = () => {
               const depth = 0;
               const filmFacts = item.url ? facts.get(item.url) : null;
               const lines = filmFacts ? captionLines(filmFacts) : null;
-              // Every poster on a mounted wall is mounted — the packing
-              // already sized its cell for a frame, so leaving one bare
-              // would hand it a cell it doesn't fit.
-              const hung = Boolean(mount) && item.category === "wishlist";
+              // The mount this one hangs in — the packing sized its cell
+              // from the same one, so the two agree to the pixel.
+              const chrome = chromeFor(item, mount);
               return (
                 // The wrapper carries the drop-off / go-up animation, so it
                 // never fights the poster's own hover transform.
@@ -680,17 +720,17 @@ const MoviesSection: React.FC = () => {
                     // better still.
                     hoverPop={item.category !== "wishlist"}
                     caption={
-                      hung && mount ? (
+                      item.category === "wishlist" ? (
                         <PosterCaption
                           lines={lines}
                           title={item.post.title}
                           width={width}
-                          chrome={mount}
+                          chrome={chrome}
                         />
                       ) : null
                     }
-                    mounted={hung}
-                    chrome={mount ?? undefined}
+                    mounted
+                    chrome={chrome}
                   />
                 </div>
               );
