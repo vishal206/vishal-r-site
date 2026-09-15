@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import FilterBar from "../../components/FilterBar";
 import MoviePoster from "../../components/MoviePoster";
 import { MOUNT_GAP, mountChrome } from "../../components/posterMount";
@@ -43,23 +43,19 @@ type Unkeyed = Omit<Shelved, "key">;
 // ── Scores ───────────────────────────────────────────────────────────────────
 // A film is scored 1–10 and the wall sizes it accordingly: the best films get
 // the biggest posters. Reviewed films take their score from the post's
-// frontmatter (`score: 9`), the rest from media.json. Anything unscored sits at
-// the middle size, so the wall reads the same as before until scores are added.
+// frontmatter (`score: 9`), the rest from media.json. Anything unscored sits
+// at the middle, so the wall reads evenly until scores are added.
+//
+// Size is a matter of which column a film hangs in — a column holding fewer
+// posters is wider, and every poster in it is bigger — not of how much of its
+// column it takes: nothing on the wall is cropped, so within a column every
+// poster is the same 2:3 sheet.
 const SCORE_MID = 5.5;
-
-// How far a score moves a poster off the middle size: a 10 comes out a fifth
-// bigger than the average, a 1 a fifth smaller. Turn this up for a wall with
-// more shout to it — past ~0.35 the crop on the biggest posters gets tight.
-const SCORE_AMP = 0.22;
 
 const toScore = (value: unknown): number =>
   typeof value === "number" && Number.isFinite(value)
     ? Math.min(10, Math.max(1, value))
     : SCORE_MID;
-
-/** A poster's share of its column's height, from its score. */
-const scoreWeight = (score: number) =>
-  1 + SCORE_AMP * ((score - SCORE_MID) / (SCORE_MID - 1));
 
 /** A media.json entry dressed as a blog post so MoviePoster can render it. */
 const toPost = (m: MediaMovie): BlogPostMeta => ({
@@ -88,118 +84,95 @@ const inFilter = (category: Category, filter: Filter) =>
 
 const POSTER_RATIO = 3 / 2; // poster height ÷ width — the standard sheet
 
-/**
- * Poster size and how many columns the wall runs to, stepped by viewport. The
- * cluster is meant to run past the viewport — the wall clips it, so it reads as
- * a wall carrying on past the edges rather than a centred block.
- */
-const wallScaleFor = (viewport: number) =>
-  viewport >= 1280
-    ? { width: 210, columns: 7 }
-    : viewport >= 1024
-      ? { width: 190, columns: 6 }
-      : viewport >= 640
-        ? { width: 165, columns: 5 }
-        : { width: 124, columns: 4 };
+// How far the wall may be zoomed, and by how much per button press.
+const ZOOM_MIN = 0.4;
+const ZOOM_MAX = 2.5;
+const ZOOM_STEP = 1.25;
 
-const useWallScale = () => {
-  const [scale, setScale] = useState(() => wallScaleFor(window.innerWidth));
+/**
+ * What a middling poster measures across, by the standard screen breakpoints
+ * (Tailwind's: sm 640, md 768, lg 1024, xl 1280, 2xl 1536). Scores step a
+ * poster up or down from here, see `posterWidth`.
+ */
+const baseWidthFor = (width: number) =>
+  width >= 1536
+    ? 200
+    : width >= 1280
+      ? 180
+      : width >= 1024
+        ? 160
+        : width >= 768
+          ? 140
+          : width >= 640
+            ? 120
+            : 96;
+
+// Five fixed sizes, the middle one the base: the best films come out a
+// third bigger than average, the worst a third smaller. A score picks the
+// nearest step, so the wall reads in a handful of clear sizes rather than a
+// smear of nearly-equal ones.
+const SIZE_STEPS = [0.7, 0.85, 1, 1.15, 1.3];
+
+/** A poster's width in px, from its score and the wall's base size. */
+const posterWidth = (score: number, base: number) => {
+  const step = Math.round(((score - 1) / 9) * (SIZE_STEPS.length - 1));
+  return Math.round(base * SIZE_STEPS[step]);
+};
+
+/** The viewport's width, live — what the wall is built to fill. */
+const useWallWidth = (viewportRef: React.RefObject<HTMLDivElement | null>) => {
+  const [width, setWidth] = useState(() => window.innerWidth);
   useEffect(() => {
-    const onResize = () => setScale(wallScaleFor(window.innerWidth));
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-  return scale;
+    const el = viewportRef.current;
+    if (!el) return;
+    const measure = () => setWidth(el.clientWidth);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [viewportRef]);
+  return width;
 };
 
-
-/**
- * How many posters go in each column, left to right: as even a split as the
- * count allows, with the remainder handed out to alternating columns so the
- * fuller and emptier columns interleave rather than bunching at one end.
- *
- * Neighbouring columns holding different numbers of posters is what keeps the
- * wall from reading as rows — every column is the same height, so a column of
- * four has its seams in different places than the column of three beside it.
- */
-const columnCounts = (n: number, columns: number): number[] => {
-  const cols = Math.max(1, Math.min(columns, n));
-  const base = Math.floor(n / cols);
-  const extras = n - base * cols;
-
-  // Two columns holding the same number of posters share every seam, so they
-  // read as a little grid wherever they sit side by side. Handing the odd ones
-  // out to alternating columns keeps that from happening — and when the odd
-  // ones are the majority, it's the same trick upside down: start everything a
-  // poster taller and thin out alternating columns instead.
-  const majority = extras * 2 > cols;
-  const counts = Array<number>(cols).fill(majority ? base + 1 : base);
-  const step = majority ? -1 : 1;
-  let left = majority ? cols - extras : extras;
-
-  // Odd columns first, then even — the second pass only comes into play for
-  // the narrow walls where alternating alone can't absorb the remainder.
-  for (const start of [1, 0]) {
-    for (let i = start; i < cols && left > 0; i += 2) {
-      counts[i] += step;
-      left -= 1;
-    }
-  }
-
-  // Where the split came out even there was no remainder to alternate with, so
-  // the wall would be every column the same. Walk it and push a poster across
-  // any pair that still matches — between neighbours, so the total is
-  // untouched and the columns stay within one or two of even.
-  for (let i = 0; i + 1 < cols; i++) {
-    if (counts[i] !== counts[i + 1]) continue;
-    for (const dir of [1, -1]) {
-      const a = counts[i] + dir;
-      const b = counts[i + 1] - dir;
-      // Never empty a column, and never solve one matching pair by creating
-      // another with the column to the left.
-      if (a < 1 || b < 1 || (i > 0 && counts[i - 1] === a)) continue;
-      counts[i] = a;
-      counts[i + 1] = b;
-      break;
-    }
-  }
-
-  return counts;
+/** Where a poster hangs: its cell on the wall, in px from the top-left. */
+type WallCell = {
+  item: Shelved;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 };
 
-// `height` is the whole cell; `poster` is what's left of it once the caption
-// strip under the artwork has taken its slice. They're the same on an
-// uncaptioned wall.
-type WallCell = { item: Shelved; height: number };
-type WallColumn = { cells: WallCell[]; width: number };
+type Rect = { x: number; y: number; w: number; h: number };
+
+const overlaps = (a: Rect, b: Rect) =>
+  a.x < b.x + b.w - 0.5 &&
+  b.x < a.x + a.w - 0.5 &&
+  a.y < b.y + b.h - 0.5 &&
+  b.y < a.y + a.h - 0.5;
 
 /**
- * Packs the films into a wall with no seams anywhere in it, biggest posters to
- * the best-scored films.
+ * Hangs the films out from the middle of the wall in the order they're
+ * listed, sized by score, packed as tightly as that allows.
  *
- * The one rule that gets the seamless part: every column is squared off to the
- * same height. Fix that height and a column's width falls out of how many
- * posters it holds — height ÷ count ÷ the poster ratio — so a column of four
- * comes out narrower than a column of three. The width variety is a
- * consequence of the packing rather than something sprinkled on top, which is
- * why it tiles: no gaps between columns, none between posters, and a flat edge
- * all the way round.
+ * Each poster is the standard 2:3 sheet, shown whole, at the width its score
+ * gives it. The first film takes the centre; every one after it goes in the
+ * spot closest to the centre that butts up against something already hung
+ * and overlaps nothing — so the wall grows outward in rings, the list order
+ * reading as distance from the middle. Candidate spots are every position
+ * flush against a hung poster's side with an edge lined up to some poster's
+ * edge, which is what keeps the packing tight; where sizes don't tile the
+ * difference is left as a hole, and those come out small.
  *
- * Scores ride on top of that in two ways, neither of which can open a gap. The
- * films are ranked and dealt into the columns biggest-cell-first, so the top
- * scores land in the wide columns; then within a column the fixed height is
- * shared out by score rather than evenly, so a favourite is taller than what
- * it sits above. Both are redistributions of space that's already spoken for.
+ * Returned in coordinates from the wall's top-left, on a block sized so the
+ * centre of the first poster is the centre of the block.
  */
 const buildWall = (
   items: Shelved[],
-  columns: number,
-  baseWidth: number,
+  base: number,
   mount: MountChrome | null = null,
-): { wall: WallColumn[]; height: number } => {
-  if (items.length === 0) return { wall: [], height: 0 };
-
-  const counts = columnCounts(items.length, columns);
+): { wall: WallCell[]; width: number; height: number } => {
+  if (items.length === 0) return { wall: [], width: 0, height: 0 };
 
   // What a mount takes out of its cell before the artwork sees any of it: the
   // gap and a frame either side across, and the gap, one frame and the plate
@@ -207,70 +180,71 @@ const buildWall = (
   // wall, where the cell simply *is* the poster.
   const across = mount ? MOUNT_GAP + 2 * mount.frame : 0;
   const down = mount ? MOUNT_GAP + mount.frame + mount.plate : 0;
+  const cellHeight = (width: number) =>
+    Math.round(POSTER_RATIO * (width - across) + down);
 
-  /** The column width that puts a `count`-poster column at exactly `h` tall. */
-  const widthAt = (h: number, count: number) =>
-    (h / count - down) / POSTER_RATIO + across;
+  const placed: Rect[] = [];
+  for (const item of items) {
+    const w = posterWidth(item.score, base);
+    const h = cellHeight(w);
+    if (placed.length === 0) {
+      placed.push({ x: -w / 2, y: -h / 2, w, h });
+      continue;
+    }
 
-  // Start from the width the wall wants to be and let the equal-height
-  // constraint pick the height: Σ widthᵢ = Σ (height ÷ countᵢ − down) ÷ ratio
-  // + across, solved for height.
-  const spread = counts.reduce((a, count) => a + 1 / count, 0);
-  let height =
-    (counts.length * (POSTER_RATIO * (baseWidth - across) + down)) / spread;
+    // The edges already on the wall, for lining up against.
+    const xs = new Set<number>();
+    const ys = new Set<number>();
+    for (const r of placed) {
+      xs.add(r.x);
+      xs.add(r.x + r.w - w);
+      ys.add(r.y);
+      ys.add(r.y + r.h - h);
+    }
 
-  // A column holding one or two posters would otherwise blow up to fill that
-  // height. Cap the widest column and let the whole wall come down with it —
-  // solved for the height that puts the fewest-poster column exactly on the
-  // cap, since with the chrome in the way the two aren't in proportion.
-  const fewest = Math.min(...counts);
-  const cap = baseWidth * 1.35;
-  if (widthAt(height, fewest) > cap)
-    height = fewest * (POSTER_RATIO * (cap - across) + down);
-
-  // What goes in the widest columns first, then on down. On a bare wall that's
-  // the best-scored films; on a mounted one it's simply the order the list is
-  // written in, so the entries at the top of the wishlist hang biggest.
-  //
-  // Columns are taken in the order of how big a poster they hold — fewest
-  // posters means the widest column. Only what goes in each column changes;
-  // the columns themselves stay where they are, so the big pictures end up
-  // scattered over the wall rather than bunched down one end.
-  const ranked = mount ? items : [...items].sort((a, b) => b.score - a.score);
-  const byCell = counts
-    .map((count, i) => ({ count, i }))
-    .sort((a, b) => a.count - b.count || a.i - b.i);
-
-  const wall: WallColumn[] = Array(counts.length);
-  let cursor = 0;
-  for (const { count, i } of byCell) {
-    const slice = ranked.slice(cursor, cursor + count);
-    cursor += count;
-
-    // The column's height is already fixed, so scores only decide how it's
-    // divided up — the shares always add back to exactly the same total.
-    //
-    // Not in a mounted column, though: the chrome is the same depth under
-    // every picture, so cells of different heights would leave artwork of
-    // different proportions in one column, and only one of them could be 3:2.
-    // Size varies between columns there instead of within them.
-    const weights = slice.map((item) => (mount ? 1 : scoreWeight(item.score)));
-    const total = weights.reduce((a, b) => a + b, 0);
-    const cells = slice.map((item, j) => ({
-      item,
-      height: (height * weights[j]) / total,
-    }));
-
-    // A bare column runs biggest-first otherwise, which puts a band of large
-    // posters along the top of the wall; flipping every other column breaks
-    // that up. A mounted column is all one size, so there's no band to break
-    // — and flipping it would only scramble the order the list is written in.
-    if (i % 2 && !mount) cells.reverse();
-
-    wall[i] = { cells, width: widthAt(height, count) };
+    let best: Rect | null = null;
+    let bestDist = Infinity;
+    const consider = (x: number, y: number) => {
+      const cx = x + w / 2;
+      const cy = y + h / 2;
+      const dist = cx * cx + cy * cy;
+      if (dist >= bestDist) return;
+      const rect = { x, y, w, h };
+      if (placed.some((r) => overlaps(rect, r))) return;
+      best = rect;
+      bestDist = dist;
+    };
+    for (const r of placed) {
+      for (const y of ys) {
+        consider(r.x + r.w, y); // to its right
+        consider(r.x - w, y); // to its left
+      }
+      for (const x of xs) {
+        consider(x, r.y + r.h); // below it
+        consider(x, r.y - h); // above it
+      }
+    }
+    // Every spot flush against something is always open somewhere on the
+    // outside, so this can't fail — the fallback only satisfies the types.
+    placed.push(best ?? { x: -w / 2, y: -h / 2, w, h });
   }
 
-  return { wall, height };
+  // Symmetric about the origin, so centring the block centres the first
+  // poster.
+  const halfW = Math.max(...placed.map((r) => Math.max(-r.x, r.x + r.w)));
+  const halfH = Math.max(...placed.map((r) => Math.max(-r.y, r.y + r.h)));
+  const width = Math.ceil(2 * halfW);
+  const height = Math.ceil(2 * halfH);
+
+  const wall = placed.map((r, i) => ({
+    item: items[i],
+    x: r.x + width / 2,
+    y: r.y + height / 2,
+    width: r.w,
+    height: r.h,
+  }));
+
+  return { wall, width, height };
 };
 
 // What a character of each plate line actually measures, taken from the widest
@@ -449,13 +423,24 @@ const enterDelay = (spread: number, depth: number) =>
 
 const MoviesSection: React.FC = () => {
   const [filter, setFilter] = useState<Filter>(DEFAULT_FILTER);
-  const { width: baseWidth, columns } = useWallScale();
-
   const viewportRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  usePointerPan(viewportRef, contentRef);
+  const wallWidth = useWallWidth(viewportRef);
+  const base = baseWidthFor(wallWidth);
 
-  // Touch has no pointer to read, so those devices get a plain scrollable
+  // Zoom, as a plain scale on the block: pinch or ctrl+wheel on the wall, or
+  // the buttons in the corner. CSS `zoom` rather than a transform so the block
+  // grows in layout — the pan's limits and the touch viewport's scroll range
+  // both follow it for free.
+  const [scale, setScale] = useState(1);
+  const zoomBy = useCallback(
+    (factor: number) =>
+      setScale((s) => Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, s * factor))),
+    [],
+  );
+  const contentRef = useRef<HTMLDivElement>(null);
+  usePointerPan(viewportRef, contentRef, zoomBy, scale);
+
+  // Touch has no wheel to read, so those devices get a plain scrollable
   // viewport instead of the pan (scrollbars are hidden site-wide) — which is
   // laid out differently, see the wall's auto margins below.
   const canPan = useMemo(
@@ -463,39 +448,52 @@ const MoviesSection: React.FC = () => {
     [],
   );
 
-  // One flat list of every movie tagged by category. A watched entry whose
-  // `post` points at a review is promoted to `reviewed` and dropped from the
-  // watched shelf — otherwise, now that Watched carries the reviews too, a
-  // reviewed film would go up on that wall twice. Mirrors how BooksSection
-  // folds `read` into `reviewed`.
+  // One flat list of every movie tagged by category, in the order media.json
+  // lists them — that order is where a film hangs on the wall, first entry
+  // top-left. A watched entry whose `post` points at a review goes up as
+  // `reviewed`, in its place in the list, rather than as a watched film and a
+  // reviewed one both. Mirrors how BooksSection folds `read` into `reviewed`.
   const movies = useMemo<Shelved[]>(() => {
-    const reviewed = getBlogPostsSync().filter((p) => p.tags === "Movie");
-    const reviewedSlugs = new Set(reviewed.map((p) => p.slug));
-
-    // A reviewed film's score and note come off the post's frontmatter; when it
-    // also has a media.json entry either can live in either place, the post
-    // winning, since that's where the write-up passing judgement lives.
-    const entries = new Map(
-      media.movies.watched.map((m) => [m.post ?? m.title, m]),
+    const reviews = new Map(
+      getBlogPostsSync()
+        .filter((p) => p.tags === "Movie")
+        .map((p) => [p.slug, p]),
     );
 
-    const reviewedShelf: Unkeyed[] = reviewed.map((p) => ({
+    // A reviewed film's score and note come off the post's frontmatter; when
+    // it also has a media.json entry either can live in either place, the
+    // post winning, since that's where the write-up passing judgement lives.
+    const asReviewed = (p: BlogPostMeta, m?: MediaMovie): Unkeyed => ({
       post: p,
       to: `/archive/${p.slug}`,
       category: "reviewed",
-      score: toScore(p.score ?? entries.get(p.slug)?.score),
-      note: p.note ?? entries.get(p.slug)?.note,
-    }));
+      score: toScore(p.score ?? m?.score),
+      note: p.note ?? m?.note,
+    });
 
-    const watchedShelf: Unkeyed[] = media.movies.watched
-      .filter((m) => !(m.post && reviewedSlugs.has(m.post)))
-      .map((m) => ({
+    const seen = new Set<string>();
+    const watchedShelf: Unkeyed[] = media.movies.watched.map((m) => {
+      const review = m.post ? reviews.get(m.post) : undefined;
+      if (review) {
+        seen.add(review.slug);
+        return asReviewed(review, m);
+      }
+      return {
         post: toPost(m),
         to: m.post ? `/archive/${m.post}` : null,
+        // A watched film with no write-up still goes somewhere, if its entry
+        // carries a TMDB link — the review wins where there is one.
+        href: !m.post && m.url ? m.url : null,
         category: "watched",
         score: toScore(m.score),
         note: m.note,
-      }));
+      };
+    });
+
+    // A review with no media.json entry still hangs — after the listed ones.
+    const unlisted: Unkeyed[] = [...reviews.values()]
+      .filter((p) => !seen.has(p.slug))
+      .map((p) => asReviewed(p));
 
     // Nothing on the wishlist has been seen, so nothing there has a score —
     // that wall comes out evenly sized, which is right. There's no write-up to
@@ -514,9 +512,10 @@ const MoviesSection: React.FC = () => {
 
     // Numbered down the whole shelf so the key can't collide even where the
     // data lists a film twice (see `Shelved.key`).
-    return [...reviewedShelf, ...watchedShelf, ...wishlistShelf].map(
-      (m, i) => ({ ...m, key: `${m.category}-${m.post.slug}-${i}` }),
-    );
+    return [...watchedShelf, ...unlisted, ...wishlistShelf].map((m, i) => ({
+      ...m,
+      key: `${m.category}-${m.post.slug}-${i}`,
+    }));
   }, []);
 
   const counts = useMemo(() => {
@@ -576,16 +575,20 @@ const MoviesSection: React.FC = () => {
   const mount = useMemo(
     () =>
       shown === "wishlist" && visible.some((m) => m.url)
-        ? mountChrome(baseWidth)
+        ? mountChrome(base)
         : null,
-    [shown, visible, baseWidth],
+    [shown, visible, base],
   );
 
-  const { wall, height } = useMemo(
-    () => buildWall(visible, columns, baseWidth, mount),
-    [visible, columns, baseWidth, mount],
+  const { wall, width, height } = useMemo(
+    () => buildWall(visible, base, mount),
+    [visible, base, mount],
   );
-  const middle = (wall.length - 1) / 2;
+
+  // The stagger on the filter change ripples out from the middle of the wall,
+  // in poster-widths from the centre.
+  const ring = (x: number, y: number) =>
+    Math.hypot(x - width / 2, y - height / 2) / base;
 
   // Now that the wall starts at the top-left of the scrolling viewport, park
   // the scroll in the middle of it — the same "dropped into the middle of the
@@ -601,18 +604,16 @@ const MoviesSection: React.FC = () => {
   return (
     <div className="flex-1 w-full">
       {/* ── The wall ──
-          Posters are stacked in columns rather than rows, packed edge to edge
-          with no gaps: every column runs to the same height, so the columns
-          butt up against each other and the block is a solid rectangle. What
-          keeps it from reading as a grid is that neighbouring columns hold
-          different numbers of posters, so no seam ever carries across (see
-          `buildWall`).
+          Posters hang where the packing put them (see `buildWall`): the first
+          in the middle and the rest in rings around it, each as big as its
+          score, each shown whole. They're positioned absolutely on a block
+          centred in the viewport, which pans both ways and zooms.
 
           It's pinned to the sheet itself (the nearest positioned ancestor), so
           it covers the whole screen — behind the filter bar and on down past
           the dock — rather than sitting in a band between them. The block runs
-          past every edge by design; this is a window onto it, panned by where
-          the cursor sits and by the wheel or trackpad (usePointerPan). */}
+          past every edge by design; this is a window onto it, panned by the
+          wheel or trackpad (usePointerPan) and never on its own. */}
       <div
         ref={viewportRef}
         className={`absolute inset-0 flex ${
@@ -624,89 +625,113 @@ const MoviesSection: React.FC = () => {
         ) : (
           <div
             ref={contentRef}
-            className="flex shrink-0 will-change-transform"
+            // Not keyed by wall: usePointerPan takes hold of this element
+            // once, on mount, so it has to be the same element for every wall
+            // — remounting it would leave the pan driving a detached node.
+            className="relative shrink-0 will-change-transform"
             // On the scrolling viewport the wall is centred by auto margins
             // rather than by the container: an auto margin takes only positive
             // free space, so a wall bigger than the screen sits flush at the
             // top-left and every part of it can be scrolled to. Centring it the
             // other way puts its top and left edges outside the scrollable
             // range, where nothing can reach them.
-            style={{ height, margin: canPan ? undefined : "auto" }}
+            style={{
+              width,
+              height,
+              zoom: scale,
+              margin: canPan ? undefined : "auto",
+            }}
           >
-            {wall.map((column, c) => (
-              // Keyed by wall as well as position, so a column div is never
-              // carried over from one wall to the next: whatever one wall
-              // leaves in it can't turn up as a gap in another.
-              <div
-                key={`${shown}-${c}`}
-                className="flex flex-col shrink-0"
-                style={{ width: column.width }}
-              >
-                {column.cells.map(({ item, height: cell }, r) => {
-                  const spread = Math.abs(c - middle);
-                  const filmFacts = item.url ? facts.get(item.url) : null;
-                  const lines = filmFacts ? captionLines(filmFacts) : null;
-                  // Every poster on a mounted wall is mounted — the packing
-                  // already sized its cell for a frame, so leaving one bare
-                  // would hand it a cell it doesn't fit.
-                  const hung = Boolean(mount) && item.category === "wishlist";
-                  return (
-                    // The wrapper carries the drop-off / go-up animation, so it
-                    // never fights the poster's own hover transform.
-                    <div
-                      key={item.key}
-                      className={leaving ? "animate-poster-out" : "animate-poster-in"}
-                      style={{
-                        animation: leaving
-                          ? `posterOut ${EXIT_MS}ms ease-in forwards ${exitDelay(spread, r)}ms`
-                          : `posterIn ${ENTER_MS}ms cubic-bezier(0.22, 1, 0.36, 1) backwards ${enterDelay(spread, r)}ms`,
-                      }}
-                    >
-                      <MoviePoster
-                        post={item.post}
-                        to={item.to}
-                        href={item.href}
-                        width={column.width}
-                        height={cell}
-                        note={item.note}
-                        // The pop is there to bring a poster forward and show
-                        // what's written under it. A wishlist film is already
-                        // hung in its mount with its facts on show, so there's
-                        // nothing left for a hover to reveal and the wall is
-                        // better still.
-                        hoverPop={item.category !== "wishlist"}
-                        caption={
-                          hung && mount ? (
-                            <PosterCaption
-                              lines={lines}
-                              title={item.post.title}
-                              width={column.width}
-                              chrome={mount}
-                            />
-                          ) : null
-                        }
-                        mounted={hung}
-                        chrome={mount ?? undefined}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
+            {wall.map(({ item, x, y, width, height: cell }) => {
+              const spread = ring(x + width / 2, y + cell / 2);
+              const depth = 0;
+              const filmFacts = item.url ? facts.get(item.url) : null;
+              const lines = filmFacts ? captionLines(filmFacts) : null;
+              // Every poster on a mounted wall is mounted — the packing
+              // already sized its cell for a frame, so leaving one bare
+              // would hand it a cell it doesn't fit.
+              const hung = Boolean(mount) && item.category === "wishlist";
+              return (
+                // The wrapper carries the drop-off / go-up animation, so it
+                // never fights the poster's own hover transform.
+                <div
+                  key={item.key}
+                  className={`absolute ${leaving ? "animate-poster-out" : "animate-poster-in"}`}
+                  style={{
+                    left: x,
+                    top: y,
+                    width,
+                    animation: leaving
+                      ? `posterOut ${EXIT_MS}ms ease-in forwards ${exitDelay(spread, depth)}ms`
+                      : `posterIn ${ENTER_MS}ms cubic-bezier(0.22, 1, 0.36, 1) backwards ${enterDelay(spread, depth)}ms`,
+                  }}
+                >
+                  <MoviePoster
+                    post={item.post}
+                    to={item.to}
+                    href={item.href}
+                    width={width}
+                    height={cell}
+                    note={item.note}
+                    // The pop is there to bring a poster forward and show
+                    // what's written under it. A wishlist film is already
+                    // hung in its mount with its facts on show, so there's
+                    // nothing left for a hover to reveal and the wall is
+                    // better still.
+                    hoverPop={item.category !== "wishlist"}
+                    caption={
+                      hung && mount ? (
+                        <PosterCaption
+                          lines={lines}
+                          title={item.post.title}
+                          width={width}
+                          chrome={mount}
+                        />
+                      ) : null
+                    }
+                    mounted={hung}
+                    chrome={mount ?? undefined}
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
 
-      {/* ── Filter bar ──
-          Sits over the wall; its own `data-no-pan` keeps the posters still
-          while you're aiming at it, since reaching for a filter at the top of
-          the screen would otherwise send them sliding. */}
+      {/* ── Filter bar ── Sits over the wall. */}
       <FilterBar
         options={FILTERS.map((f) => ({ ...f, count: counts[f.key] }))}
         value={filter}
         onChange={setFilter}
         className="pt-2"
       />
+
+      {/* ── Zoom ── The same surface as the filter bar, tucked in the corner. */}
+      <div
+        className="absolute right-4 top-3 z-10 flex gap-1 rounded-full p-1 backdrop-blur-md"
+        style={{
+          background: "rgba(17,17,17,0.72)",
+          boxShadow:
+            "inset 0 0 0 1px rgba(232,227,220,0.10), 0 10px 30px -12px rgba(0,0,0,0.9)",
+        }}
+      >
+        {[
+          { label: "−", title: "Zoom out", factor: 1 / ZOOM_STEP },
+          { label: "+", title: "Zoom in", factor: ZOOM_STEP },
+        ].map(({ label, title, factor }) => (
+          <button
+            key={label}
+            type="button"
+            title={title}
+            aria-label={title}
+            onClick={() => zoomBy(factor)}
+            className="h-8 w-8 rounded-full font-primary text-base text-editorial-text/80 transition-colors hover:bg-white/10 hover:text-editorial-text"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

@@ -19,8 +19,7 @@ type Props<K extends string> = {
  * its own background.
  *
  * The bar carries its own surface (dark, blurred) because sections can put
- * artwork directly behind it, and `data-no-pan` so a panning backdrop holds
- * still while you're aiming at a button.
+ * artwork directly behind it.
  *
  * Options after the first are dropped when their count is zero; the first is
  * always shown, since it's the section's default and can't be allowed to
@@ -69,7 +68,6 @@ function FilterBar<K extends string>({
 
   return (
     <div
-      data-no-pan
       className={`relative z-10 flex justify-center px-6 ${className}`}
     >
       <div

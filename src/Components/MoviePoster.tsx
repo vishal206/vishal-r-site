@@ -29,10 +29,10 @@ type Props = {
   /** Off for the small standalone uses (reader header, dock pile). */
   hoverPop?: boolean;
   /**
-   * Wall mode: the poster fills a cell of exactly this height, cropping the
-   * artwork rather than keeping its own proportions, so posters tile with no
-   * seams and the wall can size a film by its score. Left off elsewhere, where
-   * a poster stands alone and should keep its true shape.
+   * Wall mode: the poster fills a cell of exactly this height, so posters
+   * tile with no seams. The wall cuts its cells to the poster's own 2:3, so
+   * nothing is cropped. Left off elsewhere, where a poster stands alone and
+   * sizes itself from its width.
    */
   height?: number;
   /**
@@ -130,11 +130,11 @@ const MoviePoster = ({
       draggable={false}
       className={
         artHeight
-          ? // A mounted wall sizes its cells so this box comes out at the
-            // poster's own proportions, so `contain` has nothing to letterbox
-            // — it's here to guarantee that a poster that isn't quite the
-            // standard sheet is shown whole rather than cropped to fit.
-            `block w-full ${mounted ? "object-contain" : "object-cover"}`
+          ? // The wall sizes every cell to the standard 2:3 sheet, so `cover`
+            // has nothing to crop — it's here so a poster that isn't quite the
+            // standard sheet fills its cell rather than letterboxing, which
+            // would show the wall (or the mount) through.
+            "block w-full object-cover"
           : "block w-full h-auto"
       }
       style={cell}

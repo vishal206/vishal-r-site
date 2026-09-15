@@ -1,50 +1,34 @@
-import { RefObject, useEffect } from "react";
-
-type Options = {
-  /** Fraction of the viewport at each edge that pans. 0.3 = outer 30%. */
-  edge?: number;
-  /** Top speed at the very edge, px per second. */
-  maxSpeed?: number;
-};
+import { RefObject, useEffect, useRef } from "react";
 
 const clamp = (v: number, min: number, max: number) =>
   Math.min(max, Math.max(min, v));
 
 /**
- * How hard this axis is panning, from the pointer's position along it (0..1).
- * Nothing happens through the middle; inside an edge band the pull ramps up
- * quadratically, so it creeps as you approach and only races at the very edge.
- */
-const pull = (p: number, edge: number) => {
-  if (p < edge) {
-    const t = (edge - p) / edge;
-    return -t * t;
-  }
-  if (p > 1 - edge) {
-    const t = (p - (1 - edge)) / edge;
-    return t * t;
-  }
-  return 0;
-};
-
-/**
- * Pans an oversized block around inside a fixed viewport, two ways at once:
- * by pointer proximity — the closer the cursor gets to an edge, the faster the
- * content slides that way — and by the wheel or trackpad, which nudges the
- * same offset directly. Both axes, no scrollbars, easing to a stop against the
- * content's own edges. The pointer pull stays put whenever the pointer leaves
- * the viewport or rests on anything marked `data-no-pan`.
+ * Pans an oversized block around inside a fixed viewport by the wheel or
+ * trackpad: both axes, no scrollbars, easing to a stop against the content's
+ * own edges. Nothing moves unless you move it — there's deliberately no drift
+ * that follows the cursor. Pinch and ctrl+wheel are handed to `onZoom`.
  *
- * Skipped entirely on touch (no hover to read) — the caller is expected to
- * leave those a normal scrollable viewport. Under reduced motion the drift
- * that follows the cursor is dropped, but the wheel still pans (it's a direct
- * response to input, not ambient motion) and lands without smoothing.
+ * Skipped entirely on touch (no wheel to read) — the caller is expected to
+ * leave those a normal scrollable viewport. Under reduced motion the wheel
+ * still pans (it's a direct response to input, not ambient motion) but lands
+ * without smoothing.
  */
 export const usePointerPan = (
   viewportRef: RefObject<HTMLDivElement | null>,
   contentRef: RefObject<HTMLDivElement | null>,
-  { edge = 0.3, maxSpeed = 900 }: Options = {},
+  /** Called with a factor to zoom by, for pinch and ctrl+wheel. */
+  onZoom?: (factor: number) => void,
+  /**
+   * The block's current zoom. Only watched for changes: a CSS `zoom` doesn't
+   * alter the block's own box, so the resize observer below never sees it,
+   * and the limits have to be taken again by hand.
+   */
+  zoomLevel = 1,
 ) => {
+  const remeasure = useRef<() => void>(() => {});
+  useEffect(() => remeasure.current(), [zoomLevel]);
+
   useEffect(() => {
     const viewport = viewportRef.current;
     const content = contentRef.current;
@@ -60,9 +44,6 @@ export const usePointerPan = (
     let limitY = 0;
     let x = 0;
     let y = 0;
-    let pointerX = 0.5;
-    let pointerY = 0.5;
-    let paused = false;
     let frame = 0;
     let last = 0;
 
@@ -72,13 +53,19 @@ export const usePointerPan = (
     let pendingX = 0;
     let pendingY = 0;
 
+    // The offset is kept in screen px, but a transform on a zoomed element is
+    // zoomed along with it, so what's written is divided back out.
+    let zoom = 1;
     const apply = () => {
-      content.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
+      content.style.transform = `translate3d(${(x / zoom).toFixed(2)}px, ${(y / zoom).toFixed(2)}px, 0)`;
     };
 
+    // The block's on-screen size, zoom included (its offset size isn't).
     const measure = () => {
-      limitX = Math.max(0, (content.offsetWidth - viewport.clientWidth) / 2);
-      limitY = Math.max(0, (content.offsetHeight - viewport.clientHeight) / 2);
+      const box = content.getBoundingClientRect();
+      zoom = content.offsetWidth ? box.width / content.offsetWidth : 1;
+      limitX = Math.max(0, (box.width - viewport.clientWidth) / 2);
+      limitY = Math.max(0, (box.height - viewport.clientHeight) / 2);
       x = clamp(x, -limitX, limitX);
       y = clamp(y, -limitY, limitY);
       pendingX = clamp(pendingX, -limitX - x, limitX - x);
@@ -90,12 +77,6 @@ export const usePointerPan = (
       const dt = Math.min(0.05, (now - last) / 1000); // cap after a stalled tab
       last = now;
 
-      // Pointer left of centre pulls the content right, revealing what's off
-      // that side — hence the negated push.
-      const drift = paused || reducedMotion ? 0 : 1;
-      let dx = -pull(pointerX, edge) * maxSpeed * dt * drift;
-      let dy = -pull(pointerY, edge) * maxSpeed * dt * drift;
-
       // Whatever the wheel banked, paid out over ~a tenth of a second so a
       // flick reads as a glide rather than a jump.
       if (pendingX || pendingY) {
@@ -104,42 +85,17 @@ export const usePointerPan = (
         const stepY = pendingY * t;
         pendingX = Math.abs(pendingX - stepX) < 0.1 ? 0 : pendingX - stepX;
         pendingY = Math.abs(pendingY - stepY) < 0.1 ? 0 : pendingY - stepY;
-        dx += stepX;
-        dy += stepY;
-      }
-
-      if (dx || dy) {
-        x = clamp(x + dx, -limitX, limitX);
-        y = clamp(y + dy, -limitY, limitY);
+        x = clamp(x + stepX, -limitX, limitX);
+        y = clamp(y + stepY, -limitY, limitY);
         apply();
       }
       frame = requestAnimationFrame(tick);
     };
 
-    // Read the pointer from the document rather than the viewport: anything
-    // layered over the viewport (the filter bar, the dock) is a sibling, not a
-    // child, so its events would never reach a listener on the viewport — and
-    // the pan would carry on from the last position it saw.
-    const onMove = (e: PointerEvent) => {
-      const rect = viewport.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top) / rect.height;
-      pointerX = clamp(x, 0, 1);
-      pointerY = clamp(y, 0, 1);
-
-      const outside = x < 0 || x > 1 || y < 0 || y > 1;
-      // Controls laid over the wall opt out with `data-no-pan`, so aiming at
-      // one doesn't send the content sliding out from under the cursor.
-      const overControl =
-        e.target instanceof Element && Boolean(e.target.closest("[data-no-pan]"));
-      paused = outside || overControl;
-    };
-
-    // Same reasoning as `onMove` for listening on the document: the filter bar
-    // sits over the wall as a sibling, and the wheel should still pan while
-    // the cursor is on it.
+    // Listen on the document rather than the viewport: the filter bar sits
+    // over the wall as a sibling, and the wheel should still pan while the
+    // cursor is on it.
     const onWheel = (e: WheelEvent) => {
-      if (!limitX && !limitY) return;
       const rect = viewport.getBoundingClientRect();
       if (
         e.clientX < rect.left ||
@@ -148,6 +104,16 @@ export const usePointerPan = (
         e.clientY > rect.bottom
       )
         return;
+
+      // A pinch on a trackpad arrives as a wheel with ctrl held (and ctrl+
+      // wheel on a mouse is the same gesture by convention): that's a zoom,
+      // not a pan. Steady per notch, so a flick doesn't leap.
+      if (e.ctrlKey && onZoom) {
+        e.preventDefault();
+        onZoom(Math.exp(-e.deltaY * 0.01));
+        return;
+      }
+      if (!limitX && !limitY) return;
 
       // Firefox reports lines, and page-mode deltas are a viewport at a time.
       const step =
@@ -175,8 +141,7 @@ export const usePointerPan = (
     };
 
     measure();
-    if (!reducedMotion)
-      document.addEventListener("pointermove", onMove, { passive: true });
+    remeasure.current = measure;
     document.addEventListener("wheel", onWheel, { passive: false });
     last = performance.now();
     frame = requestAnimationFrame(tick);
@@ -188,10 +153,10 @@ export const usePointerPan = (
     observer.observe(content);
 
     return () => {
+      remeasure.current = () => {};
       cancelAnimationFrame(frame);
       observer.disconnect();
-      document.removeEventListener("pointermove", onMove);
       document.removeEventListener("wheel", onWheel);
     };
-  }, [viewportRef, contentRef, edge, maxSpeed]);
+  }, [viewportRef, contentRef, onZoom]);
 };
