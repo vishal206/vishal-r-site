@@ -13,8 +13,8 @@ type Props<K extends string> = {
   className?: string;
   /**
    * Where the bar sits: across the top of the section, centred (the
-   * default), or pinned in the top-right corner of its nearest positioned
-   * ancestor, out of the way of what's behind it.
+   * default), or as a plain list pinned in the top-right corner of its
+   * nearest positioned ancestor — green for the active filter, with a dot.
    */
   placement?: "center" | "corner";
   /** Smaller type and tighter padding at every breakpoint. */
@@ -76,28 +76,52 @@ function FilterBar<K extends string>({
 
   const EASE = "cubic-bezier(0.22,1,0.36,1)";
 
+  // In the corner the bar is no bar at all: a plain list, one filter under
+  // another, right-aligned against the corner. The active one is set in the
+  // site's green with a dot beside it; the rest in the label grey, brought up
+  // to the text colour under the cursor. No surface, no marker — small enough
+  // that whatever hangs behind it shows through around the type.
+  if (placement === "corner")
+    return (
+      <nav
+        aria-label="Filter"
+        className={`absolute right-4 top-4 z-10 flex flex-col items-end gap-1.5 sm:right-5 sm:top-5 ${className}`}
+      >
+        {shown.map(({ key, label, count }) => {
+          const active = value === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => onChange(key)}
+              aria-current={active ? "true" : undefined}
+              className={`group flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+                active
+                  ? "text-available"
+                  : "text-editorial-label hover:text-editorial-text"
+              }`}
+            >
+              <span
+                aria-hidden
+                className={`h-1.5 w-1.5 rounded-full bg-available transition-opacity duration-300 ${
+                  active ? "opacity-100" : "opacity-0"
+                }`}
+              />
+              {label}
+              <span className="opacity-60">{count}</span>
+            </button>
+          );
+        })}
+      </nav>
+    );
+
   return (
     <div
-      className={`z-10 flex ${
-        placement === "corner"
-          ? // On a phone the corner is the bottom-right one, just above the
-            // dock's stickers (and above the home indicator, where there is
-            // one); from sm up it's the top-right.
-            "absolute right-3 bottom-[calc(88px+env(safe-area-inset-bottom,0px))] justify-end sm:bottom-auto sm:right-4 sm:top-4"
-          : "relative justify-center px-3 sm:px-6"
-      } ${className}`}
+      className={`relative z-10 flex justify-center px-3 sm:px-6 ${className}`}
     >
       <div
         ref={barRef}
-        className={`relative flex justify-center gap-1 p-1 sm:gap-2 sm:p-1.5 backdrop-blur-md ${
-          // In the corner of a phone there's no room for a row, so the
-          // filters stack, one under another; a row again from sm up. The
-          // stack's corners are rounded to the pill inside plus the padding
-          // round it, so the box and the marker share one curve.
-          placement === "corner"
-            ? "flex-col rounded-[14px] sm:flex-row sm:rounded-[26px]"
-            : "flex-wrap rounded-[26px]"
-        }`}
+        className="relative flex flex-wrap justify-center gap-1 p-1 sm:gap-2 sm:p-1.5 rounded-[26px] backdrop-blur-md"
         style={{
           background: "rgba(17,17,17,0.72)",
           boxShadow:
