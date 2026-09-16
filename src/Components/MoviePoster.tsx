@@ -5,11 +5,14 @@ import { BlogPostMeta } from "../Utils/markdownLoader";
 import { MOUNT_EDGE_COLOR, MOUNT_GAP, mountChrome } from "./posterMount";
 import type { MountChrome } from "./posterMount";
 
-// The hover pop, as numbers as well as classes: the nudge below has to predict
-// where the frame will land before the transition runs, so these have to stay
-// in step with the `scale-[1.08]` and `-translate-y-2` on the inner element.
-const POP = 1.08;
+// The hover pop's lift, as a number as well as a class: the nudge below has to
+// predict where the poster will land before the transition runs, so this has
+// to stay in step with the `-translate-y-2` on the inner element. The scale
+// itself comes in as a prop (`popScale`) and reaches the class as a variable.
 const LIFT = 8;
+
+/** The pop a poster gets when nothing says otherwise. */
+const DEFAULT_POP = 1.08;
 
 /** How close the frame may come to the edge of the screen before it's moved. */
 const EDGE = 6;
@@ -28,6 +31,12 @@ type Props = {
   href?: string | null;
   /** Off for the small standalone uses (reader header, dock pile). */
   hoverPop?: boolean;
+  /**
+   * How much the poster grows on hover. The wall sets this per poster so the
+   * popped poster comes out the same size on screen whatever the wall's zoom
+   * — a quarter of the screen, say — rather than a fixed nudge up.
+   */
+  popScale?: number;
   /**
    * Wall mode: the poster fills a cell of exactly this height, so posters
    * tile with no seams. The wall cuts its cells to the poster's own 2:3, so
@@ -84,6 +93,7 @@ const MoviePoster = ({
   to = `/archive/${post.slug}`,
   href,
   hoverPop = true,
+  popScale = DEFAULT_POP,
   height,
   note,
   caption,
@@ -187,46 +197,46 @@ const MoviePoster = ({
   // entirely — its frame is in the layout, not hung over it.
   const framed = hoverPop && Boolean(label) && !mounted;
 
-  // A poster at the edge of the screen would hang its frame off it, so the pop
-  // moves inward by however much of the frame won't fit. Worked out from where
-  // the frame is *about* to land — the transition hasn't run yet at this point
-  // — and applied to the same element that scales, so the poster's own hit box
+  // A poster at the edge of the screen would pop off it, so the pop moves
+  // inward by however much won't fit. Worked out from where the poster is
+  // *about* to land — the transition hasn't run yet at this point — and
+  // applied to the same element that scales, so the poster's own hit box
   // never moves out from under the cursor and the hover can't flicker.
   const measure = useCallback(() => {
     const el = rootRef.current;
-    if (!el || !framed) return;
+    if (!el || !hoverPop) return;
     const r = el.getBoundingClientRect();
     const halfW = r.width / 2;
     const halfH = r.height / 2;
+    // The wall may be zoomed (CSS `zoom`), which scales a transform inside
+    // it along with everything else; the rect is in screen px, so the shift
+    // has to be divided back out of the zoom as well as the pop.
+    const zoom = el.offsetWidth ? r.width / el.offsetWidth : 1;
     const cx = r.left + halfW;
-    const cy = r.top + halfH - LIFT;
+    const cy = r.top + halfH - LIFT * zoom;
 
-    // How far off the screen the frame lands, capped at the thickness of the
-    // mount itself: this is here to rescue a frame that's clipped, not to haul
-    // a poster that's half below the fold into view — that would read as a
-    // teleport and tear a hole in the wall behind it. `transform` composes
-    // inside the scale, so the shift is divided back out of it.
-    const shift = (low: number, high: number, limit: number, cap: number) => {
-      const raw =
-        (Math.max(0, EDGE - low) - Math.max(0, high - (limit - EDGE))) / POP;
-      return Math.max(-cap, Math.min(cap, raw));
-    };
+    // How far off the screen the popped poster (frame included, where it
+    // hangs one) would land, brought back by exactly that much. `transform`
+    // composes inside the scale, so the shift is divided back out of it.
+    const shift = (low: number, high: number, limit: number) =>
+      (Math.max(0, EDGE - low) - Math.max(0, high - (limit - EDGE))) /
+      (popScale * zoom);
 
+    const fx = framed ? frame * zoom : 0;
+    const fy = framed ? plate * zoom : 0;
     const x = shift(
-      cx - (halfW + frame) * POP,
-      cx + (halfW + frame) * POP,
+      cx - (halfW + fx) * popScale,
+      cx + (halfW + fx) * popScale,
       window.innerWidth,
-      frame,
     );
     const y = shift(
-      cy - (halfH + frame) * POP,
-      cy + (halfH + plate) * POP,
+      cy - (halfH + fx) * popScale,
+      cy + (halfH + fy) * popScale,
       window.innerHeight,
-      plate,
     );
 
     setNudge(x || y ? { x, y } : null);
-  }, [framed, frame, plate]);
+  }, [hoverPop, framed, frame, plate, popScale]);
 
   const overlay = framed ? (
     <div
@@ -340,16 +350,19 @@ const MoviePoster = ({
   // Transform only — no shadow, and no filter animation. The lift used to cast
   // a heavy drop shadow, but a wide blur at near-black rings the frame on every
   // side and reads as a dark border around the white; the frame is the whole
-  // effect now. Coming in, the curve overshoots and settles back (the bounce);
+  // effect now. Coming in, the curve overshoots a little and settles back;
   // going out it's a plain glide, since a poster springing on its way *down*
-  // reads as a glitch rather than as weight.
+  // reads as a glitch rather than as weight. The scale is read off a
+  // variable so the wall can set it per poster.
   const inner = hoverPop ? (
     <div
       className="relative w-full transform-gpu
         transition-transform duration-[750ms] ease-[cubic-bezier(0.22,1,0.36,1)]
-        group-hover/poster:duration-[900ms] group-hover/poster:ease-[cubic-bezier(0.34,1.44,0.5,1)]
-        group-hover/poster:scale-[1.08] group-hover/poster:-translate-y-2"
+        group-hover/poster:duration-[900ms] group-hover/poster:ease-[cubic-bezier(0.34,1.18,0.5,1)]
+        group-hover/poster:scale-[var(--pop)] group-hover/poster:-translate-y-2"
       style={{
+        ["--pop" as string]: String(popScale),
+        transformOrigin: "center",
         willChange: "transform",
         backfaceVisibility: "hidden",
         // Scale and lift come from the classes above as their own `scale` and

@@ -96,6 +96,13 @@ const POSTER_RATIO = 3 / 2; // poster height ÷ width — the standard sheet
 const ZOOM_MIN = 0.2;
 const ZOOM_MAX = 2.5;
 
+// How big a poster pops to under the cursor: the artwork's height on screen
+// becomes this share of the screen's long side, whatever the wall's zoom (a
+// mount's frame and plate come on top). Never smaller than a nudge, so a
+// wall already zoomed past that still pops.
+const POP_SHARE = 0.25;
+const POP_MIN = 1.08;
+
 // The strip along the bottom the dock's stickers stand in, which the fitted
 // wall keeps clear of so its bottom row isn't hung behind them. Stepped by
 // the same breakpoints the dock scales itself by (see SectionDock): the row
@@ -788,12 +795,21 @@ const MoviesSection: React.FC = () => {
                     width={width}
                     height={cell}
                     note={item.note}
-                    // The pop is there to bring a poster forward and show
-                    // what's written under it. A wishlist film is already
-                    // hung in its mount with its facts on show, so there's
-                    // nothing left for a hover to reveal and the wall is
-                    // better still.
-                    hoverPop={item.category !== "wishlist"}
+                    // Every poster pops under the cursor, to the same size on
+                    // screen: the pop is worked out from the artwork's height
+                    // at the wall's current zoom, so the wall being zoomed
+                    // out means a bigger pop, not a smaller poster.
+                    hoverPop
+                    popScale={Math.max(
+                      POP_MIN,
+                      (POP_SHARE * Math.max(viewport.width, viewport.height)) /
+                        ((cell -
+                          chrome.gap -
+                          2 * chrome.edge -
+                          chrome.frame -
+                          chrome.plate) *
+                          scale),
+                    )}
                     caption={
                       item.category === "wishlist" ? (
                         <PosterCaption
