@@ -800,6 +800,10 @@ const MoviesSection: React.FC = () => {
                     // at the wall's current zoom, so the wall being zoomed
                     // out means a bigger pop, not a smaller poster.
                     hoverPop
+                    // The dock is painted above the wall, so a poster along
+                    // the bottom pops upward, clear of the stickers, rather
+                    // than under them.
+                    safeBottom={dockReserve}
                     popScale={Math.max(
                       POP_MIN,
                       (POP_SHARE * Math.max(viewport.width, viewport.height)) /

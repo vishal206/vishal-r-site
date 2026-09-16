@@ -38,6 +38,12 @@ type Props = {
    */
   popScale?: number;
   /**
+   * A strip along the bottom of the screen the popped poster must stay
+   * clear of — the dock's, on the wall — since it's painted in a layer above
+   * the poster and would cover it.
+   */
+  safeBottom?: number;
+  /**
    * Wall mode: the poster fills a cell of exactly this height, so posters
    * tile with no seams. The wall cuts its cells to the poster's own 2:3, so
    * nothing is cropped. Left off elsewhere, where a poster stands alone and
@@ -94,6 +100,7 @@ const MoviePoster = ({
   href,
   hoverPop = true,
   popScale = DEFAULT_POP,
+  safeBottom = 0,
   height,
   note,
   caption,
@@ -232,11 +239,11 @@ const MoviePoster = ({
     const y = shift(
       cy - (halfH + fx) * popScale,
       cy + (halfH + fy) * popScale,
-      window.innerHeight,
+      window.innerHeight - safeBottom,
     );
 
     setNudge(x || y ? { x, y } : null);
-  }, [hoverPop, framed, frame, plate, popScale]);
+  }, [hoverPop, framed, frame, plate, popScale, safeBottom]);
 
   const overlay = framed ? (
     <div
@@ -350,15 +357,12 @@ const MoviePoster = ({
   // Transform only — no shadow, and no filter animation. The lift used to cast
   // a heavy drop shadow, but a wide blur at near-black rings the frame on every
   // side and reads as a dark border around the white; the frame is the whole
-  // effect now. Coming in, the curve overshoots a little and settles back;
-  // going out it's a plain glide, since a poster springing on its way *down*
-  // reads as a glitch rather than as weight. The scale is read off a
-  // variable so the wall can set it per poster.
+  // effect now. The timing lives in index.css (`.poster-pop`): a spring on
+  // the way up, a glide on the way down. The scale is read off a variable
+  // so the wall can set it per poster.
   const inner = hoverPop ? (
     <div
-      className="relative w-full transform-gpu
-        transition-transform duration-[750ms] ease-[cubic-bezier(0.22,1,0.36,1)]
-        group-hover/poster:duration-[900ms] group-hover/poster:ease-[cubic-bezier(0.34,1.18,0.5,1)]
+      className="poster-pop relative w-full transform-gpu
         group-hover/poster:scale-[var(--pop)] group-hover/poster:-translate-y-2"
       style={{
         ["--pop" as string]: String(popScale),
@@ -388,6 +392,7 @@ const MoviePoster = ({
 
   const bind = {
     className,
+    "data-poster": hoverPop ? "" : undefined,
     style: { width },
     onMouseEnter: measure,
     onMouseLeave: () => setNudge(null),
