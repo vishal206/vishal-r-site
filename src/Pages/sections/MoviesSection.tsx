@@ -178,14 +178,14 @@ type WallCell = {
 type Rect = { x: number; y: number; w: number; h: number };
 
 /**
- * The mount a film hangs in. A wishlist film gets the full stone mount with
- * its facts on the plate; a watched film hangs bare — no edge, no stone, no
+ * The mount a film hangs in. A wishlist film gets the stone mount, no black
+ * edge, with its facts on the plate; a watched film hangs bare — no edge, no stone, no
  * plate, just a wider gap off its neighbours — and keeps its note for the
  * hover.
  */
 const chromeFor = (item: Shelved, mount: MountChrome): MountChrome =>
   item.category === "wishlist"
-    ? mount
+    ? { ...mount, edge: 0 }
     : { ...mount, gap: WATCHED_GAP * mount.frame, edge: 0, frame: 0, plate: 0 };
 
 // How far apart bare posters hang, as a multiple of the stone frame the
@@ -687,6 +687,29 @@ const MoviesSection: React.FC = () => {
     lookAt(null);
   }, [fitScale, lookAt]);
 
+  // Which poster is under the cursor, so the rest of the room can dim while
+  // it's popped: the hovered film becomes the spotlight.
+  const [hovered, setHovered] = useState<string | null>(null);
+
+  // The poster brought to the front. The dimming gives every other wrapper
+  // a stacking context of its own, which would trap a popped poster's
+  // z-index inside its wrapper and paint it in DOM order — behind whatever
+  // comes later. So the wrapper itself is raised, and stays raised a beat
+  // after the cursor leaves, long enough for the poster to shrink back.
+  const [raised, setRaised] = useState<string | null>(null);
+  const lower = useRef(0);
+  const raise = useCallback((key: string) => {
+    clearTimeout(lower.current);
+    setRaised(key);
+  }, []);
+  const unraise = useCallback((key: string) => {
+    clearTimeout(lower.current);
+    lower.current = window.setTimeout(
+      () => setRaised((k) => (k === key ? null : k)),
+      1000,
+    );
+  }, []);
+
   // Acted on after the zoom has been applied and the pan has re-measured
   // for it (that effect is registered first, so it runs first). On the
   // panning viewport the offset is from centred, in screen px; on the
@@ -779,10 +802,35 @@ const MoviesSection: React.FC = () => {
                 <div
                   key={item.key}
                   className={`absolute ${leaving ? "animate-poster-out" : "animate-poster-in"}`}
+                  onPointerEnter={(e) => {
+                    if (e.pointerType === "touch") return;
+                    setHovered(item.key);
+                    raise(item.key);
+                  }}
+                  onPointerLeave={() => {
+                    setHovered((k) => (k === item.key ? null : k));
+                    unraise(item.key);
+                  }}
                   style={{
                     left: x,
                     top: y,
                     width,
+                    // The hovered poster on top of everything, the one it
+                    // just left (still shrinking) above the rest.
+                    zIndex:
+                      hovered === item.key
+                        ? 11
+                        : raised === item.key
+                          ? 10
+                          : undefined,
+                    // Dim the room: while another poster is popped, this one
+                    // steps back — a touch darker and a touch greyer.
+                    opacity: hovered && hovered !== item.key ? 0.7 : 1,
+                    filter:
+                      hovered && hovered !== item.key
+                        ? "saturate(0.75)"
+                        : undefined,
+                    transition: "opacity 450ms ease, filter 450ms ease",
                     animation: leaving
                       ? `posterOut ${EXIT_MS}ms ease-in forwards ${exitDelay(spread, depth)}ms`
                       : `posterIn ${ENTER_MS}ms cubic-bezier(0.22, 1, 0.36, 1) backwards ${enterDelay(spread, depth)}ms`,
@@ -824,6 +872,7 @@ const MoviesSection: React.FC = () => {
                         />
                       ) : null
                     }
+
                     mounted
                     chrome={chrome}
                   />

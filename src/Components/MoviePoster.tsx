@@ -14,8 +14,21 @@ const LIFT = 8;
 /** The pop a poster gets when nothing says otherwise. */
 const DEFAULT_POP = 1.08;
 
+/** How much bigger a mount's plate type may come out on hover, on screen. */
+const PLATE_POP = 1.15;
+
+/** A note as its words, with the markdown marks it carries stripped. */
+const plainNote = (note: string) =>
+  note
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[*_`]/g, "")
+    .trim();
+
 /** How close the frame may come to the edge of the screen before it's moved. */
 const EDGE = 6;
+
+/** How far the card tilts, in degrees, with the cursor at a poster's edge. */
+const TILT = 7;
 
 type Props = {
   post: BlogPostMeta;
@@ -43,6 +56,7 @@ type Props = {
    * the poster and would cover it.
    */
   safeBottom?: number;
+
   /**
    * Wall mode: the poster fills a cell of exactly this height, so posters
    * tile with no seams. The wall cuts its cells to the poster's own 2:3, so
@@ -109,6 +123,30 @@ const MoviePoster = ({
 }: Props) => {
   const rootRef = useRef<HTMLElement | null>(null);
   const [nudge, setNudge] = useState<{ x: number; y: number } | null>(null);
+
+  // The tilt and the sheen follow the cursor across the poster: two angles
+  // and a highlight position, written straight to the poster's root as
+  // variables (no render per move — this runs at pointer rate). The 3D
+  // transform does cost the pop its sharpness on the way up — the browser
+  // rasters the poster at its resting size until the spring settles — and
+  // that's accepted for the feel of the card.
+  const onTiltMove = useCallback((e: React.PointerEvent) => {
+    const el = rootRef.current;
+    if (!el || e.pointerType === "touch") return;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    el.style.setProperty("--rx", `${(-py * TILT).toFixed(2)}deg`);
+    el.style.setProperty("--ry", `${(px * TILT).toFixed(2)}deg`);
+    el.style.setProperty("--sx", `${((px + 0.5) * 100).toFixed(1)}%`);
+    el.style.setProperty("--sy", `${((py + 0.5) * 100).toFixed(1)}%`);
+  }, []);
+  const onTiltLeave = useCallback(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    el.style.setProperty("--rx", "0deg");
+    el.style.setProperty("--ry", "0deg");
+  }, []);
 
   // The frame is heavy on purpose — a painting in a gallery, not a CSS outline.
   // Flat opaque white the whole way through: no inner line, no shadow, nothing
@@ -287,11 +325,18 @@ const MoviePoster = ({
   // the poster has to say is held back for the hover instead: a band along
   // the foot of the artwork, dark so the type reads over any picture, that
   // grows to the note rather than clipping it.
+  //
+  // The words come up one after another, from under the foot of the poster,
+  // like a subtitle being set. The note is markdown, but only ever a line
+  // of dialogue, so it's flattened to its words here and the emphasis kept
+  // as a whole — a note wrapped in `*…*` is set in italics.
+  const noteWords = note ? plainNote(note).split(/\s+/).filter(Boolean) : [];
+  const noteItalic = Boolean(note && /^[*_].*[*_]$/s.test(note.trim()));
   const hoverNote =
-    mounted && !plate && !caption && note ? (
+    mounted && !plate && !caption && noteWords.length ? (
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-2 pb-1.5 pt-6
+        className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center overflow-hidden px-2 pb-1.5 pt-6
           opacity-0 transition-opacity duration-300 ease-out group-hover/poster:opacity-100"
         style={{
           background:
@@ -299,21 +344,23 @@ const MoviePoster = ({
         }}
       >
         <span
-          className="text-center font-body text-editorial-text"
+          className={`text-center font-body text-editorial-text ${noteItalic ? "italic" : ""}`}
           style={{
             fontSize: Math.max(10, ink * 1.3),
             lineHeight: 1.3,
             overflowWrap: "anywhere",
           }}
         >
-          <ReactMarkdown
-            components={{
-              p: ({ children }) => <>{children}</>,
-              a: ({ children }) => <>{children}</>,
-            }}
-          >
-            {note}
-          </ReactMarkdown>
+          {noteWords.map((word, i) => (
+            <span
+              key={i}
+              className="poster-word"
+              style={{ ["--i" as string]: String(i) }}
+            >
+              {word}
+              {i < noteWords.length - 1 ? "\u00a0" : ""}
+            </span>
+          ))}
         </span>
       </span>
     ) : null;
@@ -341,13 +388,27 @@ const MoviePoster = ({
           {art}
           {plate > 0 && (
             <span
-              className="flex items-center justify-center overflow-hidden px-1"
+              className="flex shrink-0 items-center justify-center overflow-hidden px-1"
               style={{ height: plate }}
             >
-              {label}
+              {/* The plate's type is held back as the poster pops: it's a
+                  label, and blown up with the artwork it shouts. It comes
+                  out a touch larger than at rest, no more. */}
+              <span
+                className="poster-plate flex max-w-full items-center justify-center"
+                style={{
+                  ["--plate-pop" as string]: String(PLATE_POP / popScale),
+                }}
+              >
+                {label}
+              </span>
             </span>
           )}
           {hoverNote}
+          {/* The sheen is clipped to the mount: outside it the cell is
+              only the gap to the neighbours, and a highlight there would
+              read as a halo round the poster. */}
+          {hoverPop && <span aria-hidden className="poster-sheen" />}
         </div>
       </div>
     ) : (
@@ -367,8 +428,9 @@ const MoviePoster = ({
       style={{
         ["--pop" as string]: String(popScale),
         transformOrigin: "center",
-        willChange: "transform",
-        backfaceVisibility: "hidden",
+        // No `will-change` here: it pins the layer's raster at its resting
+        // size, and a popped poster then stays soft. Left to the browser,
+        // the layer is re-rastered once the spring settles, and it's crisp.
         // Scale and lift come from the classes above as their own `scale` and
         // `translate` properties, so this composes with them rather than
         // replacing them. `transition-transform` covers all three.
@@ -377,7 +439,10 @@ const MoviePoster = ({
           : undefined,
       }}
     >
-      {picture}
+      <div className="relative">
+        {picture}
+        {!mounted && <span aria-hidden className="poster-sheen" />}
+      </div>
       {overlay}
     </div>
   ) : (
@@ -387,7 +452,7 @@ const MoviePoster = ({
   // The wrapper keeps its layout box while the poster inside scales, so a pop
   // overlaps its neighbours instead of pushing the row around.
   const className = `group/poster block shrink-0 relative ${
-    hoverPop ? "hover:z-10" : ""
+    hoverPop ? "poster-tilt hover:z-10" : ""
   }`;
 
   const bind = {
@@ -395,7 +460,11 @@ const MoviePoster = ({
     "data-poster": hoverPop ? "" : undefined,
     style: { width },
     onMouseEnter: measure,
-    onMouseLeave: () => setNudge(null),
+    onMouseLeave: () => {
+      setNudge(null);
+      onTiltLeave();
+    },
+    onPointerMove: hoverPop ? onTiltMove : undefined,
   };
 
   if (href)
