@@ -1,6 +1,7 @@
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -11,6 +12,7 @@ import FilterBar from "../../components/FilterBar";
 import MoviePoster from "../../components/MoviePoster";
 import { mountChrome } from "../../components/posterMount";
 import type { MountChrome } from "../../components/posterMount";
+import { usePinchZoom } from "../../hooks/usePinchZoom";
 import { usePointerPan } from "../../hooks/usePointerPan";
 import { getBlogPostsSync } from "../../Utils/functions";
 import type { BlogPostMeta } from "../../Utils/markdownLoader";
@@ -510,6 +512,50 @@ const MoviesSection: React.FC = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const pan = usePointerPan(viewportRef, contentRef, zoomBy, scale);
 
+  // On touch the wall zooms under a pinch — the wall, not the page: the
+  // viewport tells the browser it may only pan (see `touchAction` below), and
+  // the pinch is read off the touches itself. The point between the fingers
+  // stays put: it's noted in the block's own px before the zoom, and once the
+  // new zoom has laid out the scroll is moved to put it back under them.
+  const pinchScale = useRef(scale);
+  const pinchAnchor = useRef<{
+    px: number;
+    py: number;
+    mx: number;
+    my: number;
+  } | null>(null);
+  const onPinch = useCallback(
+    (factor: number, mid: { x: number; y: number }) => {
+      const block = contentRef.current;
+      if (!block) return;
+      const r = block.getBoundingClientRect();
+      const from = pinchScale.current;
+      const to = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, from * factor));
+      if (to === from) return;
+      pinchAnchor.current = {
+        px: (mid.x - r.left) / from,
+        py: (mid.y - r.top) / from,
+        mx: mid.x,
+        my: mid.y,
+      };
+      pinchScale.current = to;
+      setScale(to);
+    },
+    [],
+  );
+  usePinchZoom(viewportRef, onPinch);
+  useLayoutEffect(() => {
+    pinchScale.current = scale;
+    const at = pinchAnchor.current;
+    const el = viewportRef.current;
+    const block = contentRef.current;
+    if (!at || !el || !block) return;
+    pinchAnchor.current = null;
+    const r = block.getBoundingClientRect();
+    el.scrollLeft += r.left + at.px * scale - at.mx;
+    el.scrollTop += r.top + at.py * scale - at.my;
+  }, [scale]);
+
   // Touch has no wheel to read, so those devices get a plain scrollable
   // viewport instead of the pan (scrollbars are hidden site-wide) — which is
   // laid out differently, see the wall's auto margins below.
@@ -764,6 +810,9 @@ const MoviesSection: React.FC = () => {
         style={{
           // The dock's strip, so the wall is centred in what's above it.
           paddingBottom: dockReserve,
+          // Panning only: a pinch here is the wall's to zoom, not the
+          // page's (usePinchZoom), and a double tap shouldn't zoom either.
+          touchAction: "pan-x pan-y",
         }}
       >
         {visible.length === 0 ? (
@@ -887,9 +936,12 @@ const MoviesSection: React.FC = () => {
           pinch (or ctrl+wheel), and nothing on screen says so otherwise. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-4 top-4 z-10 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-editorial-label sm:left-5 sm:top-5"
+        className="pointer-events-none absolute left-4 top-4 z-10 flex items-center gap-1.5 text-[8px] uppercase tracking-[0.14em] text-editorial-label sm:left-5 sm:top-5 sm:gap-2 sm:text-[10px] sm:tracking-[0.2em]"
       >
-        <FontAwesomeIcon icon={faMagnifyingGlassPlus} className="text-[12px]" />
+        <FontAwesomeIcon
+          icon={faMagnifyingGlassPlus}
+          className="text-[10px] sm:text-[12px]"
+        />
         Pinch to zoom
       </div>
 
