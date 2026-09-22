@@ -67,6 +67,9 @@ const SectionDock = ({
             ? "scale-[0.36] sm:scale-[0.55] md:scale-[0.72] lg:scale-[0.6]"
             : "scale-[0.36] sm:scale-[0.55] md:scale-[0.72] lg:scale-100"
         }`}
+        // Phones draw a home indicator or a toolbar over the bottom of the
+        // page; the row stands off it by however much the device reports.
+        style={{ bottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         {/* Home — the Vishal sticker returns to the home screen */}
         <button
@@ -81,7 +84,11 @@ const SectionDock = ({
           <img
             src="/assets/stickers/vishal-sticker.png"
             alt="Home"
-            style={{ height: 105, maxWidth: "none", transform: "rotate(-2deg)" }}
+            style={{
+              height: 105,
+              maxWidth: "none",
+              transform: "rotate(-2deg)",
+            }}
             className="block select-none"
           />
         </button>
@@ -92,13 +99,22 @@ const SectionDock = ({
           boxClass="relative w-44 h-44"
           rest={BOTTOM_REST}
           spread={BOTTOM_SPREAD}
-          stickerStyle={{ left: "50%", bottom: 0, transform: "translateX(-50%)", zIndex: 40 }}
+          stickerStyle={{
+            left: "50%",
+            bottom: 0,
+            transform: "translateX(-50%)",
+            zIndex: 40,
+          }}
           sticker={
             <StickerButton id="movies" active={active} onSelect={onSelect}>
               <img
                 src="/assets/stickers/movie-sticker.png"
                 alt="Movies"
-                style={{ height: 150, maxWidth: "none", transform: "rotate(-4deg)" }}
+                style={{
+                  height: 150,
+                  maxWidth: "none",
+                  transform: "rotate(-4deg)",
+                }}
                 className="block select-none"
               />
             </StickerButton>
@@ -108,9 +124,16 @@ const SectionDock = ({
             title: post.title,
             onClick: () => navigate(`/archive/${post.slug}`),
             node: (
-              <div style={{ filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.6))" }}>
+              <div
+                style={{ filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.6))" }}
+              >
                 {/* The pile supplies its own angle and click target. */}
-                <MoviePoster post={post} to={null} width={70} hoverPop={false} />
+                <MoviePoster
+                  post={post}
+                  to={null}
+                  width={70}
+                  hoverPop={false}
+                />
               </div>
             ),
           }))}
@@ -122,13 +145,22 @@ const SectionDock = ({
           boxClass="relative w-44 h-44"
           rest={BOTTOM_REST}
           spread={BOTTOM_SPREAD}
-          stickerStyle={{ left: "50%", bottom: 0, transform: "translateX(-50%)", zIndex: 40 }}
+          stickerStyle={{
+            left: "50%",
+            bottom: 0,
+            transform: "translateX(-50%)",
+            zIndex: 40,
+          }}
           sticker={
             <StickerButton id="books" active={active} onSelect={onSelect}>
               <img
                 src="/assets/stickers/book-sticker.png"
                 alt="Books"
-                style={{ height: 150, maxWidth: "none", transform: "rotate(3deg)" }}
+                style={{
+                  height: 150,
+                  maxWidth: "none",
+                  transform: "rotate(3deg)",
+                }}
                 className="block select-none"
               />
             </StickerButton>
@@ -164,13 +196,22 @@ const SectionDock = ({
           boxClass="relative w-44 h-44"
           rest={BOTTOM_REST}
           spread={BOTTOM_SPREAD}
-          stickerStyle={{ left: "50%", bottom: 0, transform: "translateX(-50%)", zIndex: 40 }}
+          stickerStyle={{
+            left: "50%",
+            bottom: 0,
+            transform: "translateX(-50%)",
+            zIndex: 40,
+          }}
           sticker={
             <StickerButton id="projects" active={active} onSelect={onSelect}>
               <img
                 src="/assets/stickers/project-sticker.png"
                 alt="Projects"
-                style={{ height: 150, maxWidth: "none", transform: "rotate(-3deg)" }}
+                style={{
+                  height: 150,
+                  maxWidth: "none",
+                  transform: "rotate(-3deg)",
+                }}
                 className="block select-none"
               />
             </StickerButton>
@@ -184,7 +225,11 @@ const SectionDock = ({
                 className={`w-24 h-24 rounded-2xl overflow-hidden flex items-center justify-center bg-white ${STICKER}`}
               >
                 {isImageLogo(p.logo) ? (
-                  <img src={p.logo} alt={p.title} className="w-full h-full object-cover" />
+                  <img
+                    src={p.logo}
+                    alt={p.title}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <span className="text-4xl select-none">{p.logo || "📦"}</span>
                 )}
@@ -199,13 +244,22 @@ const SectionDock = ({
           boxClass="relative w-44 h-44"
           rest={writing.map((_, i) => bottomBlogRest(i))}
           spread={writing.map((_, i) => bottomBunch(i, writing.length))}
-          stickerStyle={{ left: "50%", bottom: 0, transform: "translateX(-50%)", zIndex: 40 }}
+          stickerStyle={{
+            left: "50%",
+            bottom: 0,
+            transform: "translateX(-50%)",
+            zIndex: 40,
+          }}
           sticker={
             <StickerButton id="blog" active={active} onSelect={onSelect}>
               <img
                 src="/assets/stickers/blog-sticker.png"
                 alt="Blog"
-                style={{ height: 150, maxWidth: "none", transform: "rotate(4deg)" }}
+                style={{
+                  height: 150,
+                  maxWidth: "none",
+                  transform: "rotate(4deg)",
+                }}
                 className="block select-none"
               />
             </StickerButton>
@@ -217,7 +271,11 @@ const SectionDock = ({
             node: (
               <div className={`w-32 rounded-xl overflow-hidden ${STICKER}`}>
                 {b.image ? (
-                  <img src={b.image} alt={b.title} className="w-full h-20 object-cover" />
+                  <img
+                    src={b.image}
+                    alt={b.title}
+                    className="w-full h-20 object-cover"
+                  />
                 ) : null}
                 <div className="px-2.5 py-2">
                   <p className="text-[13px] font-display font-bold leading-snug line-clamp-2">

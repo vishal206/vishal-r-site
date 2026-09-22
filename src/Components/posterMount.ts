@@ -5,6 +5,10 @@
  */
 
 export type MountChrome = {
+  /** The space the mount stands off its neighbours — half on each side. */
+  gap: number;
+  /** Thickness of the black edge around the whole mount, even on all sides. */
+  edge: number;
   /** Thickness of the frame on the three even sides. */
   frame: number;
   /** Type size for a note set on the plate. */
@@ -28,15 +32,21 @@ export const mountChrome = (width: number): MountChrome => {
   const frame = Math.round(Math.min(24, Math.max(10, width * 0.075)));
   const ink = Math.round(Math.min(13, Math.max(9, width * 0.05)));
   return {
+    gap: MOUNT_GAP,
+    edge: Math.max(2, Math.round(frame * 0.3)),
     frame,
     ink,
     plate: Math.max(Math.round(frame * 1.9), Math.round(ink * 4.4)),
   };
 };
 
+/** What the mount's black edge is painted in. */
+export const MOUNT_EDGE_COLOR = "#000";
+
 /**
- * The space a mounted poster leaves around itself on a wall, so neighbouring
- * mounts read as separate pictures instead of merging into one white field.
+ * The space a mounted poster leaves around itself on a wall by default, so
+ * neighbouring mounts read as separate pictures instead of merging into one
+ * white field. A wall can set its own per mount (`MountChrome.gap`).
  *
  * It's taken out of the cell the packing already handed the poster — half on
  * each side — so the wall's geometry is untouched and this is the whole gap

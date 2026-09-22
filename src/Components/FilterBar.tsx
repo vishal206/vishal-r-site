@@ -11,6 +11,14 @@ type Props<K extends string> = {
   value: K;
   onChange: (key: K) => void;
   className?: string;
+  /**
+   * Where the bar sits: across the top of the section, centred (the
+   * default), or as a plain list pinned in the top-right corner of its
+   * nearest positioned ancestor — green for the active filter, with a dot.
+   */
+  placement?: "center" | "corner";
+  /** Smaller type and tighter padding at every breakpoint. */
+  compact?: boolean;
 };
 
 /**
@@ -19,8 +27,7 @@ type Props<K extends string> = {
  * its own background.
  *
  * The bar carries its own surface (dark, blurred) because sections can put
- * artwork directly behind it, and `data-no-pan` so a panning backdrop holds
- * still while you're aiming at a button.
+ * artwork directly behind it.
  *
  * Options after the first are dropped when their count is zero; the first is
  * always shown, since it's the section's default and can't be allowed to
@@ -31,6 +38,8 @@ function FilterBar<K extends string>({
   value,
   onChange,
   className = "",
+  placement = "center",
+  compact = false,
 }: Props<K>) {
   const barRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef(new Map<K, HTMLButtonElement>());
@@ -67,14 +76,52 @@ function FilterBar<K extends string>({
 
   const EASE = "cubic-bezier(0.22,1,0.36,1)";
 
+  // In the corner the bar is no bar at all: a plain list, one filter under
+  // another, right-aligned against the corner. The active one is set in the
+  // site's green with a dot beside it; the rest in the label grey, brought up
+  // to the text colour under the cursor. No surface, no marker — small enough
+  // that whatever hangs behind it shows through around the type.
+  if (placement === "corner")
+    return (
+      <nav
+        aria-label="Filter"
+        className={`absolute right-4 top-4 z-10 flex flex-col items-end gap-1.5 sm:right-5 sm:top-5 ${className}`}
+      >
+        {shown.map(({ key, label, count }) => {
+          const active = value === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => onChange(key)}
+              aria-current={active ? "true" : undefined}
+              className={`group flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+                active
+                  ? "text-available"
+                  : "text-editorial-label hover:text-editorial-text"
+              }`}
+            >
+              <span
+                aria-hidden
+                className={`h-1.5 w-1.5 rounded-full bg-available transition-opacity duration-300 ${
+                  active ? "opacity-100" : "opacity-0"
+                }`}
+              />
+              {label}
+              <span className="opacity-60">{count}</span>
+            </button>
+          );
+        })}
+      </nav>
+    );
+
   return (
     <div
-      data-no-pan
-      className={`relative z-10 flex justify-center px-6 ${className}`}
+      className={`relative z-10 flex justify-center px-3 sm:px-6 ${className}`}
     >
       <div
         ref={barRef}
-        className="relative flex flex-wrap justify-center gap-2 p-1.5 rounded-[26px] backdrop-blur-md"
+        className="relative flex flex-wrap justify-center gap-1 p-1 sm:gap-2 sm:p-1.5 rounded-[26px] backdrop-blur-md"
         style={{
           background: "rgba(17,17,17,0.72)",
           boxShadow:
@@ -83,7 +130,7 @@ function FilterBar<K extends string>({
       >
         <span
           aria-hidden
-          className="absolute left-0 top-0 rounded-full bg-editorial-text"
+          className="absolute left-0 top-0 rounded-full bg-available"
           style={{
             width: pill.width,
             height: pill.height,
@@ -103,7 +150,11 @@ function FilterBar<K extends string>({
               else buttonRefs.current.delete(key);
             }}
             onClick={() => onChange(key)}
-            className={`relative z-10 px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+            className={`relative z-10 rounded-full uppercase transition-colors duration-300 ${
+              compact
+                ? "px-2.5 py-1 text-[8px] tracking-[0.1em] sm:px-3 sm:text-[9px] sm:tracking-[0.14em]"
+                : "px-2.5 py-1 text-[8px] tracking-[0.1em] sm:px-4 sm:py-1.5 sm:text-[11px] sm:tracking-[0.2em]"
+            } ${
               value === key
                 ? "text-editorial-bg"
                 : "text-editorial-muted/70 hover:text-editorial-text"

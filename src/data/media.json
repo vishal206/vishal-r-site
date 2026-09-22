@@ -149,7 +149,7 @@
       {
         "title": "The Good, the Bad and the Ugly",
         "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/bX2xnavhMYjWDoZp1VM6VnU1xwe.jpg",
-        "score": 2,
+        "score": 4,
         "note": null
       },
       {
@@ -161,7 +161,7 @@
       {
         "title": "Goodfellas",
         "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/9OkCLM73MIU2CrKZbqiT8Ln1wY2.jpg",
-        "score": 2,
+        "score": 4,
         "note": null
       },
       {
@@ -274,6 +274,20 @@
         "image": "https://www.themoviedb.org/t/p/w1280/67WmijqW7fjmLcc0eKZtW59Hf4d.jpg",
         "score": 3,
         "note": "*“Inu-oh! Tomoari!”*"
+      },
+      {
+        "title": "The Great Gatsby",
+        "image": "https://www.themoviedb.org/t/p/w600_and_h900_face/nimh1rrDDLhgpG8XAYoUZXHYwb6.jpg",
+        "score": 5,
+        "note": null,
+        "url": "https://www.themoviedb.org/movie/64682-the-great-gatsby"
+      },
+      {
+        "title": "Tekkonkinkreet",
+        "image": "https://www.themoviedb.org/t/p/w1280/e2x1YDuZPpQiaQS25Ego7xMZYOI.jpg",
+        "score": 5,
+        "note": null,
+        "url": "https://www.themoviedb.org/movie/13754"
       }
     ],
     "wishlist": [
@@ -290,13 +304,6 @@
         "score": null,
         "note": null,
         "url": "https://www.themoviedb.org/movie/13688"
-      },
-      {
-        "title": "The Great Gatsby",
-        "image": "https://www.themoviedb.org/t/p/w600_and_h900_face/nimh1rrDDLhgpG8XAYoUZXHYwb6.jpg",
-        "score": null,
-        "note": null,
-        "url": "https://www.themoviedb.org/movie/64682-the-great-gatsby"
       },
       {
         "title": "Jerry Maguire",
@@ -353,13 +360,6 @@
         "score": null,
         "note": null,
         "url": "https://www.themoviedb.org/movie/1252037-der-tiger"
-      },
-      {
-        "title": "Tekkonkinkreet",
-        "image": "https://www.themoviedb.org/t/p/w1280/e2x1YDuZPpQiaQS25Ego7xMZYOI.jpg",
-        "score": null,
-        "note": null,
-        "url": "https://www.themoviedb.org/movie/13754"
       },
       {
         "title": "Lost in Starlight",
@@ -425,13 +425,6 @@
         "url": "https://www.themoviedb.org/tv/60811"
       },
       {
-        "title": "Ping Pong",
-        "image": "https://www.themoviedb.org/t/p/w1280/frgVn3ww547TVQH8vS2bWKZnEBu.jpg",
-        "score": null,
-        "note": null,
-        "url": "https://www.themoviedb.org/tv/60811"
-      },
-      {
         "title": "Temple Grandin",
         "image": "https://www.themoviedb.org/t/p/w1280/gQhQ6yEkUkDDo1zugpq46PJN8xZ.jpg",
         "score": null,
@@ -479,13 +472,6 @@
         "score": null,
         "note": null,
         "url": "https://www.themoviedb.org/movie/116745-the-secret-life-of-walter-mitty"
-      },
-      {
-        "title": "Children of Men",
-        "image": "https://www.themoviedb.org/t/p/w1280/k9IAS4TehZFcKi4HVByxZNPfqex.jpg",
-        "score": null,
-        "note": null,
-        "url": "https://www.themoviedb.org/movie/9693-children-of-men"
       },
       {
         "title": "Children of Men",

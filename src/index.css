@@ -95,6 +95,84 @@ body {
   }
 }
 
+/* Movie wall: the hover pop. Going up it's a spring — overshoots past its
+   size and settles back with a bounce (a `linear()` curve sampled from a
+   damped spring; browsers without `linear()` keep the plain ease declared
+   first). Coming down it's a plain glide, since a poster springing on its way
+   *down* reads as a glitch rather than as weight. */
+.poster-pop {
+  transition-property: transform, translate, scale;
+  transition-duration: 900ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-poster]:hover .poster-pop {
+  transition-duration: 1600ms;
+  transition-timing-function: cubic-bezier(0.34, 1.25, 0.5, 1);
+  transition-timing-function: linear(0, 0.069 3.6%, 0.232 7.1%, 0.435 10.7%, 0.638 14.3%, 0.815 17.9%, 0.953 21.4%, 1.047 25.0%, 1.102 28.6%, 1.125 32.1%, 1.123 35.7%, 1.106 39.3%, 1.082 42.9%, 1.056 46.4%, 1.032 50.0%, 1.012 53.6%, 0.998 57.1%, 0.989 60.7%, 0.985 64.3%, 0.984 67.9%, 0.986 71.4%, 0.988 75.0%, 0.992 78.6%, 0.995 82.1%, 0.998 85.7%, 1.000 89.3%, 1.001 92.9%, 1.002 96.4%, 1);
+}
+
+/* Movie wall: the poster as a glossy card. The tilt follows the cursor (two
+   variables set on pointer move) on a short ease so it feels attached; the
+   sheen is a soft highlight parked under the cursor, screened over the art. */
+.poster-tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 180ms ease-out;
+}
+.poster-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 450ms ease;
+  background: radial-gradient(
+    circle at var(--sx, 50%) var(--sy, 50%),
+    rgba(255, 255, 255, 0.13),
+    rgba(255, 255, 255, 0.03) 30%,
+    transparent 58%
+  );
+  mix-blend-mode: screen;
+}
+[data-poster]:hover .poster-sheen {
+  opacity: 1;
+}
+
+/* The note comes up like a subtitle: each word rises from below the poster's
+   foot, one a beat after the last. */
+.poster-word {
+  display: inline-block;
+  transform: translateY(130%);
+  opacity: 0;
+  transition:
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 45ms + 120ms),
+    opacity 400ms ease calc(var(--i) * 45ms + 120ms);
+}
+[data-poster]:hover .poster-word {
+  transform: none;
+  opacity: 1;
+  transition-delay: calc(var(--i) * 45ms + 120ms);
+}
+
+/* A mount's plate as the poster pops: the type is scaled back down inside
+   the growing plate so it stays a label. */
+.poster-plate {
+  transition: scale 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-poster]:hover .poster-plate {
+  scale: var(--plate-pop, 1);
+  transition-duration: 1600ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster-tilt,
+  .poster-plate,
+  .poster-word {
+    transition: none !important;
+  }
+  [data-poster]:hover .poster-tilt {
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-poster-in,
   .animate-poster-out {

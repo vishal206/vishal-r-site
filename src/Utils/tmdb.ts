@@ -93,7 +93,7 @@ const request = async (ref: TmdbRef): Promise<TmdbFacts | null> => {
     runtime:
       ref.type === "tv"
         ? (d.episode_run_time?.[0] ?? d.last_episode_to_air?.runtime ?? null)
-        : (d.runtime || null),
+        : d.runtime || null,
     episodes: ref.type === "tv" ? (d.number_of_episodes ?? null) : null,
     genres: (d.genres ?? []).map((g: { name: string }) => g.name),
     // TMDB returns a flat 0 for anything nobody has voted on.
