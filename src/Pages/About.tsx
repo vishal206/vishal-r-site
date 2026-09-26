@@ -9,13 +9,6 @@ import {
   siReact,
   siTypescript,
 } from "simple-icons";
-import Vishal_Resume from "../assets/Vishal_Resume.pdf";
-
-const SOCIALS = [
-  { label: "LinkedIn", href: "https://linkedin.com/in/vishal-r-profile" },
-  { label: "GitHub", href: "https://github.com/vishal206" },
-  { label: "Résumé", href: Vishal_Resume },
-];
 
 // Logos are raw path data so they can inherit currentColor: the chips read as
 // monochrome type until hovered, when the brand colour comes through. Most come
@@ -106,21 +99,6 @@ const About = () => (
           </div>
         </div>
       </div>
-    </div>
-
-    {/* ── Elsewhere ── */}
-    <div className="flex gap-4 pt-8 border-t border-editorial-divider">
-      {SOCIALS.map((s) => (
-        <a
-          key={s.label}
-          href={s.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[10px] uppercase tracking-[0.2em] text-editorial-label transition-colors hover:text-editorial-text"
-        >
-          {s.label}
-        </a>
-      ))}
     </div>
   </div>
 );

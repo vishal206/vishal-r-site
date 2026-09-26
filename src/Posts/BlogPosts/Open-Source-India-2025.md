@@ -3,7 +3,7 @@ title: "Open Source India 2025"
 date: "07 Dec 2025"
 image: "https://github.com/vishal206/personal-site-images/blob/main/osi-cover.png?raw=true"
 banner: "https://github.com/vishal206/personal-site-images/blob/main/osi-cover.png?raw=true"
-tags: "Tech"
+tags: "Devlog"
 isTech: true
 ---
 
