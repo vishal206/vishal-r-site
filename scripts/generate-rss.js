@@ -94,35 +94,6 @@ const generateRSSFeed = async () => {
     }
   }
 
-  // Process books
-  const booksDir = path.join(process.cwd(), "src/Posts/Books");
-
-  if (fs.existsSync(booksDir)) {
-    const bookFiles = fs
-      .readdirSync(booksDir)
-      .filter((file) => file.endsWith(".md"));
-
-    for (const file of bookFiles) {
-      const filePath = path.join(booksDir, file);
-      const fileContent = fs.readFileSync(filePath, "utf8");
-      const { data: frontmatter, content } = matter(fileContent);
-
-      // ✅ Books can explicitly opt out of RSS
-      if (frontmatter.publishRss === false) continue;
-
-      const slug = file.replace(".md", "");
-
-      items.push({
-        title: frontmatter.title,
-        url: `${baseUrl}/book/${slug}`,
-        description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
-        content,
-        date: new Date(frontmatter.date),
-        categories: ["Book"],
-      });
-    }
-  }
-
   // Sort by date (newest first) and add to feed
   items
     .sort((a, b) => b.date.getTime() - a.date.getTime())

@@ -2,13 +2,11 @@ import { useState, useEffect, useMemo, useCallback, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import HomeHero from "./components/HomeHero";
 import SectionDock from "./components/SectionDock";
-import BooksSection from "./Pages/sections/BooksSection";
 import ProjectsSection from "./Pages/sections/ProjectsSection";
 import BlogSection from "./Pages/sections/BlogSection";
 import {
   BlogPostMeta,
   ProjectMeta,
-  getBooksSync,
   getAllProjectsMeta,
 } from "./Utils/markdownLoader";
 import { fetchBlogPosts } from "./Utils/functions";
@@ -19,14 +17,12 @@ import {
 } from "./Utils/sections";
 
 const SECTION_CONTENT: Record<SectionId, ReactNode> = {
-  books: <BooksSection />,
   projects: <ProjectsSection />,
   blog: <BlogSection />,
 };
 
 const App = () => {
   const navigate = useNavigate();
-  const books = useMemo(() => getBooksSync(), []);
   const [blogs, setBlogs] = useState<BlogPostMeta[]>([]);
   const [projects, setProjects] = useState<ProjectMeta[]>([]);
 
@@ -130,7 +126,6 @@ const App = () => {
       {/* ── Persistent dock ── */}
       <SectionDock
         navigate={navigate}
-        books={books}
         writing={writing}
         projects={projects}
         active={active}

@@ -1,6 +1,6 @@
 import { NavigateFunction } from "react-router-dom";
 import CornerPile, { STICKER } from "./CornerPile";
-import { BlogPostMeta, ProjectMeta, Book } from "../Utils/markdownLoader";
+import { BlogPostMeta, ProjectMeta } from "../Utils/markdownLoader";
 import {
   BOTTOM_REST,
   BOTTOM_SPREAD,
@@ -38,7 +38,6 @@ const StickerButton = ({
 
 const SectionDock = ({
   navigate,
-  books,
   writing,
   projects,
   active,
@@ -46,7 +45,6 @@ const SectionDock = ({
   onHome,
 }: {
   navigate: NavigateFunction;
-  books: Book[];
   writing: BlogPostMeta[];
   projects: ProjectMeta[];
   active: SectionId | null;
@@ -57,7 +55,7 @@ const SectionDock = ({
     <>
       {/* ── Sticker piles that fan their items open on hover. Shown at every
           breakpoint; the whole row scales down toward its bottom-center on
-          smaller screens so all four stickers stay on screen. ── */}
+          smaller screens so all three stickers stay on screen. ── */}
       <div
         className={`flex absolute bottom-0 inset-x-0 z-40 justify-center items-end gap-8 xl:gap-20 px-10 pb-0 origin-bottom transition-transform duration-500 ease-out ${
           active
@@ -89,57 +87,6 @@ const SectionDock = ({
             className="block select-none"
           />
         </button>
-
-        {/* Books */}
-        <CornerPile
-          wrapperClass="shrink-0"
-          boxClass="relative w-44 h-44"
-          rest={BOTTOM_REST}
-          spread={BOTTOM_SPREAD}
-          stickerStyle={{
-            left: "50%",
-            bottom: 0,
-            transform: "translateX(-50%)",
-            zIndex: 40,
-          }}
-          sticker={
-            <StickerButton id="books" active={active} onSelect={onSelect}>
-              <img
-                src="/assets/stickers/book-sticker.png"
-                alt="Books"
-                style={{
-                  height: 150,
-                  maxWidth: "none",
-                  transform: "rotate(3deg)",
-                }}
-                className="block select-none"
-              />
-            </StickerButton>
-          }
-          items={books.slice(0, 3).map((book) => ({
-            key: book.slug,
-            title: book.title,
-            onClick: () => navigate(`/book/${book.slug}`),
-            node: (
-              <div className={`w-24 rounded-md overflow-hidden ${STICKER}`}>
-                {book.cover ? (
-                  <img
-                    src={book.cover}
-                    alt={book.title}
-                    className="w-full aspect-[2/3] object-cover"
-                  />
-                ) : (
-                  <div
-                    className="w-full aspect-[2/3] flex items-center justify-center p-2 text-center text-[11px] font-display font-bold"
-                    style={{ background: book.accent || "#333" }}
-                  >
-                    {book.title}
-                  </div>
-                )}
-              </div>
-            ),
-          }))}
-        />
 
         {/* Projects */}
         <CornerPile

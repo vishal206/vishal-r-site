@@ -16,7 +16,7 @@ interface UnifiedEntry {
   type: "blog";
 }
 
-const TAGS = ["Devlog", "Tech", "Life", "Movie"];
+const TAGS = ["Devlog", "Tech", "Life", "Movie", "Book"];
 const ALL_FILTERS = [
   { key: "all", label: "All Entries" },
   ...TAGS.map((t) => ({ key: t, label: t })),

@@ -1,10 +1,8 @@
 ---
 title: "The Seven Days of Peter Crumb"
-author: "Jonny Glynn"
-genres: "Thriller, Crime, Horror"
 date: "03 Jul 2026"
-cover: "/assets/seven-days-of-peter-crumb.jpeg"
-side: "/assets/seven-days-of-peter-crumb-side.jpeg"
+image: "/assets/seven-days-of-peter-crumb.jpeg"
+tags: "Book"
 publishRss: true
 ---
 
@@ -13,3 +11,5 @@ Peter Crumb keeps a journal of his last seven days. He's forced to write it by h
 But the real strength here is the **storytelling**. The author writes Crumb's emotions so well that you start feeling them as your own. This comes through strongest in the quiet moments between the violence. That's where his self-loathing and confusion hit harder than the killings themselves. The story isn't a nightly body count. It keeps turning in directions you don't expect, right up to an ending that recontextualizes everything before it.
 
 **Worth the read, if you're brave enough.**
+
+Book: The Seven Days of Peter Crumb by Jonny Glynn (Thriller, Crime, Horror)
