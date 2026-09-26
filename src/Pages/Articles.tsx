@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getBlogPostsSync } from "../../Utils/functions";
-import { usePageViews } from "../../hooks/usePageViews";
+import { getBlogPostsSync } from "../Utils/functions";
+import { usePageViews } from "../hooks/usePageViews";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 
@@ -22,7 +22,7 @@ const ALL_FILTERS = [
   ...TAGS.map((t) => ({ key: t, label: t })),
 ];
 
-const BlogSection: React.FC = () => {
+const Articles: React.FC = () => {
   const blogs = useMemo(() => getBlogPostsSync(), []);
   const [filter, setFilter] = useState<FilterType>("all");
   const [page, setPage] = useState(1);
@@ -75,9 +75,9 @@ const BlogSection: React.FC = () => {
   };
 
   return (
-    <div className="px-6 md:px-12 pb-6 max-w-screen-xl mx-auto w-full">
+    <div className="pb-6">
       {/* ── Mobile filter chips ── */}
-      <div className="flex md:hidden gap-2 overflow-x-auto py-4 -mx-6 px-6 border-b border-editorial-divider">
+      <div className="flex md:hidden gap-2 overflow-x-auto py-4 border-b border-editorial-divider">
         {ALL_FILTERS.map(({ key, label }) => (
           <button
             key={key}
@@ -132,7 +132,7 @@ const BlogSection: React.FC = () => {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-10">
                 {pagedEntries.map((entry) => (
                   <Link
                     key={`${entry.type}-${entry.slug}`}
@@ -239,4 +239,4 @@ const SidebarItem: React.FC<{
   </button>
 );
 
-export default BlogSection;
+export default Articles;

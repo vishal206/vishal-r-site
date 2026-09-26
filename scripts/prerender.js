@@ -76,10 +76,9 @@ const readProjectPosts = () => {
 };
 
 const buildRoutes = () => {
-  // NOTE: the home route ("/") is intentionally not prerendered — App.tsx loads
-  // its data asynchronously, so a snapshot would not match the client's first
-  // render (hydration flash). Leaving index.html as the clean SPA shell also
-  // keeps it neutral as the rewrite fallback target.
+  // NOTE: the home route ("/") is intentionally not prerendered — it is only the
+  // name + nav shell, and leaving index.html as the clean SPA shell keeps it
+  // neutral as the rewrite fallback target.
   const routes = [
     { url: "/archive", out: "archive.html" },
     { url: "/projects", out: "projects.html" },

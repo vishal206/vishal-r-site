@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { STICKER } from "../../components/CornerPile";
-import { ProjectMeta, getAllProjectsMeta } from "../../Utils/markdownLoader";
+import { ProjectMeta, getAllProjectsMeta } from "../Utils/markdownLoader";
+
+// Die-cut sticker chrome for the project logos: thick white edge + lift shadow.
+const STICKER =
+  "border-[3px] border-white bg-editorial-bg shadow-[0_12px_28px_-8px_rgba(0,0,0,0.8)]";
 
 const isImageLogo = (logo: string) =>
   !!logo && (logo.startsWith("/") || logo.startsWith("http"));
 
-const ProjectsSection: React.FC = () => {
+const Projects: React.FC = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<ProjectMeta[]>([]);
 
@@ -15,13 +18,13 @@ const ProjectsSection: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex-1 px-6 md:px-12 pb-10 max-w-screen-xl mx-auto w-full">
+    <div className="pb-10">
       {projects.length === 0 ? (
         <div className="text-center text-editorial-label text-sm py-16">
           No projects yet.
         </div>
       ) : (
-        <div className="flex flex-wrap justify-center gap-10 md:gap-14 pt-12 md:pt-16">
+        <div className="flex flex-wrap gap-10 md:gap-14">
           {projects.map((p) => (
             <button
               key={p.slug}
@@ -52,4 +55,4 @@ const ProjectsSection: React.FC = () => {
   );
 };
 
-export default ProjectsSection;
+export default Projects;
