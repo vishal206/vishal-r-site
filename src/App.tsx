@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo, useCallback, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import HomeHero from "./components/HomeHero";
 import SectionDock from "./components/SectionDock";
-import MoviesSection from "./Pages/sections/MoviesSection";
 import BooksSection from "./Pages/sections/BooksSection";
 import ProjectsSection from "./Pages/sections/ProjectsSection";
 import BlogSection from "./Pages/sections/BlogSection";
@@ -20,7 +19,6 @@ import {
 } from "./Utils/sections";
 
 const SECTION_CONTENT: Record<SectionId, ReactNode> = {
-  movies: <MoviesSection />,
   books: <BooksSection />,
   projects: <ProjectsSection />,
   blog: <BlogSection />,
@@ -41,14 +39,7 @@ const App = () => {
     getAllProjectsMeta().then(setProjects);
   }, []);
 
-  const movies = useMemo(
-    () => blogs.filter((b) => b.tags === "Movie").slice(0, 3),
-    [blogs],
-  );
-  const writing = useMemo(
-    () => blogs.filter((b) => b.tags !== "Movie").slice(0, 10),
-    [blogs],
-  );
+  const writing = useMemo(() => blogs.slice(0, 10), [blogs]);
 
   // The dock is always visible at the bottom; clicking a sticker raises that
   // section's content up from behind the dock as a sheet over the home hero.
@@ -123,9 +114,8 @@ const App = () => {
           Only while a section is open.
 
           Kept as shallow as the job allows: a section's own content runs right
-          down to the dock — the movies wall hangs its bottom row of mounts
-          there — and every pixel this reaches up is a pixel of that content
-          greyed out. So the solid part is only the strip actually below the
+          down to the dock, and every pixel this reaches up is a pixel of that
+          content greyed out. So the solid part is only the strip actually below the
           stickers, and the rest is a quick fade rather than a long wash. ── */}
       <div
         className={`absolute bottom-0 inset-x-0 z-30 pointer-events-none transition-all duration-500 ${
@@ -141,7 +131,6 @@ const App = () => {
       <SectionDock
         navigate={navigate}
         books={books}
-        movies={movies}
         writing={writing}
         projects={projects}
         active={active}

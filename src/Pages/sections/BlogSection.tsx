@@ -16,18 +16,14 @@ interface UnifiedEntry {
   type: "blog";
 }
 
-const TAGS = ["Devlog", "Tech", "Life"];
+const TAGS = ["Devlog", "Tech", "Life", "Movie"];
 const ALL_FILTERS = [
   { key: "all", label: "All Entries" },
   ...TAGS.map((t) => ({ key: t, label: t })),
 ];
 
 const BlogSection: React.FC = () => {
-  // Movies live in their own section — keep them out of the blog.
-  const blogs = useMemo(
-    () => getBlogPostsSync().filter((b) => b.tags !== "Movie"),
-    [],
-  );
+  const blogs = useMemo(() => getBlogPostsSync(), []);
   const [filter, setFilter] = useState<FilterType>("all");
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;

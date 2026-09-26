@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import MoviePoster from "./MoviePoster";
 import ReaderShell, { LogoBox } from "./ReaderShell";
 import {
   loadMarkdownFileSync,
@@ -14,22 +13,6 @@ import { usePostEngagement } from "../hooks/usePostEngagement";
 import { PostEngagement } from "./PostEngagement";
 import { useComments } from "../hooks/useComments";
 import { PostComments } from "./PostComments";
-
-// Movies live in their own section; everything else (essays, chapters) is the archive.
-const SECTIONS = {
-  movie: {
-    logo: "/assets/stickers/movie-sticker.png",
-    title: "Movies",
-    backTo: "/movies",
-    backLabel: "Movies",
-  },
-  archive: {
-    logo: "/assets/stickers/blog-sticker.png",
-    title: "The Archive",
-    backTo: "/archive",
-    backLabel: "Archive",
-  },
-} as const;
 
 // Unified entry shape ─────────────────────────────────────────────────────────
 interface Entry {
@@ -193,39 +176,28 @@ const BlogReader = () => {
       <ContextToc content={entry.content} />
     ) : undefined;
 
-  const section =
-    entry.label === "Movie" ? SECTIONS.movie : SECTIONS.archive;
-
-  // Movies keep the poster beside the title; chapters keep their number
-  // badge. Every other post (essays / life) with an image gets a 3:2 banner
-  // shown between the title and the engagement row instead of a side thumbnail.
-  const isMovie = entry.label === "Movie";
-  const showBanner = Boolean(entry.image) && !isMovie;
+  // Chapters keep their number badge. Every other post with an image gets a
+  // 3:2 banner shown between the title and the engagement row instead of a
+  // side thumbnail.
+  const showBanner = Boolean(entry.image);
 
   return (
     <ReaderShell
-      brandLogo={section.logo}
-      brandTitle={section.title}
+      brandLogo="/assets/stickers/blog-sticker.png"
+      brandTitle="The Archive"
       brandBare
       navLabel="In This Archive"
-      backTo={section.backTo}
-      backLabel={section.backLabel}
+      backTo="/archive"
+      backLabel="Archive"
       nav={nav || undefined}
       rightRail={rightRail}
     >
       {/* ── Compact header ── */}
       <div className="mb-8 pb-8 border-b border-editorial-divider">
         <div className="flex items-center gap-5">
-          {isMovie && entry.image ? (
-            <MoviePoster
-              post={{ slug: entry.slug, title: entry.title, date: entry.sortKey, image: entry.image }}
-              width={76}
-              to={null}
-              hoverPop={false}
-            />
-          ) : entry.sublabel ? (
+          {entry.sublabel && (
             <LogoBox logo={entry.sublabel} title={entry.title} size="lg" />
-          ) : null}
+          )}
           <div className="min-w-0">
             <div className="flex items-center gap-3 mb-1">
               <span className="text-[10px] uppercase tracking-[0.22em] text-available">

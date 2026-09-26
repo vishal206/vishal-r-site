@@ -1,17 +1,17 @@
 import fs from "fs";
 import path from "path";
 
-// ── Fills in cover/poster URLs for the media lists in src/data/media.json —
-// books via Open Library (keyless), movies via TMDB (needs TMDB_API_KEY).
+// ── Fills in cover URLs for the book lists in src/data/media.json via Open
+// Library (keyless).
 //
-//   node scripts/fetch-media.js [--dry-run] [--force] [--only=books|movies]
+//   node scripts/fetch-media.js [--dry-run] [--force]
 //
 // Scope: media.json only. Blog posts and book reviews keep their hand-uploaded
 // images in /assets — this script never touches markdown.
 //
 // Entries with `"image": null` get resolved and the provider URL written back.
 // When the search guesses wrong, pin the entry instead of editing this file:
-//   "olCoverId": 10306590   (books)   "tmdbId": 12345   (movies)
+//   "olCoverId": 10306590
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DATA_PATH = path.join(process.cwd(), "src/data/media.json");
@@ -20,16 +20,13 @@ const DATA_PATH = path.join(process.cwd(), "src/data/media.json");
 // anything this small is a miss dressed up as a hit.
 const MIN_IMAGE_BYTES = 1024;
 
-// Covers and posters are portrait (~0.65). Square art is the tell for a box-set
+// Covers are portrait (~0.65). Square art is the tell for a box-set
 // or collection listing rather than the edition we asked for.
 const MAX_ASPECT_RATIO = 0.9;
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 const force = args.includes("--force");
-const only = args.find((a) => a.startsWith("--only="))?.split("=")[1];
-
-const TMDB_KEY = process.env.TMDB_API_KEY;
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -133,26 +130,6 @@ const resolveBookCover = async ({ title, author, olCoverId }) => {
   return null;
 };
 
-/** TMDB. Needs TMDB_API_KEY. Pin ambiguous titles (e.g. remakes) with tmdbId. */
-const resolveMoviePoster = async ({ title, tmdbId }) => {
-  let posterPath;
-
-  if (tmdbId) {
-    posterPath = (
-      await getJson(
-        `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${TMDB_KEY}`,
-      )
-    ).poster_path;
-  } else {
-    const params = new URLSearchParams({ api_key: TMDB_KEY, query: title });
-    posterPath = (
-      await getJson(`https://api.themoviedb.org/3/search/movie?${params}`)
-    ).results?.find((r) => r.poster_path)?.poster_path;
-  }
-
-  return posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : null;
-};
-
 // ── Runner ───────────────────────────────────────────────────────────────────
 
 /** Resolves every imageless entry across a section's lists. Mutates in place. */
@@ -191,30 +168,17 @@ const run = async () => {
   let ok = 0;
   let missed = 0;
 
-  if (only !== "movies") {
-    console.log("Books (Open Library)");
-    const r = await processSection(data.books, resolveBookCover);
-    ok += r.ok;
-    missed += r.missed;
-  }
-
-  if (only !== "books") {
-    console.log("Movies (TMDB)");
-    if (!TMDB_KEY) {
-      console.warn("  skipped — set TMDB_API_KEY to fetch posters");
-    } else {
-      const r = await processSection(data.movies, resolveMoviePoster);
-      ok += r.ok;
-      missed += r.missed;
-    }
-  }
+  console.log("Books (Open Library)");
+  const r = await processSection(data.books, resolveBookCover);
+  ok += r.ok;
+  missed += r.missed;
 
   if (ok > 0 && !dryRun)
     fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2) + "\n", "utf8");
 
   console.log(`\n${ok} resolved, ${missed} unresolved`);
   if (missed > 0)
-    console.log("Pin unresolved entries with olCoverId / tmdbId in media.json.");
+    console.log("Pin unresolved entries with olCoverId in media.json.");
 };
 
 run().catch((err) => {
