@@ -44,7 +44,7 @@ const TECH_STACK = [
   { label: "React JS", icon: siReact },
   { label: "TypeScript", icon: siTypescript },
   // simple-icons ships Next.js as pure black, which vanishes on our dark sheet.
-  { label: "Next.JS", icon: { ...siNextdotjs, hex: "FFFFFF" } },
+  // { label: "Next.JS", icon: { ...siNextdotjs, hex: "FFFFFF" } },
   { label: "Python", icon: siPython },
   { label: "FastAPI", icon: siFastapi },
   { label: "LangGraph", icon: siLanggraph },
