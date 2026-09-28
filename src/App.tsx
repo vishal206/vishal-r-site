@@ -2,13 +2,8 @@ import { useState, useEffect, useMemo, useCallback, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import HomeHero from "./components/HomeHero";
 import SectionDock from "./components/SectionDock";
-import ProjectsSection from "./Pages/sections/ProjectsSection";
 import BlogSection from "./Pages/sections/BlogSection";
-import {
-  BlogPostMeta,
-  ProjectMeta,
-  getAllProjectsMeta,
-} from "./Utils/markdownLoader";
+import { BlogPostMeta } from "./Utils/markdownLoader";
 import { fetchBlogPosts } from "./Utils/functions";
 import {
   SectionId,
@@ -17,14 +12,12 @@ import {
 } from "./Utils/sections";
 
 const SECTION_CONTENT: Record<SectionId, ReactNode> = {
-  projects: <ProjectsSection />,
   blog: <BlogSection />,
 };
 
 const App = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState<BlogPostMeta[]>([]);
-  const [projects, setProjects] = useState<ProjectMeta[]>([]);
 
   useEffect(() => {
     fetchBlogPosts(
@@ -32,7 +25,6 @@ const App = () => {
       () => {},
       (posts) => setBlogs(posts),
     );
-    getAllProjectsMeta().then(setProjects);
   }, []);
 
   const writing = useMemo(
@@ -122,7 +114,6 @@ const App = () => {
       <SectionDock
         navigate={navigate}
         writing={writing}
-        projects={projects}
         active={active}
         onSelect={select}
         onHome={close}

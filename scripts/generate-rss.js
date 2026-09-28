@@ -22,7 +22,7 @@ const generateRSSFeed = async () => {
 
   const feed = new RSS({
     title: "Vishal R",
-    description: "Blogs, movies, and project writing from Vishal R",
+    description: "Blogs and movies from Vishal R",
     feed_url: `${baseUrl}/rss.xml`,
     site_url: baseUrl,
     language: "en-us",
@@ -56,41 +56,6 @@ const generateRSSFeed = async () => {
         date: new Date(frontmatter.date),
         categories: [frontmatter.tags || "Blog"],
       });
-    }
-  }
-
-  // Process project write-ups (each project folder's non-readme posts;
-  // the readme itself is a static overview page, not a dated entry)
-  const projectsDir = path.join(process.cwd(), "src/Posts/Projects");
-
-  if (fs.existsSync(projectsDir)) {
-    for (const projectSlug of fs.readdirSync(projectsDir)) {
-      const projectDir = path.join(projectsDir, projectSlug);
-      if (!fs.statSync(projectDir).isDirectory()) continue;
-
-      const postFiles = fs
-        .readdirSync(projectDir)
-        .filter((file) => file.endsWith(".md") && file.toLowerCase() !== "readme.md");
-
-      for (const file of postFiles) {
-        const filePath = path.join(projectDir, file);
-        const fileContent = fs.readFileSync(filePath, "utf8");
-        const { data: frontmatter, content } = matter(fileContent);
-
-        // ✅ Posts can explicitly opt out of RSS
-        if (frontmatter.publishRss === false) continue;
-
-        const slug = file.replace(".md", "");
-
-        items.push({
-          title: frontmatter.title,
-          url: `${baseUrl}/archive/${slug}`,
-          description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
-          content,
-          date: new Date(frontmatter.date),
-          categories: [frontmatter.tags || "Project"],
-        });
-      }
     }
   }
 

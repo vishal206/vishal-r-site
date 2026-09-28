@@ -3,18 +3,6 @@
 // corner (hidden); SPREAD = fanned toward the interior, covering the sticker.
 export type Pos = { x: number; y: number; r: number };
 
-// Bottom-row piles: items cluster behind the sticker at rest, fan upward on hover.
-export const BOTTOM_REST: Pos[] = [
-  { x: 42, y: 96, r: -6 },
-  { x: 58, y: 104, r: 6 },
-  { x: 50, y: 114, r: -3 },
-];
-export const BOTTOM_SPREAD: Pos[] = [
-  { x: 2, y: 22, r: -12 },
-  { x: 96, y: 26, r: 10 },
-  { x: 48, y: -16, r: -4 },
-];
-
 // Blog: rest clustered behind the sticker, spread into a circular bunch above it.
 export const bottomBlogRest = (i: number): Pos => ({
   x: 60 + ((i % 3) - 1) * 7,

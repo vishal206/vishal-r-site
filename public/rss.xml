@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title><![CDATA[Vishal R]]></title>
-        <description><![CDATA[Blogs, movies, and project writing from Vishal R]]></description>
+        <description><![CDATA[Blogs and movies from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Mon, 28 Sep 2026 17:57:29 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 28 Sep 2026 18:57:18 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Mon, 28 Sep 2026 17:57:29 GMT</pubDate>
+        <pubDate>Mon, 28 Sep 2026 18:57:18 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
         <item>
             <title><![CDATA[Teardown: Hermes Agent]]></title>
@@ -307,48 +307,6 @@ Midori asks Sachie how she let a total stranger stay with her. Sachie says, “A
 ]]></content:encoded>
         </item>
         <item>
-            <title><![CDATA[Two Types of Work. One Place to Track Both.]]></title>
-            <description><![CDATA[
-I wanted to learn System Design. I had the course, the material, and a clear list of what to cover. So I started. Some days I got through two topics. Some days one. Some days nothing.
-
-A month in, I had no idea where I actually stood.
-
-Not because I wasn't trying. Because I had no honest way to see...]]></description>
-            <link>https://vishalr.dev/archive/Two-Types-of-Work</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/Two-Types-of-Work</guid>
-            <category><![CDATA[Devlog]]></category>
-            <pubDate>Mon, 11 May 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<p>I wanted to learn System Design. I had the course, the material, and a clear list of what to cover. So I started. Some days I got through two topics. Some days one. Some days nothing.</p>
-<p>A month in, I had no idea where I actually stood.</p>
-<p>Not because I wasn&#39;t trying. Because I had no honest way to see my progress. No clear picture of what I&#39;d covered, what was left, or whether I&#39;d actually been showing up at all.</p>
-<p><a href="https://start-ember.vercel.app">Start Ember</a> is a habit tracker I built to fix this for myself. The idea was simple: show up every day, build a streak, make the work visible. It worked well for daily habits. Then I tried to use it for learning, and ran into a different problem entirely.</p>
-<h1>Two Different Types of Work</h1>
-<p>The habit model works perfectly for things like drawing, meditating, or reading. Things you want to do forever. There&#39;s no finish line, only whether you showed up.</p>
-<p>Learning System Design is different. It has a beginning and an end. There&#39;s a body of material you&#39;re moving through. Marking &quot;System Design&quot; every day tells you nothing useful. It doesn&#39;t tell you whether you&#39;re actually getting through the content, or whether you&#39;ve been circling the same two topics for three weeks.</p>
-<p>Halfway through, I realized I&#39;d been doing exactly that. I had &quot;System Design&quot; as a daily habit in Start Ember, felt like I was showing up, and still couldn&#39;t tell you what I&#39;d actually covered. The habit model was giving me the feeling of progress without the substance of it.</p>
-<p>A curriculum isn&#39;t a habit. Treating it like one is where progress quietly dies.</p>
-<h1>What Habits and Tracks Actually Do Differently</h1>
-<p>A habit is about identity. You&#39;re not trying to finish drawing, you&#39;re becoming someone who draws every day. The streak isn&#39;t about the output. It&#39;s about who you are on day 30 versus day 1.</p>
-<img src="https://vishalr.dev/assets/james-every-action.png" alt="Every action you take is a vote for the type of person you wish to become. - James Clear, Atmoic Habits"/><p>A learning track is about movement through material. There&#39;s something in front of you, a course, a book, a roadmap, and you&#39;re moving through it. The question isn&#39;t &quot;did I show up today?&quot; It&#39;s &quot;where am I in this thing, and am I actually moving forward?&quot;</p>
-<p>Both modes matter. Mixing them up is where most people quietly lose momentum, myself included.</p>
-<h1>What Tracks Are</h1>
-<p>A Track is a named curriculum you&#39;re working through.</p>
-<p>You give it a name (&quot;System Design&quot;), a source (&quot;AlgoMaster Low-Level Design&quot;), and a list of checkpoints: the topics, chapters, or modules you&#39;ll cover. Then you work through them one by one, marking each done when you&#39;ve genuinely covered it.</p>
-<p>The view is honest and minimal:</p>
-<p><strong>8 of 24 checkpoints completed.</strong> Shows where you stand.</p>
-<p><strong>Last activity: 12 days ago.</strong> This is the line that matters. If you haven&#39;t touched a track in almost two weeks, that number sits there quietly and tells you the truth.</p>
-<img src="https://vishalr.dev/assets/tracks-start-ember.png" alt="Screenshot of a track from Start Ember"/><h1>The Habit Connection</h1>
-<p>Some checkpoints aren&#39;t one-time topics. They&#39;re things you want to build a daily practice around. &quot;Solve system design problems daily&quot; might be a stage in your learning track, but it&#39;s also something you want to show up for every single day.</p>
-<p>In Start Ember, you can link a checkpoint directly to a habit. The checkpoint marks where you are in the material. The habit tracks whether you&#39;re showing up for the daily work that stage requires.</p>
-<p>The track is how you move through the curriculum. The habit is how you make it stick.</p>
-<h1>Start Simple</h1>
-<p>You don&#39;t need a complicated system. Pick something you&#39;re learning from a specific source, break it into chunks, work through the chunks. When it&#39;s done, it&#39;s done.</p>
-<p>Start Ember holds that clearly, shows you where you stand, and tells you the truth about whether you&#39;ve been showing up.</p>
-<p>Start Ember is a free habit and learning tracker. Try it at <a href="https://start-ember.vercel.app">start-ember.vercel.app</a></p>
-<p><em>If this resonated, or if you&#39;ve been quietly misusing your habit tracker the same way I was, drop a comment below.</em></p>
-]]></content:encoded>
-        </item>
-        <item>
             <title><![CDATA[Native Temple fest]]></title>
             <description><![CDATA[
 Yo! 🙋
@@ -508,30 +466,6 @@ Yo!
 <li>As for promotion, I didn’t want to go above and beyond; I decided to promote it in the peer list only. Every day this past week, I posted updates about Start Ember on Peerlist. Wrote a blog on what made me build this and promoted this blog and my project again in the Peerlist. As of today, the last day of this week’s launchpad, I have 24 upvotes. 24 people that I don’t know personally liked the project.</li>
 <li>Have a look at my project - <a href="https://start-ember.vercel.app">Start Ember</a></li>
 </ul>
-]]></content:encoded>
-        </item>
-        <item>
-            <title><![CDATA[Start Ember: How a Drawing Goal Turned Into an App]]></title>
-            <description><![CDATA[
-This year, I decided to split my resolutions into quarters, one single goal per quarter. For the first quarter, I chose something I'd always wanted to try: learning to draw characters. The plan was simple. Ten minutes every day. That's it.
-The first few days went well. Then, as these things go, it ...]]></description>
-            <link>https://vishalr.dev/archive/start-ember</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/start-ember</guid>
-            <category><![CDATA[Devlog]]></category>
-            <pubDate>Thu, 09 Apr 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<p>This year, I decided to split my resolutions into quarters, one single goal per quarter. For the first quarter, I chose something I&#39;d always wanted to try: learning to draw characters. The plan was simple. Ten minutes every day. That&#39;s it.
-The first few days went well. Then, as these things go, it started fading into the background.</p>
-<p>So I tried a caveman approach, tally counting. I bought some sticky notes and started marking every day I completed my session. Just seeing those little marks gave me a sense of achievement. But I started missing days again, so I layered on a reward system: complete a 15-day streak and treat myself to a manga( Japanese Comic ).</p>
-<p>It was working, but tracking it was becoming a problem in itself. Was I marking today, or had I already marked it? Did I accidentally double-count? The sticky notes were unreliable. That&#39;s when it hit me: why not build a small app to do this properly?
-And so the developer in me took over.</p>
-<p>I kept everything on free tiers: Supabase for the database, Vercel for deployment. I used AI for parts of the coding and UI design, no shame in that. Once the app was live, I realized I didn&#39;t want just anyone with the link to see my habit tracking, so I added authentication. Supabase&#39;s built-in auth had hit its limit, so I switched to Clerk and integrated Google sign-in. Simple, secure, and no forgotten passwords.</p>
-<p>That&#39;s how <strong>Start Ember</strong> was born.</p>
-<blockquote>
-<p>Ember is a hot coal; it symbolizes the habits that are just beginning to take shape, quietly burning before they become something bigger. A little cheesy, maybe, but it felt right.</p>
-</blockquote>
-<p>The app itself is straightforward: create habits, track your streaks, and see a monthly breakdown of how you&#39;re doing. I&#39;ve been using it for 15 days now and have tweaked the design quite a bit along the way. If you have a goal from this year that you&#39;ve already forgotten about, give it a try. I also snuck in some fun animations.</p>
-<p>I have launched it in this week&#39;s peerlist, check it out - <a href="https://peerlist.io/vishal_r_dev/project/start-ember">Peerlist launchpad</a></p>
-<p>👉 <a href="https://start-ember.vercel.app/">start-ember.vercel.app</a></p>
 ]]></content:encoded>
         </item>
         <item>

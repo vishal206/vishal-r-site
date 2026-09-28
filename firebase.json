@@ -6,7 +6,9 @@
     "redirects": [
       { "source": "/movies", "destination": "/", "type": 301 },
       { "source": "/books", "destination": "/", "type": 301 },
-      { "source": "/book/**", "destination": "/", "type": 301 }
+      { "source": "/book/**", "destination": "/", "type": 301 },
+      { "source": "/projects", "destination": "/", "type": 301 },
+      { "source": "/projects/**", "destination": "/", "type": 301 }
     ],
     "rewrites": [
       { "source": "**", "destination": "/index.html" }

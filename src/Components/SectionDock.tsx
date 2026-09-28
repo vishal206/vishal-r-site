@@ -1,16 +1,8 @@
 import { NavigateFunction } from "react-router-dom";
 import CornerPile, { STICKER } from "./CornerPile";
-import { BlogPostMeta, ProjectMeta } from "../Utils/markdownLoader";
-import {
-  BOTTOM_REST,
-  BOTTOM_SPREAD,
-  bottomBlogRest,
-  bottomBunch,
-} from "../Utils/pilePositions";
+import { BlogPostMeta } from "../Utils/markdownLoader";
+import { bottomBlogRest, bottomBunch } from "../Utils/pilePositions";
 import { SectionId, SECTION_LABELS } from "../Utils/sections";
-
-const isImageLogo = (logo: string) =>
-  !!logo && (logo.startsWith("/") || logo.startsWith("http"));
 
 // A section sticker: the tappable label that raises the section sheet. When its
 // section is the one currently open it lifts up to read as "active".
@@ -39,14 +31,12 @@ const StickerButton = ({
 const SectionDock = ({
   navigate,
   writing,
-  projects,
   active,
   onSelect,
   onHome,
 }: {
   navigate: NavigateFunction;
   writing: BlogPostMeta[];
-  projects: ProjectMeta[];
   active: SectionId | null;
   onSelect: (id: SectionId) => void;
   onHome: () => void;
@@ -87,54 +77,6 @@ const SectionDock = ({
             className="block select-none"
           />
         </button>
-
-        {/* Projects */}
-        <CornerPile
-          wrapperClass="shrink-0"
-          boxClass="relative w-44 h-44"
-          rest={BOTTOM_REST}
-          spread={BOTTOM_SPREAD}
-          stickerStyle={{
-            left: "50%",
-            bottom: 0,
-            transform: "translateX(-50%)",
-            zIndex: 40,
-          }}
-          sticker={
-            <StickerButton id="projects" active={active} onSelect={onSelect}>
-              <img
-                src="/assets/stickers/project-sticker.png"
-                alt="Projects"
-                style={{
-                  height: 150,
-                  maxWidth: "none",
-                  transform: "rotate(-3deg)",
-                }}
-                className="block select-none"
-              />
-            </StickerButton>
-          }
-          items={projects.slice(0, 3).map((p) => ({
-            key: p.slug,
-            title: p.title,
-            onClick: () => navigate(`/projects/${p.slug}`),
-            node: (
-              <div
-                className={`w-24 h-24 rounded-2xl overflow-hidden flex items-center justify-center bg-white ${STICKER}`}
-              >
-                {isImageLogo(p.logo) ? (
-                  <img
-                    src={p.logo}
-                    alt={p.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-4xl select-none">{p.logo || "📦"}</span>
-                )}
-              </div>
-            ),
-          }))}
-        />
 
         {/* Blog — circular bunch */}
         <CornerPile
