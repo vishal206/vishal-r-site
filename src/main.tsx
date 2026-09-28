@@ -39,7 +39,6 @@ const tree = (
         <Route path="/archive/:slug" element={<BlogReader />} />
         <Route path="/books" element={<App />} />
         <Route path="/book/:slug" element={<BookPage />} />
-        <Route path="/movies" element={<App />} />
         <Route path="/projects" element={<App />} />
         <Route path="/projects/:projectSlug" element={<ProjectPage />} />
         <Route
@@ -54,7 +53,7 @@ const tree = (
 // Paths the SPA knows how to render. Used to avoid wiping prerendered content in
 // reader/extracted contexts (see below).
 const KNOWN_ROUTE =
-  /^\/(?:archive(?:\/[^/]+)?|books|book\/[^/]+|movies|projects(?:\/[^/]+(?:\/[^/]+)?)?)?\/?$/;
+  /^\/(?:archive(?:\/[^/]+)?|books|book\/[^/]+|projects(?:\/[^/]+(?:\/[^/]+)?)?)?\/?$/;
 
 // Prerendered pages already contain the article markup, which the browser paints
 // before this script runs (great for perceived speed, SEO and RSS readers). We

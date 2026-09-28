@@ -23,7 +23,7 @@ const ALL_FILTERS = [
 ];
 
 const BlogSection: React.FC = () => {
-  // Movies live in their own section — keep them out of the blog.
+  // Movie reviews hang on the home page's movie shelf — keep them out of the blog.
   const blogs = useMemo(
     () => getBlogPostsSync().filter((b) => b.tags !== "Movie"),
     [],

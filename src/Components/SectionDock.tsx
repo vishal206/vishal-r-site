@@ -1,5 +1,4 @@
 import { NavigateFunction } from "react-router-dom";
-import MoviePoster from "./MoviePoster";
 import CornerPile, { STICKER } from "./CornerPile";
 import { BlogPostMeta, ProjectMeta, Book } from "../Utils/markdownLoader";
 import {
@@ -40,7 +39,6 @@ const StickerButton = ({
 const SectionDock = ({
   navigate,
   books,
-  movies,
   writing,
   projects,
   active,
@@ -49,7 +47,6 @@ const SectionDock = ({
 }: {
   navigate: NavigateFunction;
   books: Book[];
-  movies: BlogPostMeta[];
   writing: BlogPostMeta[];
   projects: ProjectMeta[];
   active: SectionId | null;
@@ -92,52 +89,6 @@ const SectionDock = ({
             className="block select-none"
           />
         </button>
-
-        {/* Movies as CDs */}
-        <CornerPile
-          wrapperClass="shrink-0"
-          boxClass="relative w-44 h-44"
-          rest={BOTTOM_REST}
-          spread={BOTTOM_SPREAD}
-          stickerStyle={{
-            left: "50%",
-            bottom: 0,
-            transform: "translateX(-50%)",
-            zIndex: 40,
-          }}
-          sticker={
-            <StickerButton id="movies" active={active} onSelect={onSelect}>
-              <img
-                src="/assets/stickers/movie-sticker.png"
-                alt="Movies"
-                style={{
-                  height: 150,
-                  maxWidth: "none",
-                  transform: "rotate(-4deg)",
-                }}
-                className="block select-none"
-              />
-            </StickerButton>
-          }
-          items={movies.map((post) => ({
-            key: post.slug,
-            title: post.title,
-            onClick: () => navigate(`/archive/${post.slug}`),
-            node: (
-              <div
-                style={{ filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.6))" }}
-              >
-                {/* The pile supplies its own angle and click target. */}
-                <MoviePoster
-                  post={post}
-                  to={null}
-                  width={70}
-                  hoverPop={false}
-                />
-              </div>
-            ),
-          }))}
-        />
 
         {/* Books */}
         <CornerPile

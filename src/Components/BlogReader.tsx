@@ -15,13 +15,14 @@ import { PostEngagement } from "./PostEngagement";
 import { useComments } from "../hooks/useComments";
 import { PostComments } from "./PostComments";
 
-// Movies live in their own section; everything else (essays, chapters) is the archive.
+// Movie reviews are reached from the shelf on the home page; everything else
+// (essays, chapters) is the archive.
 const SECTIONS = {
   movie: {
     logo: "/assets/stickers/movie-sticker.png",
     title: "Movies",
-    backTo: "/movies",
-    backLabel: "Movies",
+    backTo: "/",
+    backLabel: "Home",
   },
   archive: {
     logo: "/assets/stickers/blog-sticker.png",
@@ -217,12 +218,7 @@ const BlogReader = () => {
       <div className="mb-8 pb-8 border-b border-editorial-divider">
         <div className="flex items-center gap-5">
           {isMovie && entry.image ? (
-            <MoviePoster
-              post={{ slug: entry.slug, title: entry.title, date: entry.sortKey, image: entry.image }}
-              width={76}
-              to={null}
-              hoverPop={false}
-            />
+            <MoviePoster src={entry.image} title={entry.title} className="w-[76px] shrink-0" />
           ) : entry.sublabel ? (
             <LogoBox logo={entry.sublabel} title={entry.title} size="lg" />
           ) : null}

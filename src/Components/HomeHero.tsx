@@ -10,6 +10,7 @@ import {
   siTypescript,
 } from "simple-icons";
 import Vishal_Resume from "../assets/Vishal_Resume.pdf";
+import MovieShelf from "./MovieShelf";
 
 const SOCIALS = [
   {
@@ -65,7 +66,7 @@ const TECH_STACK = [
 
 // The home backdrop that always sits behind the section sheet. It now carries
 // the full "about" narrative — the name hero, the latest chapter, and the
-// three-column dossier — in its own scroll container. Navigation still lives in
+// two-column dossier, and the movie shelf — in its own scroll container. Navigation still lives in
 // the persistent SectionDock at the bottom of the screen, so we pad the bottom
 // to keep content clear of the dock.
 const HomeHero = () => (
@@ -195,6 +196,9 @@ const HomeHero = () => (
           </div>
         </div>
       </div>
+
+      {/* ── Movies: watched, then wishlist ── */}
+      <MovieShelf />
     </div>
   </div>
 );

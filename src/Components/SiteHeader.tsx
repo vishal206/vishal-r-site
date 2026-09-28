@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-type ActivePage = "blog" | "books" | "movies";
+type ActivePage = "blog" | "books";
 
 interface SiteHeaderProps {
   activePage?: ActivePage;
@@ -10,7 +10,6 @@ interface SiteHeaderProps {
 const NAV: { label: string; page: ActivePage; to: string }[] = [
   { label: "Blog", page: "blog", to: "/archive" },
   { label: "Books", page: "books", to: "/books" },
-  { label: "Movies", page: "movies", to: "/movies" },
 ];
 
 const SiteHeader = ({ activePage }: SiteHeaderProps) => {
