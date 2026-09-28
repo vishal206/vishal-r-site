@@ -171,7 +171,7 @@ const MovieShelf = () => {
   }, []);
 
   return (
-    <section className="border-t border-editorial-divider pt-8">
+    <section className="pt-8">
       <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-2">
         Movies
       </div>

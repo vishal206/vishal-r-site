@@ -80,11 +80,6 @@ const App = () => {
   return (
     <div
       className="fixed inset-0 overflow-hidden bg-editorial-bg text-editorial-text font-primary"
-      style={{
-        backgroundImage:
-          "radial-gradient(rgba(255,255,255,0.07) 1.3px, transparent 1.3px)",
-        backgroundSize: "24px 24px",
-      }}
     >
       {/* ── Home backdrop (always behind) ── */}
       <HomeHero />
@@ -94,9 +89,6 @@ const App = () => {
         className="absolute inset-0 z-20 bg-editorial-bg overflow-y-auto transition-transform duration-[550ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{
           transform: active ? "translateY(0%)" : "translateY(100%)",
-          backgroundImage:
-            "radial-gradient(rgba(255,255,255,0.07) 1.3px, transparent 1.3px)",
-          backgroundSize: "24px 24px",
           // Clear the dock (tall sticker row on desktop, tab bar on mobile).
           paddingBottom: "13rem",
           pointerEvents: active ? "auto" : "none",
