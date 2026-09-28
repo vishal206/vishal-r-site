@@ -56,7 +56,7 @@ interface ReaderShellProps {
 }
 
 /**
- * App-shell layout shared by the project, blog, and book readers: a fixed
+ * App-shell layout shared by the project and blog readers: a fixed
  * left sidebar with independent scrolling, a mobile header + fullscreen
  * navigation overlay, and a content pane that scrolls in its own pane.
  */

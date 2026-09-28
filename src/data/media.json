@@ -1,68 +1,4 @@
 {
-  "books": {
-    "read": [
-      {
-        "title": "The Seven Days of Peter Crumb",
-        "author": "Jonny Glynn",
-        "image": "/assets/seven-days-of-peter-crumb.jpeg",
-        "post": "The-Seven-Days-of-Peter-Crumb"
-      },
-      {
-        "title": "Crooked Kingdom",
-        "author": "Leigh Bardugo",
-        "image": "https://covers.openlibrary.org/b/id/12667428-L.jpg"
-      },
-      {
-        "title": "Six of Crows",
-        "author": "Leigh Bardugo",
-        "olCoverId": 15154301,
-        "image": "https://covers.openlibrary.org/b/id/15154301-L.jpg"
-      },
-      {
-        "title": "The Decagon House Murders",
-        "author": "Yukito Ayatsuji",
-        "image": "https://covers.openlibrary.org/b/id/14648882-L.jpg"
-      },
-      {
-        "title": "The Mill House Murders",
-        "author": "Yukito Ayatsuji",
-        "image": "https://covers.openlibrary.org/b/id/13863987-L.jpg"
-      },
-      {
-        "title": "BAKUMAN",
-        "author": "Tsugumi Ohba & Takeshi Obata",
-        "volumes": [
-          "https://covers.openlibrary.org/b/id/9354224-L.jpg",
-          "https://covers.openlibrary.org/b/id/6667569-L.jpg",
-          "https://covers.openlibrary.org/b/id/6681638-L.jpg",
-          "https://covers.openlibrary.org/b/id/12817366-L.jpg",
-          "https://covers.openlibrary.org/b/id/12962249-L.jpg",
-          "https://covers.openlibrary.org/b/id/7820917-L.jpg",
-          "https://covers.openlibrary.org/b/id/12816891-L.jpg",
-          "https://covers.openlibrary.org/b/id/7838953-L.jpg",
-          "https://covers.openlibrary.org/b/id/7315310-L.jpg",
-          "https://covers.openlibrary.org/b/id/7315314-L.jpg",
-          "https://covers.openlibrary.org/b/id/12816896-L.jpg",
-          "https://covers.openlibrary.org/b/id/9250475-L.jpg",
-          "https://covers.openlibrary.org/b/id/9251358-L.jpg",
-          "https://covers.openlibrary.org/b/id/12769542-L.jpg",
-          "https://covers.openlibrary.org/b/id/7315327-L.jpg",
-          "https://covers.openlibrary.org/b/id/8537695-L.jpg",
-          "https://covers.openlibrary.org/b/id/7335314-L.jpg",
-          "https://covers.openlibrary.org/b/id/7315328-L.jpg",
-          "https://covers.openlibrary.org/b/id/7335318-L.jpg",
-          "https://covers.openlibrary.org/b/id/7335320-L.jpg"
-        ]
-      }
-    ],
-    "wishlist": [
-      {
-        "title": "The Labyrinth House Murders",
-        "author": "Yukito Ayatsuji",
-        "image": null
-      }
-    ]
-  },
   "movies": {
     "watched": [
       {
@@ -236,7 +172,6 @@
         "score": 9,
         "note": null
       },
-
       {
         "title": "Daddy's Home",
         "image": "https://www.themoviedb.org/t/p/w1280/fB9lALk9zKsMYWvf0bJSkJN219Z.jpg",
@@ -255,14 +190,12 @@
         "score": 2,
         "note": null
       },
-
       {
         "title": "A Letter to Momo",
         "image": "https://www.themoviedb.org/t/p/w1280/uH4c5t3Wzzv41Wq9ws2Q47N1Dzo.jpg",
         "score": 3,
         "note": "*“Dear Momo”*"
       },
-
       {
         "title": "100 METERS",
         "image": "https://www.themoviedb.org/t/p/w1280/kQyS2UrSbkd5AF0seuTSvRqWIdh.jpg",

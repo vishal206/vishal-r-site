@@ -1,33 +1,32 @@
 import fs from "fs";
 import path from "path";
 
-// ── Fills in cover/poster URLs for the media lists in src/data/media.json —
-// books via Open Library (keyless), movies via TMDB (needs TMDB_API_KEY).
+// ── Fills in poster URLs for the movie lists in src/data/media.json via TMDB
+// (needs TMDB_API_KEY).
 //
-//   node scripts/fetch-media.js [--dry-run] [--force] [--only=books|movies]
+//   node scripts/fetch-media.js [--dry-run] [--force]
 //
-// Scope: media.json only. Blog posts and book reviews keep their hand-uploaded
+// Scope: media.json only. Blog posts and reviews keep their hand-uploaded
 // images in /assets — this script never touches markdown.
 //
-// Entries with `"image": null` get resolved and the provider URL written back.
+// Entries with `"image": null` get resolved and the TMDB URL written back.
 // When the search guesses wrong, pin the entry instead of editing this file:
-//   "olCoverId": 10306590   (books)   "tmdbId": 12345   (movies)
+//   "tmdbId": 12345
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DATA_PATH = path.join(process.cwd(), "src/data/media.json");
 
-// Open Library answers 200 with a ~43-byte blank GIF when it has no cover, so
-// anything this small is a miss dressed up as a hit.
+// Anything this small is a placeholder, not a poster — a miss dressed up as a
+// hit.
 const MIN_IMAGE_BYTES = 1024;
 
-// Covers and posters are portrait (~0.65). Square art is the tell for a box-set
-// or collection listing rather than the edition we asked for.
+// Posters are portrait (~0.65). Square art is the tell for a collection
+// listing rather than the film we asked for.
 const MAX_ASPECT_RATIO = 0.9;
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 const force = args.includes("--force");
-const only = args.find((a) => a.startsWith("--only="))?.split("=")[1];
 
 const TMDB_KEY = process.env.TMDB_API_KEY;
 
@@ -61,9 +60,8 @@ const imageSize = (bytes) => {
 };
 
 /**
- * Downloads the art once to prove the URL is worth hotlinking: catches the
- * blank-placeholder-with-a-200 and the square box-set covers before they reach
- * the live site.
+ * Downloads the art once to prove the URL is worth hotlinking: catches
+ * placeholders and square collection art before they reach the live site.
  */
 const validateArt = async (url) => {
   const res = await fetch(url);
@@ -75,63 +73,11 @@ const validateArt = async (url) => {
   const size = imageSize(bytes);
   if (size && size.width / size.height > MAX_ASPECT_RATIO)
     throw new Error(
-      `not a portrait cover (${size.width}x${size.height}) — likely a collection listing`,
+      `not a portrait poster (${size.width}x${size.height}) — likely a collection listing`,
     );
 };
 
 // ── Resolvers ────────────────────────────────────────────────────────────────
-
-/** Loose title equality — punctuation, case, diacritics and a leading article. */
-const normalizeTitle = (s = "") =>
-  s
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/^the\s+/, "")
-    .replace(/\s+/g, " ")
-    .trim();
-
-/**
- * Open Library. Keyless.
- *
- * Uses the structured title/author fields, not free-text `q`: `q` ranks study
- * guides, workbooks and "3 Books Collection Set" bundles above the actual book,
- * and those bundles carry a cover_i, so they look like clean hits. The title
- * equality check drops whatever bundles still slip through.
- */
-const resolveBookCover = async ({ title, author, olCoverId }) => {
-  if (olCoverId) return `https://covers.openlibrary.org/b/id/${olCoverId}-L.jpg`;
-
-  const wanted = normalizeTitle(title);
-
-  // The structured search is strict about articles — "The Mill House Murders"
-  // finds nothing when Open Library titled the record "Mill House Murders" —
-  // so fall back to the article-stripped title. normalizeTitle keeps the
-  // results comparable either way.
-  const attempts = [title];
-  const stripped = title.replace(/^(the|a|an)\s+/i, "");
-  if (stripped !== title) attempts.push(stripped);
-
-  for (const attempt of attempts) {
-    const params = new URLSearchParams({
-      title: attempt,
-      limit: "10",
-      fields: "title,author_name,cover_i",
-    });
-    if (author) params.set("author", author);
-
-    const docs =
-      (await getJson(`https://openlibrary.org/search.json?${params}`)).docs ??
-      [];
-    const doc = docs.find(
-      (d) => d.cover_i && normalizeTitle(d.title) === wanted,
-    );
-    if (doc) return `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`;
-  }
-
-  return null;
-};
 
 /** TMDB. Needs TMDB_API_KEY. Pin ambiguous titles (e.g. remakes) with tmdbId. */
 const resolveMoviePoster = async ({ title, tmdbId }) => {
@@ -191,22 +137,13 @@ const run = async () => {
   let ok = 0;
   let missed = 0;
 
-  if (only !== "movies") {
-    console.log("Books (Open Library)");
-    const r = await processSection(data.books, resolveBookCover);
+  console.log("Movies (TMDB)");
+  if (!TMDB_KEY) {
+    console.warn("  skipped — set TMDB_API_KEY to fetch posters");
+  } else {
+    const r = await processSection(data.movies, resolveMoviePoster);
     ok += r.ok;
     missed += r.missed;
-  }
-
-  if (only !== "books") {
-    console.log("Movies (TMDB)");
-    if (!TMDB_KEY) {
-      console.warn("  skipped — set TMDB_API_KEY to fetch posters");
-    } else {
-      const r = await processSection(data.movies, resolveMoviePoster);
-      ok += r.ok;
-      missed += r.missed;
-    }
   }
 
   if (ok > 0 && !dryRun)
@@ -214,7 +151,7 @@ const run = async () => {
 
   console.log(`\n${ok} resolved, ${missed} unresolved`);
   if (missed > 0)
-    console.log("Pin unresolved entries with olCoverId / tmdbId in media.json.");
+    console.log("Pin unresolved entries with tmdbId in media.json.");
 };
 
 run().catch((err) => {

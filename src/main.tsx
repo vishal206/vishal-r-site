@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import BlogReader from "./components/BlogReader.tsx";
-import BookPage from "./Pages/BookPage.tsx";
 import ProjectPage from "./Pages/ProjectPage.tsx";
 import { analytics } from "./firebase.ts";
 import { logEvent } from "firebase/analytics";
@@ -37,8 +36,6 @@ const tree = (
         <Route path="/" element={<App />} />
         <Route path="/archive" element={<App />} />
         <Route path="/archive/:slug" element={<BlogReader />} />
-        <Route path="/books" element={<App />} />
-        <Route path="/book/:slug" element={<BookPage />} />
         <Route path="/projects" element={<App />} />
         <Route path="/projects/:projectSlug" element={<ProjectPage />} />
         <Route
@@ -53,7 +50,7 @@ const tree = (
 // Paths the SPA knows how to render. Used to avoid wiping prerendered content in
 // reader/extracted contexts (see below).
 const KNOWN_ROUTE =
-  /^\/(?:archive(?:\/[^/]+)?|books|book\/[^/]+|projects(?:\/[^/]+(?:\/[^/]+)?)?)?\/?$/;
+  /^\/(?:archive(?:\/[^/]+)?|projects(?:\/[^/]+(?:\/[^/]+)?)?)?\/?$/;
 
 // Prerendered pages already contain the article markup, which the browser paints
 // before this script runs (great for perceived speed, SEO and RSS readers). We

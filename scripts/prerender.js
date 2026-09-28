@@ -82,7 +82,6 @@ const buildRoutes = () => {
   // keeps it neutral as the rewrite fallback target.
   const routes = [
     { url: "/archive", out: "archive.html" },
-    { url: "/books", out: "books.html" },
     { url: "/projects", out: "projects.html" },
     { url: "/about", out: "about.html" },
   ];
@@ -108,15 +107,6 @@ const buildRoutes = () => {
     });
   }
 
-  // Books each get a /book/<slug> reader page.
-  for (const slug of readSlugs("src/Posts/Books")) {
-    const { data, content } = frontmatterFor(["src/Posts/Books"], slug);
-    routes.push({
-      url: `/book/${encodeURI(slug)}`,
-      out: path.join("book", `${slug}.html`),
-      meta: metaFor({ ...data, image: data.cover }, content, `/book/${slug}`),
-    });
-  }
   return routes;
 };
 
