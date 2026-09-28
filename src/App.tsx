@@ -1,10 +1,7 @@
-import { useState, useEffect, useMemo, useCallback, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback, ReactNode } from "react";
 import HomeHero from "./components/HomeHero";
-import SectionDock from "./components/SectionDock";
+import SiteHeader from "./components/SiteHeader";
 import BlogSection from "./Pages/sections/BlogSection";
-import { BlogPostMeta } from "./Utils/markdownLoader";
-import { fetchBlogPosts } from "./Utils/functions";
 import {
   SectionId,
   SECTION_TO_PATH,
@@ -16,25 +13,8 @@ const SECTION_CONTENT: Record<SectionId, ReactNode> = {
 };
 
 const App = () => {
-  const navigate = useNavigate();
-  const [blogs, setBlogs] = useState<BlogPostMeta[]>([]);
-
-  useEffect(() => {
-    fetchBlogPosts(
-      () => {},
-      () => {},
-      (posts) => setBlogs(posts),
-    );
-  }, []);
-
-  const writing = useMemo(
-    () => blogs.filter((b) => b.tags !== "Movie").slice(0, 10),
-    [blogs],
-  );
-
-  // The dock is always visible at the bottom; clicking a sticker raises that
-  // section's content up from behind the dock as a sheet over the home hero.
-  // Clicking the already-open section (or Escape) drops the sheet back down.
+  // A section (the archive, via "More articles") rises as a sheet over the
+  // home screen. The header's home link, or Escape, drops it back down.
   const [active, setActive] = useState<SectionId | null>(
     PATH_TO_SECTION[window.location.pathname] ?? null,
   );
@@ -71,53 +51,32 @@ const App = () => {
 
   return (
     <div
-      className="fixed inset-0 overflow-hidden bg-editorial-bg text-editorial-text font-primary"
+      className="fixed inset-0 flex flex-col overflow-hidden bg-editorial-bg text-editorial-text font-primary"
     >
-      {/* ── Home backdrop (always behind) ── */}
-      <HomeHero onMoreArticles={() => select("blog")} />
+      {/* ── Site header: fixed along the top, above the home screen and any
+          open section, which scroll beneath it. Home drops the sheet. ── */}
+      <SiteHeader onHome={close} />
 
-      {/* ── Section sheet: rises from the bottom when a section is open ── */}
-      <div
-        className="absolute inset-0 z-20 bg-editorial-bg overflow-y-auto transition-transform duration-[550ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
-        style={{
-          transform: active ? "translateY(0%)" : "translateY(100%)",
-          // Clear the dock (tall sticker row on desktop, tab bar on mobile).
-          paddingBottom: "13rem",
-          pointerEvents: active ? "auto" : "none",
-        }}
-      >
-        {active && (
-          <div key={active} className="animate-sheet-rise min-h-full pt-10 md:pt-14">
-            {SECTION_CONTENT[active]}
-          </div>
-        )}
+      {/* ── Everything below the header ── */}
+      <div className="relative flex-1 min-h-0">
+        {/* ── Home backdrop (always behind) ── */}
+        <HomeHero onMoreArticles={() => select("blog")} />
+
+        {/* ── Section sheet: rises from the bottom when a section is open ── */}
+        <div
+          className="absolute inset-0 z-20 bg-editorial-bg overflow-y-auto transition-transform duration-[550ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+          style={{
+            transform: active ? "translateY(0%)" : "translateY(100%)",
+            pointerEvents: active ? "auto" : "none",
+          }}
+        >
+          {active && (
+            <div key={active} className="animate-sheet-rise min-h-full pt-6 md:pt-8 pb-16">
+              {SECTION_CONTENT[active]}
+            </div>
+          )}
+        </div>
       </div>
-
-      {/* ── Scrim so sheet content doesn't peek through the sticker gaps.
-          Only while a section is open.
-
-          Kept as shallow as the job allows: every pixel this reaches up is a
-          pixel of section content greyed out. So the solid part is only the
-          strip actually below the stickers, and the rest is a quick fade
-          rather than a long wash. ── */}
-      <div
-        className={`absolute bottom-0 inset-x-0 z-30 pointer-events-none transition-all duration-500 ${
-          active ? "h-[40px]" : "h-0"
-        }`}
-        style={{
-          backgroundImage:
-            "linear-gradient(to top, var(--color-editorial-bg, #111111) 0%, rgba(17,17,17,0.55) 45%, transparent 100%)",
-        }}
-      />
-
-      {/* ── Persistent dock ── */}
-      <SectionDock
-        navigate={navigate}
-        writing={writing}
-        active={active}
-        onSelect={select}
-        onHome={close}
-      />
     </div>
   );
 };

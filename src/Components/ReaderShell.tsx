@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import ScrollToTopButton from "./ScrollToTopButton";
+import SiteHeader from "./SiteHeader";
 import { setExclusionRect } from "../Utils/exclusionZone";
 
 // Small square badge used for a reader's brand mark (image, emoji, or text).
@@ -121,6 +122,9 @@ const ReaderShell = ({
 
   return (
     <div className="h-screen bg-editorial-bg text-editorial-text font-primary flex flex-col">
+      {/* ── Site header, as on every screen ── */}
+      <SiteHeader fullWidth />
+
       {/* ── Mobile header ── */}
       <header className="md:hidden px-6 py-4 flex items-center justify-between border-b border-editorial-divider shrink-0">
         <div className="flex items-center gap-3 min-w-0">

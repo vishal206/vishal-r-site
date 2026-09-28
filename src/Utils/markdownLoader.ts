@@ -95,11 +95,6 @@ export const loadMarkdownFileSync = (slug: string): BlogPost | null => {
   }
 };
 
-/** Async wrapper kept for existing callers. */
-export const loadMarkdownFile = async (
-  slug: string,
-): Promise<BlogPost | null> => loadMarkdownFileSync(slug);
-
 // ── About Chapters ──────────────────────────────────────────────────────────
 
 const chapterFiles = import.meta.glob("/src/Posts/About/*.md", {
