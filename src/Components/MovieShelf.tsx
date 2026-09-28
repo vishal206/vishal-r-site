@@ -173,7 +173,7 @@ const MovieShelf = () => {
   return (
     <section className="pt-8">
       <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-2">
-        Movies
+        Movies I watch
       </div>
       <PosterRow label="Watched" items={watched} />
       <PosterRow label="Wishlist" items={wishlist} />

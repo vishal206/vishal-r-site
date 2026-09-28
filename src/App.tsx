@@ -82,7 +82,7 @@ const App = () => {
       className="fixed inset-0 overflow-hidden bg-editorial-bg text-editorial-text font-primary"
     >
       {/* ── Home backdrop (always behind) ── */}
-      <HomeHero />
+      <HomeHero onMoreArticles={() => select("blog")} />
 
       {/* ── Section sheet: rises from the bottom when a section is open ── */}
       <div

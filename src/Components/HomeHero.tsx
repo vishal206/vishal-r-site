@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
 import Vishal_Resume from "../assets/Vishal_Resume.pdf";
+import LatestArticles from "./LatestArticles";
 import MovieShelf from "./MovieShelf";
 
 // The header block: the Vishal sticker beside a stack of the links, the name
@@ -47,10 +48,10 @@ const SOCIALS = [
 ];
 
 // The home backdrop that always sits behind the section sheet: a slim header
-// (sticker, links and name, top-left) and the movie shelf, in its own scroll
-// container. Navigation lives in the persistent SectionDock at the bottom of
+// (sticker, links and name, top-left), the latest articles and the movie
+// shelf, in its own scroll container. Navigation lives in the persistent SectionDock at the bottom of
 // the screen, so we pad the bottom to keep content clear of the dock.
-const HomeHero = () => (
+const HomeHero = ({ onMoreArticles }: { onMoreArticles: () => void }) => (
   <div className="absolute inset-0 overflow-y-auto">
     <div className="px-6 md:px-12 pb-[14rem] max-w-screen-xl mx-auto">
       {/* ── Header ── */}
@@ -86,6 +87,9 @@ const HomeHero = () => (
           </p>
         </div>
       </header>
+
+      {/* ── Latest articles ── */}
+      <LatestArticles onMore={onMoreArticles} />
 
       {/* ── Movies: watched, then wishlist ── */}
       <MovieShelf />
