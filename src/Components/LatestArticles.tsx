@@ -10,8 +10,11 @@ const LatestArticles = ({ onMore }: { onMore: () => void }) => {
 
   if (posts.length === 0) return null;
 
+  // The space below matches the space above "Articles I wrote" (the header's
+  // bottom padding plus the home page's top padding: 16 + 24 on phones,
+  // 20 + 32 from md), so the sections sit evenly apart.
   return (
-    <section className="pb-12 md:pb-16">
+    <section className="pb-10 md:pb-13">
       {/* ── Heading row: the label, and the way through to the archive ── */}
       <div className="mb-5 flex items-baseline justify-between gap-4">
         <div className="text-[10px] uppercase tracking-[0.2em] text-available">

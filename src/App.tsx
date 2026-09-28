@@ -51,27 +51,23 @@ const App = () => {
 
   return (
     <div
-      className="fixed inset-0 flex flex-col overflow-hidden bg-editorial-bg text-editorial-text font-primary"
+      className="fixed inset-0 overflow-hidden bg-editorial-bg text-editorial-text font-primary"
     >
-      {/* ── Site header: fixed along the top, above the home screen and any
-          open section, which scroll beneath it. Home closes the sheet. ── */}
-      <SiteHeader onHome={close} />
+      {/* ── Home backdrop (always behind) ── */}
+      <HomeHero onHome={close} onMoreArticles={() => select("blog")} />
 
-      {/* ── Everything below the header ── */}
-      <div className="relative flex-1 min-h-0">
-        {/* ── Home backdrop (always behind) ── */}
-        <HomeHero onMoreArticles={() => select("blog")} />
-
-        {/* ── Section sheet: covers the home screen while a section is open ── */}
-        {active && (
-          <div
-            key={active}
-            className="absolute inset-0 z-20 bg-editorial-bg overflow-y-auto pt-6 md:pt-8 pb-16"
-          >
-            {SECTION_CONTENT[active]}
-          </div>
-        )}
-      </div>
+      {/* ── Section sheet: covers the home screen while a section is open.
+          The site header scrolls away with its content, as on every screen;
+          its home link closes the sheet. ── */}
+      {active && (
+        <div
+          key={active}
+          className="absolute inset-0 z-20 bg-editorial-bg overflow-y-auto pb-16"
+        >
+          <SiteHeader onHome={close} />
+          <div className="pt-6 md:pt-8">{SECTION_CONTENT[active]}</div>
+        </div>
+      )}
     </div>
   );
 };

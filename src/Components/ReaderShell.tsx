@@ -66,24 +66,23 @@ const ReaderShell = ({ rightRail, children }: ReaderShellProps) => {
 
   return (
     <div className="h-screen bg-editorial-bg text-editorial-text font-primary flex flex-col">
-      {/* ── Site header, as on every screen ── */}
-      <SiteHeader />
-
-      {/* ── Body: scrolls on its own below the header. Its content sits in
-          the header's centred column, so the article lines up with it. ── */}
+      {/* ── Body: scrolls on its own, the site header along with it, as on
+          every screen. The article sits in the header's centred column, so
+          it lines up with it. ── */}
       <main ref={mainRef} className="flex-1 overflow-y-auto">
+        <SiteHeader />
         <div className="max-w-screen-xl mx-auto px-6 md:px-12 flex gap-12">
           {/* ── Article: a readable measure, from the column's left edge ── */}
           <div className="min-w-0 flex-1 max-w-4xl pt-6 md:pt-8 pb-20">
             {children}
           </div>
 
-          {/* ── Right rail (desktop, optional): stays in view as you read, never
-              taller than the space under the header (114px tall at this
-              width). What's inside decides what scrolls; the rail itself only
-              scrolls on a screen too short to fit it. ── */}
+          {/* ── Right rail (desktop, optional): once the header has scrolled
+              away it stays in view as you read, never taller than the screen.
+              What's inside decides what scrolls; the rail itself only scrolls
+              on a screen too short to fit it. ── */}
           {rightRail && (
-            <aside className="hidden xl:flex flex-col w-56 shrink-0 ml-auto sticky top-0 self-start max-h-[calc(100vh-114px)] overflow-y-auto pt-6 md:pt-8 pb-8">
+            <aside className="hidden xl:flex flex-col w-56 shrink-0 ml-auto sticky top-0 self-start max-h-screen overflow-y-auto pt-6 md:pt-8 pb-8">
               {rightRail}
             </aside>
           )}
