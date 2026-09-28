@@ -1,36 +1,18 @@
 import { useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MoviePoster from "./MoviePoster";
 import ReaderShell, { LogoBox } from "./ReaderShell";
 import {
   loadMarkdownFileSync,
   loadChapterFileSync,
-  getAvailablePosts,
-  getAvailableChapters,
 } from "../Utils/markdownLoader";
 import { CustomMarkdownReader } from "./CustomMarkdownReader";
 import ContextToc, { extractHeadings } from "./ContextToc";
+import RailArticles from "./RailArticles";
 import { usePostEngagement } from "../hooks/usePostEngagement";
 import { PostEngagement } from "./PostEngagement";
 import { useComments } from "../hooks/useComments";
 import { PostComments } from "./PostComments";
-
-// Movie reviews are reached from the shelf on the home page; everything else
-// (essays, chapters) is the archive.
-const SECTIONS = {
-  movie: {
-    logo: "/assets/stickers/movie-sticker.png",
-    title: "Movies",
-    backTo: "/",
-    backLabel: "Home",
-  },
-  archive: {
-    logo: "/assets/stickers/blog-sticker.png",
-    title: "The Archive",
-    backTo: "/archive",
-    backLabel: "Archive",
-  },
-} as const;
 
 // Unified entry shape ─────────────────────────────────────────────────────────
 interface Entry {
@@ -79,71 +61,16 @@ const loadEntry = (slug: string): Entry | null => {
   return null;
 };
 
-interface SidebarEntry {
-  slug: string;
-  title: string;
-  meta: string;
-  ts: number; // ms timestamp for sorting
-}
-
-// Build unified list sorted newest-first by date
-const buildUnifiedList = (): SidebarEntry[] => {
-  const [blogSlugs, chSlugs] = [getAvailablePosts(), getAvailableChapters()];
-
-  const blogs = blogSlugs.map((s) => loadMarkdownFileSync(s));
-  const chapters = chSlugs.map((s) => loadChapterFileSync(s));
-
-  const items: SidebarEntry[] = [];
-
-  blogs.forEach((b) => {
-    if (!b) return;
-    items.push({
-      slug: b.slug,
-      title: b.frontmatter.title,
-      meta: `${b.frontmatter.tags || "Essay"}`,
-      ts: new Date(b.frontmatter.date).getTime(),
-    });
-  });
-
-  chapters.forEach((ch) => {
-    if (!ch) return;
-    items.push({
-      slug: ch.slug,
-      title: ch.frontmatter.title,
-      meta: `Chapter ${String(ch.frontmatter.sno).padStart(2, "0")}`,
-      ts: new Date(ch.frontmatter.date).getTime(),
-    });
-  });
-
-  // Newest first
-  return items.sort((a, b) => b.ts - a.ts);
-};
-
-// Returns window: up to 2 newer (lower index), current, up to 2 older (higher index)
-const getWindow = (all: SidebarEntry[], slug: string): SidebarEntry[] => {
-  const idx = all.findIndex((i) => i.slug === slug);
-  if (idx === -1) return [];
-  const start = Math.max(0, idx - 2);
-  const end = Math.min(all.length - 1, idx + 2);
-  return all.slice(start, end + 1);
-};
-
 // ─────────────────────────────────────────────────────────────────────────────
 
 const BlogReader = () => {
   const { slug } = useParams<{ slug: string }>();
 
-  // Markdown is eager-bundled (see markdownLoader), so the entry and sidebar are
-  // resolved synchronously on the first render. This means the prerendered HTML
-  // and the client's first render are identical — hydration matches with no
-  // loading flash, and SPA navigation between posts is instant.
-  const { entry, sidebar } = useMemo(() => {
-    if (!slug) return { entry: null, sidebar: [] as SidebarEntry[] };
-    return {
-      entry: loadEntry(slug),
-      sidebar: getWindow(buildUnifiedList(), slug),
-    };
-  }, [slug]);
+  // Markdown is eager-bundled (see markdownLoader), so the entry is resolved
+  // synchronously on the first render. This means the prerendered HTML and the
+  // client's first render are identical — hydration matches with no loading
+  // flash, and SPA navigation between posts is instant.
+  const entry = useMemo(() => (slug ? loadEntry(slug) : null), [slug]);
   const error = slug && !entry ? "Entry not found" : null;
   const engagement = usePostEngagement(slug);
   const { comments, submitting, submitComment } = useComments(slug);
@@ -155,67 +82,38 @@ const BlogReader = () => {
       </div>
     );
 
-  // ── Nav list (shared between sidebar + mobile overlay) ──
-  const nav =
-    sidebar.length > 1 &&
-    sidebar.map((item) => {
-      const isCurrent = item.slug === slug;
-      return (
-        <div
-          key={item.slug}
-          className={`py-4 border-b border-editorial-divider last:border-0 transition-opacity ${isCurrent ? "opacity-100" : "opacity-50 hover:opacity-100"}`}
-        >
-          {isCurrent ? (
-            <>
-              <div className="text-[9px] uppercase tracking-[0.18em] text-available mb-1">
-                Reading
-              </div>
-              <p className="text-sm font-display font-bold text-editorial-text leading-tight">
-                {item.title}
-              </p>
-            </>
-          ) : (
-            <Link to={`/archive/${item.slug}`} className="block group">
-              <div className="text-[9px] uppercase tracking-[0.18em] text-editorial-label mb-1 line-clamp-1">
-                {item.meta}
-              </div>
-              <p className="text-sm font-display font-bold text-editorial-text leading-tight group-hover:opacity-70 transition-opacity line-clamp-2">
-                {item.title}
-              </p>
-            </Link>
-          )}
+  // ── Right rail: the on-this-page table of contents (for context-table
+  // posts), then the latest articles ──
+  const hasToc =
+    entry.isContextTable && extractHeadings(entry.content).length > 0;
+  // The rail is as tall as the space under the header and doesn't scroll as
+  // a whole: the latest articles always show in full, and the contents list
+  // takes what's left — shrinking to fit, then scrolling on its own. It never
+  // shrinks below ~6 lines (11rem with its heading); on a screen too short for
+  // that and the articles, the rail itself scrolls instead (see ReaderShell).
+  const rightRail = (
+    <div className="flex min-h-0 flex-1 flex-col gap-10">
+      {hasToc && (
+        <div className="flex min-h-[11rem] flex-initial flex-col">
+          <ContextToc content={entry.content} />
         </div>
-      );
-    });
-
-  // ── Right rail: on-this-page table of contents for context-table posts ──
-  const rightRail =
-    entry.isContextTable && extractHeadings(entry.content).length > 0 ? (
-      <ContextToc content={entry.content} />
-    ) : undefined;
-
-  const section =
-    entry.label === "Movie" ? SECTIONS.movie : SECTIONS.archive;
+      )}
+      <div className="shrink-0">
+        <RailArticles currentSlug={slug} />
+      </div>
+    </div>
+  );
 
   // Movies keep the poster beside the title; chapters keep their number
-  // badge. Every other post (essays / life) with an image gets a 3:2 banner
+  // badge. Every other post (essays / life) with an image gets a 16:9 banner
   // shown between the title and the engagement row instead of a side thumbnail.
   const isMovie = entry.label === "Movie";
   const showBanner = Boolean(entry.image) && !isMovie;
 
   return (
-    <ReaderShell
-      brandLogo={section.logo}
-      brandTitle={section.title}
-      brandBare
-      navLabel="In This Archive"
-      backTo={section.backTo}
-      backLabel={section.backLabel}
-      nav={nav || undefined}
-      rightRail={rightRail}
-    >
+    <ReaderShell rightRail={rightRail}>
       {/* ── Compact header ── */}
-      <div className="mb-8 pb-8 border-b border-editorial-divider">
+      <div className="mb-10">
         <div className="flex items-center gap-5">
           {isMovie && entry.image ? (
             <MoviePoster src={entry.image} title={entry.title} className="w-[76px] shrink-0" />
@@ -239,7 +137,7 @@ const BlogReader = () => {
           </div>
         </div>
         {showBanner && (
-          <div className="aspect-[21/9] w-full overflow-hidden rounded-xl mt-6">
+          <div className="aspect-[16/9] w-full overflow-hidden rounded-xl mt-6">
             <img
               src={entry.image}
               alt={entry.title}

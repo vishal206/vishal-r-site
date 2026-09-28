@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, ReactNode } from "react";
 import ScrollToTopButton from "./ScrollToTopButton";
 import SiteHeader from "./SiteHeader";
 import { setExclusionRect } from "../Utils/exclusionZone";
@@ -34,49 +33,19 @@ export const LogoBox = ({
 };
 
 interface ReaderShellProps {
-  /** Brand mark shown in the sidebar / mobile header (image url, emoji, or text). */
-  brandLogo: string;
-  /** Brand title shown next to the mark. */
-  brandTitle: string;
-  /** Render the brand mark as a bare image (no background bubble) — for stickers. */
-  brandBare?: boolean;
-  /** Heading for the nav region + label for the mobile nav button. */
-  navLabel: string;
-  /** Route the back button navigates to (e.g. "/archive"). */
-  backTo: string;
-  /** Label for the back button (e.g. "Archive"). */
-  backLabel: string;
-  /** Optional item rendered above the nav heading (e.g. an "Overview" link). */
-  preNav?: ReactNode;
-  /** The nav list. Rendered in both the desktop sidebar and the mobile overlay. */
-  nav?: ReactNode;
-  /** Optional third column (e.g. an on-this-page table of contents). */
+  /** Optional right-hand column (e.g. an on-this-page table of contents). */
   rightRail?: ReactNode;
   /** Content pane. Should include its own compact header. */
   children: ReactNode;
 }
 
 /**
- * App-shell layout used by the blog reader: a fixed
- * left sidebar with independent scrolling, a mobile header + fullscreen
- * navigation overlay, and a content pane that scrolls in its own pane.
+ * Layout for the article reader: the site header, then the article —
+ * which scrolls on its own — in the header's column, with an optional right
+ * rail beside it on wide screens.
  */
-const ReaderShell = ({
-  brandLogo,
-  brandTitle,
-  brandBare,
-  navLabel,
-  backTo,
-  backLabel,
-  preNav,
-  nav,
-  rightRail,
-  children,
-}: ReaderShellProps) => {
-  const navigate = useNavigate();
-  const [overlayOpen, setOverlayOpen] = useState(false);
+const ReaderShell = ({ rightRail, children }: ReaderShellProps) => {
   const mainRef = useRef<HTMLElement>(null);
-  const hasNav = Boolean(preNav || nav);
 
   // Keep the background exclusion zone in sync with the content pane.
   useEffect(() => {
@@ -95,129 +64,31 @@ const ReaderShell = ({
 
   useEffect(() => () => setExclusionRect(null), []);
 
-  const brandMark = brandBare ? (
-    <img
-      src={brandLogo}
-      alt={brandTitle}
-      className="w-10 h-10 object-contain shrink-0 select-none"
-    />
-  ) : (
-    <LogoBox logo={brandLogo} title={brandTitle} size="sm" />
-  );
-
-  const navRegion = (
-    <>
-      {preNav}
-      {nav && (
-        <div className="px-6 pt-5 pb-8">
-          <div className="text-[9px] uppercase tracking-[0.2em] text-editorial-label mb-3">
-            {navLabel}
-          </div>
-          <div className="h-px bg-editorial-divider mb-1" />
-          {nav}
-        </div>
-      )}
-    </>
-  );
-
   return (
     <div className="h-screen bg-editorial-bg text-editorial-text font-primary flex flex-col">
       {/* ── Site header, as on every screen ── */}
-      <SiteHeader fullWidth />
+      <SiteHeader />
 
-      {/* ── Mobile header ── */}
-      <header className="md:hidden px-6 py-4 flex items-center justify-between border-b border-editorial-divider shrink-0">
-        <div className="flex items-center gap-3 min-w-0">
-          <button
-            onClick={() => navigate(backTo)}
-            className="text-editorial-label hover:text-editorial-text transition-colors shrink-0"
-            aria-label={`Back to ${backLabel}`}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
-          {brandMark}
-          <span className="text-sm font-display font-bold text-editorial-text truncate">
-            {brandTitle}
-          </span>
+      {/* ── Body: scrolls on its own below the header. Its content sits in
+          the header's centred column, so the article lines up with it. ── */}
+      <main ref={mainRef} className="flex-1 overflow-y-auto">
+        <div className="max-w-screen-xl mx-auto px-6 md:px-12 flex gap-12">
+          {/* ── Article: a readable measure, from the column's left edge ── */}
+          <div className="min-w-0 flex-1 max-w-4xl pt-6 md:pt-8 pb-20">
+            {children}
+          </div>
+
+          {/* ── Right rail (desktop, optional): stays in view as you read, never
+              taller than the space under the header (114px tall at this
+              width). What's inside decides what scrolls; the rail itself only
+              scrolls on a screen too short to fit it. ── */}
+          {rightRail && (
+            <aside className="hidden xl:flex flex-col w-56 shrink-0 ml-auto sticky top-0 self-start max-h-[calc(100vh-114px)] overflow-y-auto pt-6 md:pt-8 pb-8">
+              {rightRail}
+            </aside>
+          )}
         </div>
-
-        {hasNav && (
-          <button
-            onClick={() => setOverlayOpen(true)}
-            className="flex items-center gap-2 text-[9px] uppercase tracking-[0.2em] text-editorial-label hover:text-editorial-text transition-colors shrink-0 ml-3"
-          >
-            {navLabel}
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 18l6-6-6-6" />
-            </svg>
-          </button>
-        )}
-      </header>
-
-      {/* ── Mobile fullscreen overlay ── */}
-      {overlayOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-editorial-bg flex flex-col">
-          <div className="px-6 py-4 flex items-center justify-between border-b border-editorial-divider">
-            <div className="flex items-center gap-3">
-              {brandMark}
-              <span className="text-sm font-display font-bold text-editorial-text">
-                {brandTitle}
-              </span>
-            </div>
-            <button
-              onClick={() => setOverlayOpen(false)}
-              className="text-editorial-label hover:text-editorial-text transition-colors"
-              aria-label="Close"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-          <div
-            className="flex-1 overflow-y-auto py-2"
-            onClick={() => setOverlayOpen(false)}
-          >
-            {navRegion}
-          </div>
-        </div>
-      )}
-
-      {/* ── Body ── */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* ── Left sidebar (desktop only) ── */}
-        <aside className="hidden md:flex w-60 shrink-0 border-r border-editorial-divider flex-col overflow-y-auto">
-          <div className="p-6 border-b border-editorial-divider">
-            <button
-              onClick={() => navigate(backTo)}
-              className="text-[9px] uppercase tracking-[0.2em] text-editorial-label hover:text-editorial-text transition-colors block mb-5 text-left"
-            >
-              ← {backLabel}
-            </button>
-            <div className="flex items-center gap-3">
-              {brandMark}
-              <h2 className="text-sm font-display font-bold text-editorial-text leading-tight">
-                {brandTitle}
-              </h2>
-            </div>
-          </div>
-          {navRegion}
-        </aside>
-
-        {/* ── Content pane ── */}
-        <main ref={mainRef} className="flex-1 overflow-y-auto">
-          <div className="px-6 md:px-12 pt-10 pb-20">{children}</div>
-        </main>
-
-        {/* ── Right rail (desktop, optional) ── */}
-        {rightRail && (
-          <aside className="hidden xl:block w-56 shrink-0 border-l border-editorial-divider overflow-y-auto px-6 py-10">
-            {rightRail}
-          </aside>
-        )}
-      </div>
+      </main>
 
       <ScrollToTopButton />
     </div>

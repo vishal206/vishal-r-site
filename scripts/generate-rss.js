@@ -50,7 +50,11 @@ const generateRSSFeed = async () => {
 
       items.push({
         title: frontmatter.title,
-        url: `${baseUrl}/archive/${slug}`,
+        url: `${baseUrl}/article/${slug}`,
+        // The item's identity, not a link: kept at the URL posts were first
+        // published under, before /archive became /article, so feed readers
+        // don't take every post for a new one.
+        guid: `${baseUrl}/archive/${slug}`,
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
         content,
         date: new Date(frontmatter.date),
@@ -69,7 +73,7 @@ const generateRSSFeed = async () => {
         description: item.description,
         date: item.date,
         categories: item.categories,
-        guid: item.url,
+        guid: item.guid,
         custom_elements: [{ "content:encoded": { _cdata: toRssHtml(item.content, baseUrl) } }],
       });
     });

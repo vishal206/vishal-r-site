@@ -4,15 +4,15 @@
         <description><![CDATA[Blogs and movies from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Mon, 28 Sep 2026 18:57:18 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 28 Sep 2026 19:14:09 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Mon, 28 Sep 2026 18:57:18 GMT</pubDate>
+        <pubDate>Mon, 28 Sep 2026 19:14:09 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
         <item>
             <title><![CDATA[Teardown: Hermes Agent]]></title>
             <description><![CDATA[
 **Hermes** is an open-source, self-hostable AI agent: a personal, always-available assistant that you run and own instead of renting from a closed platform. You can talk to it from a terminal, a desktop app, an API, or messaging platforms such as Telegram, Slack, WhatsApp, and email. It keeps durab...]]></description>
-            <link>https://vishalr.dev/archive/Teardown-Hermes-Agent</link>
+            <link>https://vishalr.dev/article/Teardown-Hermes-Agent</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Teardown-Hermes-Agent</guid>
             <category><![CDATA[Devlog]]></category>
             <pubDate>Mon, 13 Jul 2026 18:30:00 GMT</pubDate>
@@ -193,7 +193,7 @@ Do you feel the want of getting into all the hobbies out there? If yes, we are i
 Here is the list of immediate hobbies in mind
 
 **...]]></description>
-            <link>https://vishalr.dev/archive/Hobby-Lock-in</link>
+            <link>https://vishalr.dev/article/Hobby-Lock-in</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Hobby-Lock-in</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 27 Jun 2026 18:30:00 GMT</pubDate>
@@ -247,7 +247,7 @@ Yo! 🙋
 Outside the Koshe restaurant I spotted a billboard, which had posters of drama happening in the town. How come I have been walking through there and never noticed it. I will be on the look out for a worthwhile performance.
 
 Watched Dhurandhar 2, a well written movie with good cinematography...]]></description>
-            <link>https://vishalr.dev/archive/36-First-Baddy-club-experience</link>
+            <link>https://vishalr.dev/article/36-First-Baddy-club-experience</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/36-First-Baddy-club-experience</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 06 Jun 2026 18:30:00 GMT</pubDate>
@@ -265,7 +265,7 @@ Yo! 🙋
 So in Bangalore, this so-called rainy season, which rains exactly when everyone leaves from office, started, and because of this, the metro got altered, and I had to wait till the crowds got piled up and took the metro and couldn't get in at Chalakatta.
 
 So I thought, okay, why not go somewh...]]></description>
-            <link>https://vishalr.dev/archive/35-Start-of-rainy-evenings</link>
+            <link>https://vishalr.dev/article/35-Start-of-rainy-evenings</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/35-Start-of-rainy-evenings</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 30 May 2026 18:30:00 GMT</pubDate>
@@ -285,7 +285,7 @@ So in Bangalore, this so-called rainy season, which rains exactly when everyone 
 Irasshaimase 🙋‍♂️!
 
 Kamome Diner is a slow, quiet, funny ( makes you smile kinda ) movie that is the definition of a slice of life. About the story, wait, there is no story; this movie is a pure slice of life that revolves around a diner. A Japanese diner located in Finland. The 1h 42m goes throug...]]></description>
-            <link>https://vishalr.dev/archive/Kamome-Diner</link>
+            <link>https://vishalr.dev/article/Kamome-Diner</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Kamome-Diner</guid>
             <category><![CDATA[Movie]]></category>
             <pubDate>Sat, 30 May 2026 18:30:00 GMT</pubDate>
@@ -315,7 +315,7 @@ So there I was in my native, Devakottai, Tamil Nadu.
 img src="/assets/native-temple.png" alt="" style="float: right; width: 35%; max-width: 300px; min-width: 140px; shape-outside: url('/assets/native-temple.png'); shape-margin: 0.75rem; shape-image-threshold: 0.1;" /
 
 Our temple has a wee...]]></description>
-            <link>https://vishalr.dev/archive/32-Native-Temple-fest</link>
+            <link>https://vishalr.dev/article/32-Native-Temple-fest</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/32-Native-Temple-fest</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 09 May 2026 18:30:00 GMT</pubDate>
@@ -340,7 +340,7 @@ Yo! 🙋
 Got my marathon picture. Good lord, I did not pay for that thing.
 
 On the 29th, Bengaluru got hit with a heavy hailstorm. I was in office when it started. Coming out of a meeting room, I stopped. The sky outside had gone completely grey, visibility was near zero, and water was streaming in f...]]></description>
-            <link>https://vishalr.dev/archive/31-hailstorm-in-church-street</link>
+            <link>https://vishalr.dev/article/31-hailstorm-in-church-street</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/31-hailstorm-in-church-street</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 02 May 2026 18:30:00 GMT</pubDate>
@@ -359,7 +359,7 @@ Three chunking strategies walked into a RAG pipeline. Only one handled every doc
 
 Yo! 🙋
 When I built my first RAG pipeline, I picked 512 tokens with a 50-token overlap because it was the standard. It worked well enough. In my next project, I tried im...]]></description>
-            <link>https://vishalr.dev/archive/The-chunking-showdown</link>
+            <link>https://vishalr.dev/article/The-chunking-showdown</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/The-chunking-showdown</guid>
             <category><![CDATA[Devlog]]></category>
             <pubDate>Thu, 30 Apr 2026 18:30:00 GMT</pubDate>
@@ -417,7 +417,7 @@ Yo!🙋
 For World Book Day, Sadhana gifted me Watchmen, while I got her Martyr! by Kaveh Akbar. A good trade.
 
 Sunday was special. I ran my first marathon, thanks to Ritik dragging me into it. Yes, people had opinions about whether 4.2 km counts as a marathon. But for someone who has never crossed a ...]]></description>
-            <link>https://vishalr.dev/archive/30-My-First-Marathon</link>
+            <link>https://vishalr.dev/article/30-My-First-Marathon</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/30-My-First-Marathon</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 25 Apr 2026 18:30:00 GMT</pubDate>
@@ -433,7 +433,7 @@ For World Book Day, Sadhana gifted me Watchmen, while I got her Martyr! by Kaveh
 Yo!
 
 This week, I witnessed a mass layoff. My team members were removed. My friends were removed. The whole day went by refreshing my inbox, wondering if I was next, pinging everyone on leave to check if they were among them. The person I’d lunch with, the person who got teased for being a workahol...]]></description>
-            <link>https://vishalr.dev/archive/29-Will-We-Ever-Get-Used-To-This</link>
+            <link>https://vishalr.dev/article/29-Will-We-Ever-Get-Used-To-This</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/29-Will-We-Ever-Get-Used-To-This</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 18 Apr 2026 18:30:00 GMT</pubDate>
@@ -454,7 +454,7 @@ Yo!
 
 - Have you heard of an app named [Peerlist](https://peerlist.io/)? This is like Twitter, but built exclusively for developers. This has a feature “Launchpad” where every week people publish their products/projects and get voting from other users.
 - This week, I built a straightforward habit tr...]]></description>
-            <link>https://vishalr.dev/archive/28-First-app-launch</link>
+            <link>https://vishalr.dev/article/28-First-app-launch</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/28-First-app-launch</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 11 Apr 2026 18:30:00 GMT</pubDate>
@@ -474,7 +474,7 @@ Yo!
 Yo!
 
 - Traded my Mercedes Hot Wheels for a Nissan this week. On paper, not a fair swap, but I'm building a themed collection, strictly JDMs , so the Mercedes had to go. I've watched enough History Channel car trading shows to know a good deal when I see one. This felt like that, just in miniature. ...]]></description>
-            <link>https://vishalr.dev/archive/25-my-first-hotwheel-trade</link>
+            <link>https://vishalr.dev/article/25-my-first-hotwheel-trade</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/25-my-first-hotwheel-trade</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 21 Mar 2026 18:30:00 GMT</pubDate>
@@ -497,7 +497,7 @@ figure style="float: right; margin: -1rem 0 0 0; text-align: center;"
 
 - Hit the first 15 days of both gym and drawing – reward habit system is holding! 🎉
 - Drawing has been a bit scattered f...]]></description>
-            <link>https://vishalr.dev/archive/24-hamnet</link>
+            <link>https://vishalr.dev/article/24-hamnet</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/24-hamnet</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 14 Mar 2026 18:30:00 GMT</pubDate>
@@ -524,7 +524,7 @@ Yo! 🙋‍♂️In week 23,
 
 - Something I forgot to mention in the last week was the war between Iran, Israel + USA. Even though the US claims it’s to liberate and help the people of Iran, it doesn’t look like a good way to help someone by bombing them.
 - I would say it’s just a plan for Israel to become...]]></description>
-            <link>https://vishalr.dev/archive/23-israel-iran-war</link>
+            <link>https://vishalr.dev/article/23-israel-iran-war</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/23-israel-iran-war</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 07 Mar 2026 18:30:00 GMT</pubDate>
@@ -556,7 +556,7 @@ Yo! 🙋‍♂️In week 22,
 - In recent months, I have been trying to have a daily habit, and to improve the consistency, I have included a reward method. As I cross a particular streak, I will reward myself, something that I enjoy doing.
 
 figure style="float: right; margin: -2rem 2rem 0 0; text-align: ...]]></description>
-            <link>https://vishalr.dev/archive/22-to-wonderla</link>
+            <link>https://vishalr.dev/article/22-to-wonderla</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/22-to-wonderla</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 28 Feb 2026 18:30:00 GMT</pubDate>
@@ -578,7 +578,7 @@ figure style="float: right; margin: -2rem 2rem 0 0; text-align: ...]]></descript
 Yo! 🙋‍♂️In week 20,
 
 - This week I was in coimbatore at my uncle’s home for his wedding anniversary. They forgot I’m coming home and left for a trip. Good thing they left the keys with neigbour so I had to stay alone for a day. Neighbour is a relative of ours, the patti (grandmother) there gave me...]]></description>
-            <link>https://vishalr.dev/archive/20-Anniversary-at-Coimbatore</link>
+            <link>https://vishalr.dev/article/20-Anniversary-at-Coimbatore</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/20-Anniversary-at-Coimbatore</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 14 Feb 2026 18:30:00 GMT</pubDate>
@@ -609,7 +609,7 @@ Yo 🙋‍♂️!
 
 I just found a new Christmas movie.
 A movie released before you were born that will make you cherish the life you have. 2 hours about a man, getting what he deserved for being good. I recommend it if you are feeling your life is racing by, and you need a cozy ending slice of life movie. ...]]></description>
-            <link>https://vishalr.dev/archive/Its-a-Wonderful-Life</link>
+            <link>https://vishalr.dev/article/Its-a-Wonderful-Life</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Its-a-Wonderful-Life</guid>
             <category><![CDATA[Movie]]></category>
             <pubDate>Sat, 31 Jan 2026 18:30:00 GMT</pubDate>
@@ -629,7 +629,7 @@ Leave money, that may not be the only thing to show your love. There is a scene 
             <description><![CDATA[
 A painting that survives. The painting that lived. A painter dies in an accidental explosion. Only survivor is a bird painted — a bird tied at a place. After time, the bird gets into a terrorist explosion in an art museum. Yet again, it survives in the hands of a child.
 But a work of art surviving ...]]></description>
-            <link>https://vishalr.dev/archive/The-Goldfinch</link>
+            <link>https://vishalr.dev/article/The-Goldfinch</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/The-Goldfinch</guid>
             <category><![CDATA[Movie]]></category>
             <pubDate>Sun, 25 Jan 2026 18:30:00 GMT</pubDate>
@@ -649,7 +649,7 @@ figure style="float: right; text-align: center;"
 Yo! 🙋‍♂️ In week 17,
 
 - My parents stay in 3rd floor of the apartment whenever my brother leaves for school, my mom stays near the stairs and ...]]></description>
-            <link>https://vishalr.dev/archive/17-post-pongal</link>
+            <link>https://vishalr.dev/article/17-post-pongal</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/17-post-pongal</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 24 Jan 2026 18:30:00 GMT</pubDate>
@@ -676,7 +676,7 @@ That felt so beautiful. So that day, I left the flat, took the lift. Once I reac
 Yo!
 
 As per my trip goals for this year, I went to Chennai to celebrate Pongal. This was an educational trip, as I was requested to teach my brother the NCERT. He is jee aspirant and has cleared Olympiads. But he has no interest in opening an NCERT book. So I had to summarize some lessons and motiv...]]></description>
-            <link>https://vishalr.dev/archive/16-Theater-1-restaurant-0</link>
+            <link>https://vishalr.dev/article/16-Theater-1-restaurant-0</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/16-Theater-1-restaurant-0</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 17 Jan 2026 18:30:00 GMT</pubDate>
@@ -705,7 +705,7 @@ figure style="float: right; margin: 0 0 1rem 1rem; text-align: center;"
 Yo! Week 15,
 
 Had a micro war with my friend over choosing the WhatsApp group profile. She wanted Jungkook, while I wanted a cutie Kim Jong...]]></description>
-            <link>https://vishalr.dev/archive/15-Parasakthi-doesn’t-deserve</link>
+            <link>https://vishalr.dev/article/15-Parasakthi-doesn’t-deserve</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/15-Parasakthi-doesn’t-deserve</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 10 Jan 2026 18:30:00 GMT</pubDate>
@@ -731,7 +731,7 @@ Had a micro war with my friend over choosing the WhatsApp group profile. She wan
 - Before travelling, I have been busy with plans and actions for the coming year 2026. Below are some,
 
 - **Trips for 2026**: Here I have planned out when I‘m gonna meet my parents, my favorite relative, and take trips. This goes like, I...]]></description>
-            <link>https://vishalr.dev/archive/13-plans-for-2026</link>
+            <link>https://vishalr.dev/article/13-plans-for-2026</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/13-plans-for-2026</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Mon, 29 Dec 2025 18:30:00 GMT</pubDate>
@@ -759,7 +759,7 @@ Konnichiwa Readers!
 Last month, I attended an event I found through my regular magazine, **Open Source For You**.  
 If you like holding a physical magazine that talks about tech, especially the soft side of tech changes, I recommend this one.  
 _Also because I don’t think we have another option in...]]></description>
-            <link>https://vishalr.dev/archive/Open-Source-India-2025</link>
+            <link>https://vishalr.dev/article/Open-Source-India-2025</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Open-Source-India-2025</guid>
             <category><![CDATA[Tech]]></category>
             <pubDate>Sat, 06 Dec 2025 18:30:00 GMT</pubDate>
@@ -1038,7 +1038,7 @@ Inference latency is simply the time taken to produce output after receiving inp
 Hi! Welcome to my Weekly Note nummbbberrr 7 ✨
 
 - This week I went **go-karting** for the first time. My great friends Sadhana and Mayank took me to **LOCO BEAR**. During a break, Mayank asked, “Let’s go for karting.” I acted casually “Sure, Sadhana, you’re coming too” but damn, my heart was on fire...]]></description>
-            <link>https://vishalr.dev/archive/8-Minutes-of-Pure-Vroooom-Weekly-Note-7</link>
+            <link>https://vishalr.dev/article/8-Minutes-of-Pure-Vroooom-Weekly-Note-7</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/8-Minutes-of-Pure-Vroooom-Weekly-Note-7</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Tue, 18 Nov 2025 18:30:00 GMT</pubDate>
@@ -1065,7 +1065,7 @@ Hi! Welcome to my Weekly Note nummbbberrr 7 ✨
 Recently I have updated my morning routine to something that I'm proud of, so here I'm to boost it.
 
 1. First thing (after all the essentials), I do a leetcode question every day. This takes me roughly around 45 mins. Yes I'm a bit above noob at this space. Why this habit? Recently I realized I'm b...]]></description>
-            <link>https://vishalr.dev/archive/Proof-That-Even-I-Can-Stick-to-a-Routine</link>
+            <link>https://vishalr.dev/article/Proof-That-Even-I-Can-Stick-to-a-Routine</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Proof-That-Even-I-Can-Stick-to-a-Routine</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Fri, 14 Nov 2025 18:30:00 GMT</pubDate>
@@ -1095,7 +1095,7 @@ Recently I have updated my morning routine to something that I'm proud of, so he
             <title><![CDATA[Escape Room & Diwali 🧨]]></title>
             <description><![CDATA[
 - Celebrated the **1-year anniversary of the 11 AM Club**, started with paper cutting where the creativity juice flows. I couldn't finalize what to make, every cut I made gave me a new idea. Anyway, I ended up with a unique-looking piece by the end. As usual, Bake Duck got an exquisite cake, this t...]]></description>
-            <link>https://vishalr.dev/archive/escape-room-and-diwali</link>
+            <link>https://vishalr.dev/article/escape-room-and-diwali</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/escape-room-and-diwali</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sun, 19 Oct 2025 18:30:00 GMT</pubDate>
@@ -1124,7 +1124,7 @@ Recently I have updated my morning routine to something that I'm proud of, so he
             <description><![CDATA[
 - Got my **IKEA delivery!** Finally received the ALGANÄS shoe stand that I’d been waiting for quite some time , loved it! I was afraid it would be _wobbly-wobbly_ 😅 but it turned out super steady and slim, so it doesn’t take up much space.  
   Also grabbed a few other small things along with two c...]]></description>
-            <link>https://vishalr.dev/archive/ikea-earbuds-and-empathy</link>
+            <link>https://vishalr.dev/article/ikea-earbuds-and-empathy</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/ikea-earbuds-and-empathy</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Fri, 10 Oct 2025 18:30:00 GMT</pubDate>
@@ -1150,7 +1150,7 @@ Recently, I’ve been working with a friend of mine on building a lifestyle bran
 
 Started working on the skincare POC,  
 where we first understand the user’s skin. For the POC, we fetch a user’s image and share it with an LLM to ...]]></description>
-            <link>https://vishalr.dev/archive/something-fresh</link>
+            <link>https://vishalr.dev/article/something-fresh</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/something-fresh</guid>
             <category><![CDATA[Devlog]]></category>
             <pubDate>Mon, 06 Oct 2025 18:30:00 GMT</pubDate>
@@ -1170,7 +1170,7 @@ where we first understand the user’s skin. For the POC, we fetch a user’s im
 # 🗓️ The Day:
 
 On the day of **26 July 2025, 09:30 AM** started a 30-hour hackathon. My first full-night hackathon I pulled. Around **700 teams** were shortlisted out of supposedly **3000 teams** who submitted their idea. Yes, they made a **Guinness World Record** with the maximum number of hackat...]]></description>
-            <link>https://vishalr.dev/archive/aa-hackathon</link>
+            <link>https://vishalr.dev/article/aa-hackathon</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/aa-hackathon</guid>
             <category><![CDATA[Tech]]></category>
             <pubDate>Sun, 27 Jul 2025 18:30:00 GMT</pubDate>
@@ -1238,7 +1238,7 @@ I’m richer than I was in school, but I’m not happier.
 
 So what do I think gives happiness?
 Good health — Freedom — Strong Re...]]></description>
-            <link>https://vishalr.dev/archive/time-money-life</link>
+            <link>https://vishalr.dev/article/time-money-life</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/time-money-life</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sun, 13 Jul 2025 18:30:00 GMT</pubDate>
@@ -1282,7 +1282,7 @@ div style="display: flex; gap: 20px; margin-bottom: 20px;"
   div style="flex: 1;"
     pI see this picture of my favorite character Luffy from One Piece—a happy, free-living person jumping toward his dreams and goals while taking great pleasure in his journey—I feel inspired./p
     pI saw ...]]></description>
-            <link>https://vishalr.dev/archive/totem-totem-totem</link>
+            <link>https://vishalr.dev/article/totem-totem-totem</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/totem-totem-totem</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Fri, 04 Jul 2025 18:30:00 GMT</pubDate>

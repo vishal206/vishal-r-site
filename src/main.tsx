@@ -33,8 +33,8 @@ const tree = (
       <PageViewTracker />
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/archive" element={<App />} />
-        <Route path="/archive/:slug" element={<BlogReader />} />
+        <Route path="/article" element={<App />} />
+        <Route path="/article/:slug" element={<BlogReader />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
@@ -43,7 +43,7 @@ const tree = (
 // Paths the SPA knows how to render. Used to avoid wiping prerendered content in
 // reader/extracted contexts (see below).
 const KNOWN_ROUTE =
-  /^\/(?:archive(?:\/[^/]+)?)?\/?$/;
+  /^\/(?:article(?:\/[^/]+)?)?\/?$/;
 
 // Prerendered pages already contain the article markup, which the browser paints
 // before this script runs (great for perceived speed, SEO and RSS readers). We

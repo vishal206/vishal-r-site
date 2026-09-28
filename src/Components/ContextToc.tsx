@@ -2,7 +2,7 @@
 // Rendered in a reader's right rail (see ReaderShell). Numbers headings
 // hierarchically: 1, 2 for h1; 1.1, 1.2 for h2; 1.1.1 for h3.
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface TocHeading {
   level: number;
@@ -80,14 +80,34 @@ const ContextToc = ({ content }: { content: string }) => {
 
   const activeId = useActiveHeading(numbered.map((h) => h.id));
 
+  // The list scrolls on its own when it's longer than the room the rail gives
+  // it. Keep the active entry in view as the article is read: centre it in the
+  // list by scrolling the list alone — `scrollIntoView` would drag the article
+  // along too, since it scrolls every ancestor.
+  const listRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const list = listRef.current;
+    const item = list?.querySelector<HTMLElement>('[aria-current="location"]');
+    if (!list || !item || list.scrollHeight <= list.clientHeight) return;
+    list.scrollTo({
+      top: item.offsetTop - list.clientHeight / 2 + item.offsetHeight / 2,
+      behavior: "smooth",
+    });
+  }, [activeId]);
+
   if (headings.length === 0) return null;
 
+  // Shrinks to the height its parent allows: the heading stays put and the
+  // list below it scrolls.
   return (
-    <div className="sticky top-0">
-      <div className="text-[9px] uppercase tracking-[0.22em] text-editorial-label mb-5">
+    <div className="flex min-h-0 flex-col">
+      <div className="shrink-0 text-[9px] uppercase tracking-[0.22em] text-editorial-label mb-5">
         On This Page
       </div>
-      <nav className="flex flex-col gap-1">
+      <nav
+        ref={listRef}
+        className="relative min-h-0 flex-1 overflow-y-auto flex flex-col gap-1"
+      >
         {numbered.map((h, i) => {
           const isActive = h.id === activeId;
           return (

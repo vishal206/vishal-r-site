@@ -30,7 +30,7 @@ const MIME = {
   ".ttf": "font/ttf",
 };
 
-// ── Route enumeration (mirrors how the app resolves /archive/:slug) ──────────
+// ── Route enumeration (mirrors how the app resolves /article/:slug) ──────────
 const readSlugs = (dir) => {
   const abs = path.join(root, dir);
   if (!fs.existsSync(abs)) return [];
@@ -62,7 +62,7 @@ const buildRoutes = () => {
   // render (hydration flash). Leaving index.html as the clean SPA shell also
   // keeps it neutral as the rewrite fallback target.
   const routes = [
-    { url: "/archive", out: "archive.html" },
+    { url: "/article", out: "article.html" },
     { url: "/about", out: "about.html" },
   ];
 
@@ -72,9 +72,9 @@ const buildRoutes = () => {
   for (const slug of archiveSlugs) {
     const { data, content } = frontmatterFor(archiveDirs, slug);
     routes.push({
-      url: `/archive/${encodeURI(slug)}`,
-      out: path.join("archive", `${slug}.html`),
-      meta: metaFor(data, content, `/archive/${slug}`),
+      url: `/article/${encodeURI(slug)}`,
+      out: path.join("article", `${slug}.html`),
+      meta: metaFor(data, content, `/article/${slug}`),
     });
   }
 

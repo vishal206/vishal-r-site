@@ -147,7 +147,7 @@ const MovieShelf = () => {
         title: m.title,
         // A reviewed film may keep its poster on the post rather than here.
         image: m.image ?? (m.post ? reviewImage.get(m.post) : null),
-        to: m.post ? `/archive/${m.post}` : null,
+        to: m.post ? `/article/${m.post}` : null,
         href: m.post ? null : m.url,
       })),
       ...reviews
@@ -156,7 +156,7 @@ const MovieShelf = () => {
           key: `review-${p.slug}`,
           title: p.title,
           image: p.image,
-          to: `/archive/${p.slug}`,
+          to: `/article/${p.slug}`,
         })),
     ];
 

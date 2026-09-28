@@ -115,11 +115,6 @@ export type Chapter = {
   content: string;
 };
 
-export const getAvailableChapters = (): string[] =>
-  Object.keys(chapterFiles)
-    .map((path) => path.match(/\/([^/]+)\.md$/)?.[1] ?? "")
-    .filter(Boolean);
-
 export const loadChapterFileSync = (slug: string): Chapter | null => {
   try {
     const filePath = Object.keys(chapterFiles).find((p) => p.endsWith(`/${slug}.md`));

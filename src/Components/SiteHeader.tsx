@@ -50,19 +50,12 @@ const SOCIALS = [
 /**
  * The site header, on every screen. The sticker and the name lead home.
  *
- * - `onHome`: on the home screen itself, "home" means dropping any open
- *   section sheet rather than navigating, so the app hands in its own handler.
- * - `fullWidth`: the reader pages run edge to edge with a sidebar on the left,
- *   so there the header spans the full width to line up with it, instead of
- *   the home page's centred column.
+ * It sits in the same centred column, at the same height, on every screen.
+ *
+ * `onHome`: on the home screen itself, "home" means closing any open section
+ * sheet rather than navigating, so the app hands in its own handler.
  */
-const SiteHeader = ({
-  onHome,
-  fullWidth = false,
-}: {
-  onHome?: () => void;
-  fullWidth?: boolean;
-}) => {
+const SiteHeader = ({ onHome }: { onHome?: () => void }) => {
   const goHome = onHome
     ? (e: MouseEvent) => {
         e.preventDefault();
@@ -71,16 +64,8 @@ const SiteHeader = ({
     : undefined;
 
   return (
-    <header
-      className={`shrink-0 bg-editorial-bg ${
-        fullWidth ? "border-b border-editorial-divider" : ""
-      }`}
-    >
-      <div
-        className={`flex items-center gap-3 md:gap-4 px-6 py-4 md:py-5 ${
-          fullWidth ? "" : "md:px-12 max-w-screen-xl mx-auto"
-        }`}
-      >
+    <header className="shrink-0 bg-editorial-bg">
+      <div className="flex items-center gap-3 md:gap-4 px-6 md:px-12 py-4 md:py-5 max-w-screen-xl mx-auto">
         <Link to="/" onClick={goHome} aria-label="Home" tabIndex={-1} className="shrink-0">
           <img
             src="/assets/stickers/vishal-sticker.png"

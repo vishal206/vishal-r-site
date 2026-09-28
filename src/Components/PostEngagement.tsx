@@ -160,7 +160,7 @@ export const PostEngagement = ({
     "flex items-center justify-center py-3 w-16 border-t border-b transition-colors";
 
   return (
-    <div className="mt-12 pt-8 border-t border-editorial-divider">
+    <div className="mt-12">
       <div className="flex">
         <div
           className={`${boxClass} border-l border-r border-editorial-divider text-editorial-label`}

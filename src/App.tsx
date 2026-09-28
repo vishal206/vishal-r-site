@@ -13,8 +13,8 @@ const SECTION_CONTENT: Record<SectionId, ReactNode> = {
 };
 
 const App = () => {
-  // A section (the archive, via "More articles") rises as a sheet over the
-  // home screen. The header's home link, or Escape, drops it back down.
+  // A section (the archive, via "More articles") opens as a sheet over the
+  // home screen. The header's home link, or Escape, closes it.
   const [active, setActive] = useState<SectionId | null>(
     PATH_TO_SECTION[window.location.pathname] ?? null,
   );
@@ -41,7 +41,7 @@ const App = () => {
     window.history.replaceState(null, "", "/");
   }, []);
 
-  // Escape drops the sheet.
+  // Escape closes the sheet.
   useEffect(() => {
     if (!active) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
@@ -54,7 +54,7 @@ const App = () => {
       className="fixed inset-0 flex flex-col overflow-hidden bg-editorial-bg text-editorial-text font-primary"
     >
       {/* ── Site header: fixed along the top, above the home screen and any
-          open section, which scroll beneath it. Home drops the sheet. ── */}
+          open section, which scroll beneath it. Home closes the sheet. ── */}
       <SiteHeader onHome={close} />
 
       {/* ── Everything below the header ── */}
@@ -62,20 +62,15 @@ const App = () => {
         {/* ── Home backdrop (always behind) ── */}
         <HomeHero onMoreArticles={() => select("blog")} />
 
-        {/* ── Section sheet: rises from the bottom when a section is open ── */}
-        <div
-          className="absolute inset-0 z-20 bg-editorial-bg overflow-y-auto transition-transform duration-[550ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
-          style={{
-            transform: active ? "translateY(0%)" : "translateY(100%)",
-            pointerEvents: active ? "auto" : "none",
-          }}
-        >
-          {active && (
-            <div key={active} className="animate-sheet-rise min-h-full pt-6 md:pt-8 pb-16">
-              {SECTION_CONTENT[active]}
-            </div>
-          )}
-        </div>
+        {/* ── Section sheet: covers the home screen while a section is open ── */}
+        {active && (
+          <div
+            key={active}
+            className="absolute inset-0 z-20 bg-editorial-bg overflow-y-auto pt-6 md:pt-8 pb-16"
+          >
+            {SECTION_CONTENT[active]}
+          </div>
+        )}
       </div>
     </div>
   );
