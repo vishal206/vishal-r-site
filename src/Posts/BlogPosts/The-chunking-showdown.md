@@ -4,6 +4,7 @@ date: "1 May 2026"
 isTech: true
 isContextTable: true
 tags: "Devlog"
+banner: "/assets/chunking.png"
 ---
 
 Three chunking strategies walked into a RAG pipeline. Only one handled every document type well. Here's what the numbers showed.

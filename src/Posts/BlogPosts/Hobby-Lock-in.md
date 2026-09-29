@@ -2,8 +2,7 @@
 title: "Hobby Lock-in"
 date: "28 Jun 2026"
 tags: "Life"
-image: "/assets/hobbies.jpg"
-banner: "/assets/hobbies.jpg"
+banner: "/assets/hobby-lock-in.gif"
 publishRss: true
 ---
 
@@ -11,28 +10,11 @@ Do you feel the want of getting into all the hobbies out there? If yes, we are i
 
 Here is the list of immediate hobbies in mind
 
-**Physical**
+**Physical** : Running, Badminton, Skateboarding, Cycling, Gym & Table Tennis
 
-- Running
-- Badminton
-- Skateboarding
-- Cycling
-- Gym
-- Table Tennis
+**Creative** : Drawing, Video Graphy, Guitar & House Gardening
 
-**Creative**
-
-- Drawing
-- Video Graphy
-- Guitar
-- House Gardening
-
-**Intellectual**
-
-- Reading
-- Chess
-- Learning language
-- Writing
+**Intellectual** : Reading, Chess, Learning language & Writing
 
 Now, this is overwhelming to fit into my life with the time and capital I have. So I decided to keep 2, no, I can't be happy with one.
 Starting with physical. Badminton is staying for sure. The second one, I want to go cycling and skateboarding. A big but on that was I ran 2 marathons, and I love the concept of it. They don't care who comes first or last; you get a medal and appreciation for completion. Isn't that how life should be? And I got a good running buddy too. Now I only play table tennis in the office. I like it, I got a cool racket. I'm not considering it a full-fledged hobby, but I will keep smashing & skining in the office. Finally, the gym was out of the list even before it started. I know I gain and all, but it's no more fun.

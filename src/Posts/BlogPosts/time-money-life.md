@@ -1,7 +1,6 @@
 ---
 title: "Time. Money. Life."
 date: "14 July 2025"
-image: "https://github.com/vishal206/personal-site-images/blob/main/time-money-life-profile.jpg?raw=true"
 banner: "https://github.com/vishal206/personal-site-images/blob/main/time-money-life-profile.jpg?raw=true"
 tags: "Life"
 isTech: true

@@ -30,7 +30,7 @@ const MIME = {
   ".ttf": "font/ttf",
 };
 
-// ── Route enumeration (mirrors how the app resolves /archive/:slug) ──────────
+// ── Route enumeration (mirrors how the app resolves /article/:slug) ──────────
 const readSlugs = (dir) => {
   const abs = path.join(root, dir);
   if (!fs.existsSync(abs)) return [];
@@ -56,35 +56,13 @@ const archiveDirs = [
   "src/Posts/About",
 ];
 
-// Project write-ups live nested under src/Posts/Projects/<project>/<post>.md
-// (the project's readme.md is a static overview, not an archive entry) but
-// are reachable at /archive/:slug just like a regular blog post.
-const readProjectPosts = () => {
-  const projectsRoot = path.join(root, "src/Posts/Projects");
-  if (!fs.existsSync(projectsRoot)) return [];
-  const posts = [];
-  for (const projectSlug of fs.readdirSync(projectsRoot)) {
-    const projectDir = path.join(projectsRoot, projectSlug);
-    if (!fs.statSync(projectDir).isDirectory()) continue;
-    for (const file of fs.readdirSync(projectDir)) {
-      if (!file.endsWith(".md") || file.toLowerCase() === "readme.md") continue;
-      const { data, content } = matter(fs.readFileSync(path.join(projectDir, file), "utf8"));
-      posts.push({ slug: file.replace(/\.md$/, ""), data, content });
-    }
-  }
-  return posts;
-};
-
 const buildRoutes = () => {
   // NOTE: the home route ("/") is intentionally not prerendered — App.tsx loads
   // its data asynchronously, so a snapshot would not match the client's first
   // render (hydration flash). Leaving index.html as the clean SPA shell also
   // keeps it neutral as the rewrite fallback target.
   const routes = [
-    { url: "/archive", out: "archive.html" },
-    { url: "/books", out: "books.html" },
-    { url: "/movies", out: "movies.html" },
-    { url: "/projects", out: "projects.html" },
+    { url: "/article", out: "article.html" },
     { url: "/about", out: "about.html" },
   ];
 
@@ -94,30 +72,12 @@ const buildRoutes = () => {
   for (const slug of archiveSlugs) {
     const { data, content } = frontmatterFor(archiveDirs, slug);
     routes.push({
-      url: `/archive/${encodeURI(slug)}`,
-      out: path.join("archive", `${slug}.html`),
-      meta: metaFor(data, content, `/archive/${slug}`),
+      url: `/article/${encodeURI(slug)}`,
+      out: path.join("article", `${slug}.html`),
+      meta: metaFor(data, content, `/article/${slug}`),
     });
   }
 
-  for (const { slug, data, content } of readProjectPosts()) {
-    if (archiveSlugs.has(slug)) continue;
-    routes.push({
-      url: `/archive/${encodeURI(slug)}`,
-      out: path.join("archive", `${slug}.html`),
-      meta: metaFor(data, content, `/archive/${slug}`),
-    });
-  }
-
-  // Books each get a /book/<slug> reader page.
-  for (const slug of readSlugs("src/Posts/Books")) {
-    const { data, content } = frontmatterFor(["src/Posts/Books"], slug);
-    routes.push({
-      url: `/book/${encodeURI(slug)}`,
-      out: path.join("book", `${slug}.html`),
-      meta: metaFor({ ...data, image: data.cover }, content, `/book/${slug}`),
-    });
-  }
   return routes;
 };
 
@@ -143,7 +103,7 @@ const metaFor = (data, content, urlPath) => {
   const description = data.description || excerpt(content) || "Blogs and DevLogs from Vishal R";
   const url = `${baseUrl}${urlPath}`;
   // Posts without their own image fall back to the branded logo card.
-  return { title, description, url, image: data.image || data.banner || "/og-default.png" };
+  return { title, description, url, image: data.banner || "/og-default.png" };
 };
 
 const injectHead = (html, meta) => {

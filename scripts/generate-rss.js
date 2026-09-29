@@ -22,7 +22,7 @@ const generateRSSFeed = async () => {
 
   const feed = new RSS({
     title: "Vishal R",
-    description: "Blogs, movies, books, and project writing from Vishal R",
+    description: "Blogs and movies from Vishal R",
     feed_url: `${baseUrl}/rss.xml`,
     site_url: baseUrl,
     language: "en-us",
@@ -50,75 +50,15 @@ const generateRSSFeed = async () => {
 
       items.push({
         title: frontmatter.title,
-        url: `${baseUrl}/archive/${slug}`,
+        url: `${baseUrl}/article/${slug}`,
+        // The item's identity, not a link: kept at the URL posts were first
+        // published under, before /archive became /article, so feed readers
+        // don't take every post for a new one.
+        guid: `${baseUrl}/archive/${slug}`,
         description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
         content,
         date: new Date(frontmatter.date),
         categories: [frontmatter.tags || "Blog"],
-      });
-    }
-  }
-
-  // Process project write-ups (each project folder's non-readme posts;
-  // the readme itself is a static overview page, not a dated entry)
-  const projectsDir = path.join(process.cwd(), "src/Posts/Projects");
-
-  if (fs.existsSync(projectsDir)) {
-    for (const projectSlug of fs.readdirSync(projectsDir)) {
-      const projectDir = path.join(projectsDir, projectSlug);
-      if (!fs.statSync(projectDir).isDirectory()) continue;
-
-      const postFiles = fs
-        .readdirSync(projectDir)
-        .filter((file) => file.endsWith(".md") && file.toLowerCase() !== "readme.md");
-
-      for (const file of postFiles) {
-        const filePath = path.join(projectDir, file);
-        const fileContent = fs.readFileSync(filePath, "utf8");
-        const { data: frontmatter, content } = matter(fileContent);
-
-        // ✅ Posts can explicitly opt out of RSS
-        if (frontmatter.publishRss === false) continue;
-
-        const slug = file.replace(".md", "");
-
-        items.push({
-          title: frontmatter.title,
-          url: `${baseUrl}/archive/${slug}`,
-          description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
-          content,
-          date: new Date(frontmatter.date),
-          categories: [frontmatter.tags || "Project"],
-        });
-      }
-    }
-  }
-
-  // Process books
-  const booksDir = path.join(process.cwd(), "src/Posts/Books");
-
-  if (fs.existsSync(booksDir)) {
-    const bookFiles = fs
-      .readdirSync(booksDir)
-      .filter((file) => file.endsWith(".md"));
-
-    for (const file of bookFiles) {
-      const filePath = path.join(booksDir, file);
-      const fileContent = fs.readFileSync(filePath, "utf8");
-      const { data: frontmatter, content } = matter(fileContent);
-
-      // ✅ Books can explicitly opt out of RSS
-      if (frontmatter.publishRss === false) continue;
-
-      const slug = file.replace(".md", "");
-
-      items.push({
-        title: frontmatter.title,
-        url: `${baseUrl}/book/${slug}`,
-        description: content.substring(0, 300).replace(/[<>]/g, "") + "...",
-        content,
-        date: new Date(frontmatter.date),
-        categories: ["Book"],
       });
     }
   }
@@ -133,7 +73,7 @@ const generateRSSFeed = async () => {
         description: item.description,
         date: item.date,
         categories: item.categories,
-        guid: item.url,
+        guid: item.guid,
         custom_elements: [{ "content:encoded": { _cdata: toRssHtml(item.content, baseUrl) } }],
       });
     });

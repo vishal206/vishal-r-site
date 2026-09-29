@@ -1,7 +1,6 @@
 ---
 title: "Proof That Even I Can Stick to a Routine"
 date: "15 Nov 2025"
-image: "https://github.com/vishal206/personal-site-images/blob/main/morning-routine.png?raw=true"
 banner: "https://github.com/vishal206/personal-site-images/blob/main/morning-routine.png?raw=true"
 tags: "Life"
 isTech: true

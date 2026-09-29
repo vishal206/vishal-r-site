@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title><![CDATA[Vishal R]]></title>
-        <description><![CDATA[Blogs, movies, books, and project writing from Vishal R]]></description>
+        <description><![CDATA[Blogs and movies from Vishal R]]></description>
         <link>https://vishalr.dev</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Tue, 22 Sep 2026 04:03:20 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 29 Sep 2026 05:17:13 GMT</lastBuildDate>
         <atom:link href="https://vishalr.dev/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Tue, 22 Sep 2026 04:03:20 GMT</pubDate>
+        <pubDate>Tue, 29 Sep 2026 05:17:13 GMT</pubDate>
         <language><![CDATA[en-us]]></language>
         <item>
             <title><![CDATA[Teardown: Hermes Agent]]></title>
             <description><![CDATA[
 **Hermes** is an open-source, self-hostable AI agent: a personal, always-available assistant that you run and own instead of renting from a closed platform. You can talk to it from a terminal, a desktop app, an API, or messaging platforms such as Telegram, Slack, WhatsApp, and email. It keeps durab...]]></description>
-            <link>https://vishalr.dev/archive/Teardown-Hermes-Agent</link>
+            <link>https://vishalr.dev/article/Teardown-Hermes-Agent</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Teardown-Hermes-Agent</guid>
             <category><![CDATA[Devlog]]></category>
             <pubDate>Mon, 13 Jul 2026 18:30:00 GMT</pubDate>
@@ -186,19 +186,6 @@ while iteration_budget_remains():
 ]]></content:encoded>
         </item>
         <item>
-            <title><![CDATA[The Seven Days of Peter Crumb]]></title>
-            <description><![CDATA[
-Peter Crumb keeps a journal of his last seven days. He's forced to write it by his alter ego, the darker of his two personalities. Usually with two personalities, one is evil and one is good. However, the dynamic here is more complex. The book starts with the evil one speaking as a separate voice. ...]]></description>
-            <link>https://vishalr.dev/book/The-Seven-Days-of-Peter-Crumb</link>
-            <guid isPermaLink="false">https://vishalr.dev/book/The-Seven-Days-of-Peter-Crumb</guid>
-            <category><![CDATA[Book]]></category>
-            <pubDate>Thu, 02 Jul 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<p>Peter Crumb keeps a journal of his last seven days. He&#39;s forced to write it by his alter ego, the darker of his two personalities. Usually with two personalities, one is evil and one is good. However, the dynamic here is more complex. The book starts with the evil one speaking as a separate voice. Somewhere in the middle, I felt a switch happen. It wasn&#39;t explicit, no line was drawn, but when I realized it, it hit me with a kind of dread. Like the ground had shifted under the story without warning. Since this book gets compared to American Psycho, it has its share of gory killings and disturbing thoughts to match.</p>
-<p>But the real strength here is the <strong>storytelling</strong>. The author writes Crumb&#39;s emotions so well that you start feeling them as your own. This comes through strongest in the quiet moments between the violence. That&#39;s where his self-loathing and confusion hit harder than the killings themselves. The story isn&#39;t a nightly body count. It keeps turning in directions you don&#39;t expect, right up to an ending that recontextualizes everything before it.</p>
-<p><strong>Worth the read, if you&#39;re brave enough.</strong></p>
-]]></content:encoded>
-        </item>
-        <item>
             <title><![CDATA[Hobby Lock-in]]></title>
             <description><![CDATA[
 Do you feel the want of getting into all the hobbies out there? If yes, we are in the same boat. I had a huge list of hobby bucket list that never saw the light of day. I decided to lock on to one hobby of type Physical, Creative, and Intellectual.
@@ -206,35 +193,15 @@ Do you feel the want of getting into all the hobbies out there? If yes, we are i
 Here is the list of immediate hobbies in mind
 
 **...]]></description>
-            <link>https://vishalr.dev/archive/Hobby-Lock-in</link>
+            <link>https://vishalr.dev/article/Hobby-Lock-in</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Hobby-Lock-in</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 27 Jun 2026 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<p>Do you feel the want of getting into all the hobbies out there? If yes, we are in the same boat. I had a huge list of hobby bucket list that never saw the light of day. I decided to lock on to one hobby of type Physical, Creative, and Intellectual.</p>
 <p>Here is the list of immediate hobbies in mind</p>
-<p><strong>Physical</strong></p>
-<ul>
-<li>Running</li>
-<li>Badminton</li>
-<li>Skateboarding</li>
-<li>Cycling</li>
-<li>Gym</li>
-<li>Table Tennis</li>
-</ul>
-<p><strong>Creative</strong></p>
-<ul>
-<li>Drawing</li>
-<li>Video Graphy</li>
-<li>Guitar</li>
-<li>House Gardening</li>
-</ul>
-<p><strong>Intellectual</strong></p>
-<ul>
-<li>Reading</li>
-<li>Chess</li>
-<li>Learning language</li>
-<li>Writing</li>
-</ul>
+<p><strong>Physical</strong> : Running, Badminton, Skateboarding, Cycling, Gym &amp; Table Tennis</p>
+<p><strong>Creative</strong> : Drawing, Video Graphy, Guitar &amp; House Gardening</p>
+<p><strong>Intellectual</strong> : Reading, Chess, Learning language &amp; Writing</p>
 <p>Now, this is overwhelming to fit into my life with the time and capital I have. So I decided to keep 2, no, I can&#39;t be happy with one.
 Starting with physical. Badminton is staying for sure. The second one, I want to go cycling and skateboarding. A big but on that was I ran 2 marathons, and I love the concept of it. They don&#39;t care who comes first or last; you get a medal and appreciation for completion. Isn&#39;t that how life should be? And I got a good running buddy too. Now I only play table tennis in the office. I like it, I got a cool racket. I&#39;m not considering it a full-fledged hobby, but I will keep smashing &amp; skining in the office. Finally, the gym was out of the list even before it started. I know I gain and all, but it&#39;s no more fun.</p>
 <blockquote>
@@ -253,52 +220,12 @@ Starting with physical. Badminton is staying for sure. The second one, I want to
 ]]></content:encoded>
         </item>
         <item>
-            <title><![CDATA[First Baddy club experience]]></title>
-            <description><![CDATA[
-Yo! 🙋
-
-Outside the Koshe restaurant I spotted a billboard, which had posters of drama happening in the town. How come I have been walking through there and never noticed it. I will be on the look out for a worthwhile performance.
-
-Watched Dhurandhar 2, a well written movie with good cinematography...]]></description>
-            <link>https://vishalr.dev/archive/36-First-Baddy-club-experience</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/36-First-Baddy-club-experience</guid>
-            <category><![CDATA[Life]]></category>
-            <pubDate>Sat, 06 Jun 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<p>Yo! 🙋</p>
-<p>Outside the Koshe restaurant I spotted a billboard, which had posters of drama happening in the town. How come I have been walking through there and never noticed it. I will be on the look out for a worthwhile performance.</p>
-<p>Watched Dhurandhar 2, a well written movie with good cinematography. But the justification it says for the choices Modi made as a PM and saying the losing party lost because of shortage of funds from Pakistan is kinda baseless allegations which might just confuse people now. Who knows, maybe that’s what they want.</p>
-<p>Found a badminton club, The Baddy Club. I entered the court to see a huge 3x3 court with everyone in matching jerseys. The jerseys looked too plain to be the club&#39;s own. A lady with a list and whistle told me this is a tournament and we are not part of the baddy club. I did feel shy when saying,&quot; Are you from Baddy club?&quot;. I rushed out to the door, where there was a guy in a T-shirt with the pink Baddy Club logo on it. Followed and found the rest of the members waiting. Turns out we start at 10. We start at 10. Did my warm-ups alone without any embarrassment. After a short wait, we made a circle with 3 organizers, college kids, in the center. The T-shirt guy started. “ I founded this club to have fun and find more people, and here we have 3 volunteers who will help us out today”.</p>
-<p>The girl standing next to him came forward. She instructed light warm-ups for everyone. She lined everyone up in two rows facing each other. A game. The call-out person shouts a body part, then we touch it, and on the call of “SHUTTLE,” we pick the shuttle, a reflex test. With this, they broke everyone into 4 groups and set us up to play matches. After every 15-point match, we shuffle. The organizers wanted everyone to play with everyone. But people made sure they stuck with their level of play. In one way, this is good. Once, I ended up in a match with the pro players by mistake. It got me all worked up until the organizer noticed and pulled me back. It might sound like this creates cliques. It doesn&#39;t; I even got a chance to ask some of the pro players for racket recommendations. After 1.5 hours of shuffles, they split us into 4 teams. Like the good old days, four captains took turns picking players, and no one picked me. I was among the last four who were the team pick with no choice. It was embarrassing, but at least I was not the last. Then we played a 2-court match, 5 people on each side. After a while, they switched it up to a 2-shuttle format. In a 2-shuttle format, you&#39;d serve both shuttles at once, and to score, both had to land on the opponent&#39;s side. It was fun, I had a good time, and I forgot the embarrassment. Forgot to mention, we did get free electrolytes.</p>
-]]></content:encoded>
-        </item>
-        <item>
-            <title><![CDATA[Start of rainy evenings]]></title>
-            <description><![CDATA[
-Yo! 🙋
-So in Bangalore, this so-called rainy season, which rains exactly when everyone leaves from office, started, and because of this, the metro got altered, and I had to wait till the crowds got piled up and took the metro and couldn't get in at Chalakatta.
-
-So I thought, okay, why not go somewh...]]></description>
-            <link>https://vishalr.dev/archive/35-Start-of-rainy-evenings</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/35-Start-of-rainy-evenings</guid>
-            <category><![CDATA[Life]]></category>
-            <pubDate>Sat, 30 May 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<p>Yo! 🙋
-So in Bangalore, this so-called rainy season, which rains exactly when everyone leaves from office, started, and because of this, the metro got altered, and I had to wait till the crowds got piled up and took the metro and couldn&#39;t get in at Chalakatta.</p>
-<p>So I thought, okay, why not go somewhere, and I went to IKEA at a late time. I had a friend of mine with me, another IKEA freak, had dinner, and bought one or two things as usual. No-crowd-IKEA is the best IKEA. The whole vibe was relaxing, with rain and dark outside.</p>
-<p>In my office, our team director came. Marcos had some meetings and all blah blah, and then went to this place called The 13th floor. It is on Church Street, which I never knew about. Yes, this restaurant is on the 13th floor. They had a great view, you could look at the whole Chinnaswamy Stadium and the metro curve. Their food was fine, it was all indian style, especially the prawns that they gave in a wine glass, it was super good, but the highlight was the desserts. All the desserts they had, except for the cheesecakes (it was heavy after a meal ), were so good, especially the one I don&#39;t know the name of, it was in the first of the desserts, super good. I will definitely go there for the view and the dessert.</p>
-<p>Went to Cubbon Park, took some cool pictures I posted on Instagram, and went to go native.</p>
-<p>I took my first consultancy at a dermatologist; she gave some advice on skin care routines, and I should use my sunscreen throughout the day, not just before leaving for the office. Apparently, my neck is also sensitive like my face, so I have to apply all the care to it too. Finally, I had to spend 6,900 on creams and things. I was like, let&#39;s take a leap of faith and see if it works.</p>
-<p>I went shopping, and I couldn&#39;t find anything. I tried my usuals, Uniqlo and H&amp;M. Concluded on ordering from myntra.</p>
-<p>I went to my friend&#39;s place, Manan. We used to work together when I was doing my first internship in Bangalore; it was nostalgic. We did talk a lot about tech and career. We were playing Tekken, and I played that Ghost of Yōtei; it got some nice graphics. I feel I&#39;m not a gaming guy; I didn&#39;t feel relaxed when I played it. I tend to get more relaxed when a movie plays.</p>
-]]></content:encoded>
-        </item>
-        <item>
             <title><![CDATA[Kamome Diner]]></title>
             <description><![CDATA[
 Irasshaimase 🙋‍♂️!
 
 Kamome Diner is a slow, quiet, funny ( makes you smile kinda ) movie that is the definition of a slice of life. About the story, wait, there is no story; this movie is a pure slice of life that revolves around a diner. A Japanese diner located in Finland. The 1h 42m goes throug...]]></description>
-            <link>https://vishalr.dev/archive/Kamome-Diner</link>
+            <link>https://vishalr.dev/article/Kamome-Diner</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Kamome-Diner</guid>
             <category><![CDATA[Movie]]></category>
             <pubDate>Sat, 30 May 2026 18:30:00 GMT</pubDate>
@@ -320,101 +247,13 @@ Midori asks Sachie how she let a total stranger stay with her. Sachie says, “A
 ]]></content:encoded>
         </item>
         <item>
-            <title><![CDATA[Two Types of Work. One Place to Track Both.]]></title>
-            <description><![CDATA[
-I wanted to learn System Design. I had the course, the material, and a clear list of what to cover. So I started. Some days I got through two topics. Some days one. Some days nothing.
-
-A month in, I had no idea where I actually stood.
-
-Not because I wasn't trying. Because I had no honest way to see...]]></description>
-            <link>https://vishalr.dev/archive/Two-Types-of-Work</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/Two-Types-of-Work</guid>
-            <category><![CDATA[Devlog]]></category>
-            <pubDate>Mon, 11 May 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<p>I wanted to learn System Design. I had the course, the material, and a clear list of what to cover. So I started. Some days I got through two topics. Some days one. Some days nothing.</p>
-<p>A month in, I had no idea where I actually stood.</p>
-<p>Not because I wasn&#39;t trying. Because I had no honest way to see my progress. No clear picture of what I&#39;d covered, what was left, or whether I&#39;d actually been showing up at all.</p>
-<p><a href="https://start-ember.vercel.app">Start Ember</a> is a habit tracker I built to fix this for myself. The idea was simple: show up every day, build a streak, make the work visible. It worked well for daily habits. Then I tried to use it for learning, and ran into a different problem entirely.</p>
-<h1>Two Different Types of Work</h1>
-<p>The habit model works perfectly for things like drawing, meditating, or reading. Things you want to do forever. There&#39;s no finish line, only whether you showed up.</p>
-<p>Learning System Design is different. It has a beginning and an end. There&#39;s a body of material you&#39;re moving through. Marking &quot;System Design&quot; every day tells you nothing useful. It doesn&#39;t tell you whether you&#39;re actually getting through the content, or whether you&#39;ve been circling the same two topics for three weeks.</p>
-<p>Halfway through, I realized I&#39;d been doing exactly that. I had &quot;System Design&quot; as a daily habit in Start Ember, felt like I was showing up, and still couldn&#39;t tell you what I&#39;d actually covered. The habit model was giving me the feeling of progress without the substance of it.</p>
-<p>A curriculum isn&#39;t a habit. Treating it like one is where progress quietly dies.</p>
-<h1>What Habits and Tracks Actually Do Differently</h1>
-<p>A habit is about identity. You&#39;re not trying to finish drawing, you&#39;re becoming someone who draws every day. The streak isn&#39;t about the output. It&#39;s about who you are on day 30 versus day 1.</p>
-<img src="https://vishalr.dev/assets/james-every-action.png" alt="Every action you take is a vote for the type of person you wish to become. - James Clear, Atmoic Habits"/><p>A learning track is about movement through material. There&#39;s something in front of you, a course, a book, a roadmap, and you&#39;re moving through it. The question isn&#39;t &quot;did I show up today?&quot; It&#39;s &quot;where am I in this thing, and am I actually moving forward?&quot;</p>
-<p>Both modes matter. Mixing them up is where most people quietly lose momentum, myself included.</p>
-<h1>What Tracks Are</h1>
-<p>A Track is a named curriculum you&#39;re working through.</p>
-<p>You give it a name (&quot;System Design&quot;), a source (&quot;AlgoMaster Low-Level Design&quot;), and a list of checkpoints: the topics, chapters, or modules you&#39;ll cover. Then you work through them one by one, marking each done when you&#39;ve genuinely covered it.</p>
-<p>The view is honest and minimal:</p>
-<p><strong>8 of 24 checkpoints completed.</strong> Shows where you stand.</p>
-<p><strong>Last activity: 12 days ago.</strong> This is the line that matters. If you haven&#39;t touched a track in almost two weeks, that number sits there quietly and tells you the truth.</p>
-<img src="https://vishalr.dev/assets/tracks-start-ember.png" alt="Screenshot of a track from Start Ember"/><h1>The Habit Connection</h1>
-<p>Some checkpoints aren&#39;t one-time topics. They&#39;re things you want to build a daily practice around. &quot;Solve system design problems daily&quot; might be a stage in your learning track, but it&#39;s also something you want to show up for every single day.</p>
-<p>In Start Ember, you can link a checkpoint directly to a habit. The checkpoint marks where you are in the material. The habit tracks whether you&#39;re showing up for the daily work that stage requires.</p>
-<p>The track is how you move through the curriculum. The habit is how you make it stick.</p>
-<h1>Start Simple</h1>
-<p>You don&#39;t need a complicated system. Pick something you&#39;re learning from a specific source, break it into chunks, work through the chunks. When it&#39;s done, it&#39;s done.</p>
-<p>Start Ember holds that clearly, shows you where you stand, and tells you the truth about whether you&#39;ve been showing up.</p>
-<p>Start Ember is a free habit and learning tracker. Try it at <a href="https://start-ember.vercel.app">start-ember.vercel.app</a></p>
-<p><em>If this resonated, or if you&#39;ve been quietly misusing your habit tracker the same way I was, drop a comment below.</em></p>
-]]></content:encoded>
-        </item>
-        <item>
-            <title><![CDATA[Native Temple fest]]></title>
-            <description><![CDATA[
-Yo! 🙋
-So there I was in my native, Devakottai, Tamil Nadu.
-
-img src="/assets/native-temple.png" alt="" style="float: right; width: 35%; max-width: 300px; min-width: 140px; shape-outside: url('/assets/native-temple.png'); shape-margin: 0.75rem; shape-image-threshold: 0.1;" /
-
-Our temple has a wee...]]></description>
-            <link>https://vishalr.dev/archive/32-Native-Temple-fest</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/32-Native-Temple-fest</guid>
-            <category><![CDATA[Life]]></category>
-            <pubDate>Sat, 09 May 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<p>Yo! 🙋
-So there I was in my native, Devakottai, Tamil Nadu.</p>
-<img src="https://vishalr.dev/assets/native-temple.png" alt=""  / style="display:block;margin:1em auto;max-width:100%;"><p>Our temple has a week-long tradition before the main fest. For seven days leading up to it, a different group of families took responsibility for dinner each night, deciding among themselves what to cook. I arrived on day five.</p>
-<p>Around 7 pm that evening, people started gathering near the temple. A minute later, firecrackers went off in the sky. The call for everyone to come. My mom, my brother, and I made our way there. The tradition for these six days went like this: the temple priest carried a decorated pot filled with water and walked around the temple three times, with everyone following behind. After the three rounds, he came inside, cleansed the idol, and began the pooja. Dinner came after.</p>
-<p>My plate came loaded: idlis, pongal, chutney, a sweet for dessert, and veg puffs. It didn&#39;t go entirely smoothly, though. Heavy wind kept cutting the power on and off right through dinner. When the lights finally stayed on, sitting down to eat felt like a sign from god himself.
-<img src="https://vishalr.dev/assets/native-card.png" alt=""  / style="display:block;margin:1em auto;max-width:100%;"></p>
-<p>The next day, our guests arrived. My aunt and her family came in. My cousin Akshitha got slightly jealous the moment I greeted her mom before I even noticed her. We always fight. That&#39;s just how we say hello. They came with a cake that read &quot;Congrats Vishwesh 490/500,&quot; a whole plan to celebrate my brother&#39;s 10th board results. After the celebration, it was back to the routine: temple visit, then home to a night of cards. The core entertainment at every family reunion.</p>
-<p>Then came the day of Pal Kudam, which was also the day my family had to serve dinner. It started with a visit to Veerapathirar Kovil, a nearby temple, where we prayed and broke a coconut. Back home, the Pal Kudam procession had already started. Everyone was dressed in full yellows, and the little kids carrying small pots on their heads, with family hands steadying them from the sides, was something else entirely.</p>
-<p>Somewhere in between, we found a pond near the house and took a bath. Damn, that brought back every summer holiday memory in one shot. Two hours in the pond, every single day.</p>
-<p>For dinner, we had planned biriyani and idiyappam. It went well, except we ran out of gravy. People had to eat the biriyani plain. That one still stings.</p>
-<img src="https://vishalr.dev/assets/native-temple-fest.png" alt=""  / style="display:block;margin:1em auto;max-width:100%;"><p>The last special day was the play night, where the village stages a folk performance after seven straight days of vegetarian food. Everyone cooked non-veg, and families and friends got invited over. Our plates had mutton and chicken gravies with parotta and rice. We also made sure to invite the people who had set up the stage and lights.</p>
-<p>The next morning, I headed back to Bengaluru. The rest of the week comes in the next weekly.</p>
-]]></content:encoded>
-        </item>
-        <item>
-            <title><![CDATA[Hailstorm in church st]]></title>
-            <description><![CDATA[
-Yo! 🙋
-Got my marathon picture. Good lord, I did not pay for that thing.
-
-On the 29th, Bengaluru got hit with a heavy hailstorm. I was in office when it started. Coming out of a meeting room, I stopped. The sky outside had gone completely grey, visibility was near zero, and water was streaming in f...]]></description>
-            <link>https://vishalr.dev/archive/31-hailstorm-in-church-street</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/31-hailstorm-in-church-street</guid>
-            <category><![CDATA[Life]]></category>
-            <pubDate>Sat, 02 May 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<p>Yo! 🙋
-Got my marathon picture. Good lord, I did not pay for that thing.</p>
-<p>On the 29th, Bengaluru got hit with a heavy hailstorm. I was in office when it started. Coming out of a meeting room, I stopped. The sky outside had gone completely grey, visibility was near zero, and water was streaming in from the service balcony. The cleaners were already trying to push it back out. That&#39;s when I noticed it: ice, floating in the water. Actual hailstones.</p>
-<p>Naturally, I had to see this up close. Ran up to the 9th floor, but the doors were shut. Through the glass, the entire floor was covered in hailstones. Then I went down to the ground floor instead and just stood there watching: heavy wind, rain, and stones pelting everything in sight.</p>
-<p>Getting home was a whole thing. I managed to find an office cab and made it to the metro. The next day, I found out the bookstores on Church Street had flooded. Thousands of books, damaged. The drainage systems were there, but the hailstones had blocked them completely, so the water backed up straight into the buildings. Bookworm posted about it, and the comments were full of people offering to help. That part was nice to see.</p>
-<p>A few days later, on May 2nd, I headed to Devakottai, Tamil Nadu. Mom made dosa with multiple chutneys, and we had a banana leaf dinner. Simple, but exactly what I needed.</p>
-]]></content:encoded>
-        </item>
-        <item>
             <title><![CDATA[The chunking showdown: Fixed vs Semantic vs Hierarchical]]></title>
             <description><![CDATA[
 Three chunking strategies walked into a RAG pipeline. Only one handled every document type well. Here's what the numbers showed.
 
 Yo! 🙋
 When I built my first RAG pipeline, I picked 512 tokens with a 50-token overlap because it was the standard. It worked well enough. In my next project, I tried im...]]></description>
-            <link>https://vishalr.dev/archive/The-chunking-showdown</link>
+            <link>https://vishalr.dev/article/The-chunking-showdown</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/The-chunking-showdown</guid>
             <category><![CDATA[Devlog]]></category>
             <pubDate>Thu, 30 Apr 2026 18:30:00 GMT</pubDate>
@@ -472,7 +311,7 @@ Yo!🙋
 For World Book Day, Sadhana gifted me Watchmen, while I got her Martyr! by Kaveh Akbar. A good trade.
 
 Sunday was special. I ran my first marathon, thanks to Ritik dragging me into it. Yes, people had opinions about whether 4.2 km counts as a marathon. But for someone who has never crossed a ...]]></description>
-            <link>https://vishalr.dev/archive/30-My-First-Marathon</link>
+            <link>https://vishalr.dev/article/30-My-First-Marathon</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/30-My-First-Marathon</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 25 Apr 2026 18:30:00 GMT</pubDate>
@@ -488,7 +327,7 @@ For World Book Day, Sadhana gifted me Watchmen, while I got her Martyr! by Kaveh
 Yo!
 
 This week, I witnessed a mass layoff. My team members were removed. My friends were removed. The whole day went by refreshing my inbox, wondering if I was next, pinging everyone on leave to check if they were among them. The person I’d lunch with, the person who got teased for being a workahol...]]></description>
-            <link>https://vishalr.dev/archive/29-Will-We-Ever-Get-Used-To-This</link>
+            <link>https://vishalr.dev/article/29-Will-We-Ever-Get-Used-To-This</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/29-Will-We-Ever-Get-Used-To-This</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 18 Apr 2026 18:30:00 GMT</pubDate>
@@ -509,7 +348,7 @@ Yo!
 
 - Have you heard of an app named [Peerlist](https://peerlist.io/)? This is like Twitter, but built exclusively for developers. This has a feature “Launchpad” where every week people publish their products/projects and get voting from other users.
 - This week, I built a straightforward habit tr...]]></description>
-            <link>https://vishalr.dev/archive/28-First-app-launch</link>
+            <link>https://vishalr.dev/article/28-First-app-launch</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/28-First-app-launch</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 11 Apr 2026 18:30:00 GMT</pubDate>
@@ -524,36 +363,12 @@ Yo!
 ]]></content:encoded>
         </item>
         <item>
-            <title><![CDATA[Start Ember: How a Drawing Goal Turned Into an App]]></title>
-            <description><![CDATA[
-This year, I decided to split my resolutions into quarters, one single goal per quarter. For the first quarter, I chose something I'd always wanted to try: learning to draw characters. The plan was simple. Ten minutes every day. That's it.
-The first few days went well. Then, as these things go, it ...]]></description>
-            <link>https://vishalr.dev/archive/start-ember</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/start-ember</guid>
-            <category><![CDATA[Devlog]]></category>
-            <pubDate>Thu, 09 Apr 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<p>This year, I decided to split my resolutions into quarters, one single goal per quarter. For the first quarter, I chose something I&#39;d always wanted to try: learning to draw characters. The plan was simple. Ten minutes every day. That&#39;s it.
-The first few days went well. Then, as these things go, it started fading into the background.</p>
-<p>So I tried a caveman approach, tally counting. I bought some sticky notes and started marking every day I completed my session. Just seeing those little marks gave me a sense of achievement. But I started missing days again, so I layered on a reward system: complete a 15-day streak and treat myself to a manga( Japanese Comic ).</p>
-<p>It was working, but tracking it was becoming a problem in itself. Was I marking today, or had I already marked it? Did I accidentally double-count? The sticky notes were unreliable. That&#39;s when it hit me: why not build a small app to do this properly?
-And so the developer in me took over.</p>
-<p>I kept everything on free tiers: Supabase for the database, Vercel for deployment. I used AI for parts of the coding and UI design, no shame in that. Once the app was live, I realized I didn&#39;t want just anyone with the link to see my habit tracking, so I added authentication. Supabase&#39;s built-in auth had hit its limit, so I switched to Clerk and integrated Google sign-in. Simple, secure, and no forgotten passwords.</p>
-<p>That&#39;s how <strong>Start Ember</strong> was born.</p>
-<blockquote>
-<p>Ember is a hot coal; it symbolizes the habits that are just beginning to take shape, quietly burning before they become something bigger. A little cheesy, maybe, but it felt right.</p>
-</blockquote>
-<p>The app itself is straightforward: create habits, track your streaks, and see a monthly breakdown of how you&#39;re doing. I&#39;ve been using it for 15 days now and have tweaked the design quite a bit along the way. If you have a goal from this year that you&#39;ve already forgotten about, give it a try. I also snuck in some fun animations.</p>
-<p>I have launched it in this week&#39;s peerlist, check it out - <a href="https://peerlist.io/vishal_r_dev/project/start-ember">Peerlist launchpad</a></p>
-<p>👉 <a href="https://start-ember.vercel.app/">start-ember.vercel.app</a></p>
-]]></content:encoded>
-        </item>
-        <item>
             <title><![CDATA[My First Hotwheel Trade]]></title>
             <description><![CDATA[
 Yo!
 
 - Traded my Mercedes Hot Wheels for a Nissan this week. On paper, not a fair swap, but I'm building a themed collection, strictly JDMs , so the Mercedes had to go. I've watched enough History Channel car trading shows to know a good deal when I see one. This felt like that, just in miniature. ...]]></description>
-            <link>https://vishalr.dev/archive/25-my-first-hotwheel-trade</link>
+            <link>https://vishalr.dev/article/25-my-first-hotwheel-trade</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/25-my-first-hotwheel-trade</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 21 Mar 2026 18:30:00 GMT</pubDate>
@@ -576,7 +391,7 @@ figure style="float: right; margin: -1rem 0 0 0; text-align: center;"
 
 - Hit the first 15 days of both gym and drawing – reward habit system is holding! 🎉
 - Drawing has been a bit scattered f...]]></description>
-            <link>https://vishalr.dev/archive/24-hamnet</link>
+            <link>https://vishalr.dev/article/24-hamnet</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/24-hamnet</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 14 Mar 2026 18:30:00 GMT</pubDate>
@@ -597,37 +412,6 @@ figure style="float: right; margin: -1rem 0 0 0; text-align: center;"
 ]]></content:encoded>
         </item>
         <item>
-            <title><![CDATA[Israel - Iran war]]></title>
-            <description><![CDATA[
-Yo! 🙋‍♂️In week 23,
-
-- Something I forgot to mention in the last week was the war between Iran, Israel + USA. Even though the US claims it’s to liberate and help the people of Iran, it doesn’t look like a good way to help someone by bombing them.
-- I would say it’s just a plan for Israel to become...]]></description>
-            <link>https://vishalr.dev/archive/23-israel-iran-war</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/23-israel-iran-war</guid>
-            <category><![CDATA[Life]]></category>
-            <pubDate>Sat, 07 Mar 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<p>Yo! 🙋‍♂️In week 23,</p>
-<ul>
-<li><p>Something I forgot to mention in the last week was the war between Iran, Israel + USA. Even though the US claims it’s to liberate and help the people of Iran, it doesn’t look like a good way to help someone by bombing them.</p>
-</li>
-<li><p>I would say it’s just a plan for Israel to become <strong>Greater Israel</strong>, where they occupy a lot of other nearby areas, which has been their goal since they named themself a nation. Why the US is helping them, one word answer is the <strong>lobbying</strong> of Israel in the US. Lobbying (in the U.S.) simply means trying to influence government decisions, which is apparently legal in the U.S.</p>
-<div style="display: flex; gap: 1rem; justify-content: center; margin: 1.5rem 0;">
-  <figure style="text-align:center;">
-    <img src="https://vishalr.dev/assets/current-israel-map.jpg" width="400" alt="Current Israel Map."/>
-  </figure>  <figure style="text-align:center;">
-    <img src="https://vishalr.dev/assets/greater-israel-map.jpg" width="500" alt="The area Israel aim for."/>
-  </figure></li>
-</ul>
-</div><ul>
-<li>The Israel lobby in the United States is considered one of the most influential foreign-policy lobbying networks. Basically, they fund candidates who support strong US-Israel relations. Plus, Israel has been the closest military and intelligence partner in the Middle East.</li>
-<li>Whatever the reason they give, any reason is not enough to bomb at innocents. They should just talk, or the leader should try a 1-on-1.</li>
-<li>Btw, my dad is in Bahrain, and there was a bombing 10 KM away from his place. He says he is fine, and he has to go to work 😑.</li>
-<li>Here, I’m exploring a new pizza place, <strong>Serious Slice</strong>, on <a href="https://maps.app.goo.gl/De1jwjJpLDr4dgNb7">Cullingam Road</a>. The pizza and chicken were decent. I love the aesthetics.</li>
-</ul>
-]]></content:encoded>
-        </item>
-        <item>
             <title><![CDATA[To Wonderla]]></title>
             <description><![CDATA[
 Yo! 🙋‍♂️In week 22,
@@ -635,7 +419,7 @@ Yo! 🙋‍♂️In week 22,
 - In recent months, I have been trying to have a daily habit, and to improve the consistency, I have included a reward method. As I cross a particular streak, I will reward myself, something that I enjoy doing.
 
 figure style="float: right; margin: -2rem 2rem 0 0; text-align: ...]]></description>
-            <link>https://vishalr.dev/archive/22-to-wonderla</link>
+            <link>https://vishalr.dev/article/22-to-wonderla</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/22-to-wonderla</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 28 Feb 2026 18:30:00 GMT</pubDate>
@@ -657,7 +441,7 @@ figure style="float: right; margin: -2rem 2rem 0 0; text-align: ...]]></descript
 Yo! 🙋‍♂️In week 20,
 
 - This week I was in coimbatore at my uncle’s home for his wedding anniversary. They forgot I’m coming home and left for a trip. Good thing they left the keys with neigbour so I had to stay alone for a day. Neighbour is a relative of ours, the patti (grandmother) there gave me...]]></description>
-            <link>https://vishalr.dev/archive/20-Anniversary-at-Coimbatore</link>
+            <link>https://vishalr.dev/article/20-Anniversary-at-Coimbatore</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/20-Anniversary-at-Coimbatore</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 14 Feb 2026 18:30:00 GMT</pubDate>
@@ -688,7 +472,7 @@ Yo 🙋‍♂️!
 
 I just found a new Christmas movie.
 A movie released before you were born that will make you cherish the life you have. 2 hours about a man, getting what he deserved for being good. I recommend it if you are feeling your life is racing by, and you need a cozy ending slice of life movie. ...]]></description>
-            <link>https://vishalr.dev/archive/Its-a-Wonderful-Life</link>
+            <link>https://vishalr.dev/article/Its-a-Wonderful-Life</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Its-a-Wonderful-Life</guid>
             <category><![CDATA[Movie]]></category>
             <pubDate>Sat, 31 Jan 2026 18:30:00 GMT</pubDate>
@@ -708,7 +492,7 @@ Leave money, that may not be the only thing to show your love. There is a scene 
             <description><![CDATA[
 A painting that survives. The painting that lived. A painter dies in an accidental explosion. Only survivor is a bird painted — a bird tied at a place. After time, the bird gets into a terrorist explosion in an art museum. Yet again, it survives in the hands of a child.
 But a work of art surviving ...]]></description>
-            <link>https://vishalr.dev/archive/The-Goldfinch</link>
+            <link>https://vishalr.dev/article/The-Goldfinch</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/The-Goldfinch</guid>
             <category><![CDATA[Movie]]></category>
             <pubDate>Sun, 25 Jan 2026 18:30:00 GMT</pubDate>
@@ -728,7 +512,7 @@ figure style="float: right; text-align: center;"
 Yo! 🙋‍♂️ In week 17,
 
 - My parents stay in 3rd floor of the apartment whenever my brother leaves for school, my mom stays near the stairs and ...]]></description>
-            <link>https://vishalr.dev/archive/17-post-pongal</link>
+            <link>https://vishalr.dev/article/17-post-pongal</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/17-post-pongal</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 24 Jan 2026 18:30:00 GMT</pubDate>
@@ -755,7 +539,7 @@ That felt so beautiful. So that day, I left the flat, took the lift. Once I reac
 Yo!
 
 As per my trip goals for this year, I went to Chennai to celebrate Pongal. This was an educational trip, as I was requested to teach my brother the NCERT. He is jee aspirant and has cleared Olympiads. But he has no interest in opening an NCERT book. So I had to summarize some lessons and motiv...]]></description>
-            <link>https://vishalr.dev/archive/16-Theater-1-restaurant-0</link>
+            <link>https://vishalr.dev/article/16-Theater-1-restaurant-0</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/16-Theater-1-restaurant-0</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sat, 17 Jan 2026 18:30:00 GMT</pubDate>
@@ -775,34 +559,6 @@ As always, a simple story with a good screenplay wins.</p>
 ]]></content:encoded>
         </item>
         <item>
-            <title><![CDATA[Parasakthi doesn’t deserve]]></title>
-            <description><![CDATA[
-figure style="float: right; margin: 0 0 1rem 1rem; text-align: center;"
-  img src="/assets/cutie-kim-jong-un.jpeg" alt="Cutie Kim" width="150" /
-/figure
-
-Yo! Week 15,
-
-Had a micro war with my friend over choosing the WhatsApp group profile. She wanted Jungkook, while I wanted a cutie Kim Jong...]]></description>
-            <link>https://vishalr.dev/archive/15-Parasakthi-doesn’t-deserve</link>
-            <guid isPermaLink="false">https://vishalr.dev/archive/15-Parasakthi-doesn’t-deserve</guid>
-            <category><![CDATA[Life]]></category>
-            <pubDate>Sat, 10 Jan 2026 18:30:00 GMT</pubDate>
-            <content:encoded><![CDATA[<figure style="float: right; margin: 0 0 1rem 1rem; text-align: center;">
-  <img src="https://vishalr.dev/assets/cutie-kim-jong-un.jpeg" alt="Cutie Kim" width="150" />
-</figure><p>Yo! Week 15,</p>
-<p>Had a micro war with my friend over choosing the WhatsApp group profile. She wanted Jungkook, while I wanted a cutie Kim Jong Un. It went back and forth and finally settled on common ground — a cat picture.</p>
-<p><strong>Parasakthi doesn’t deserve this hatred.</strong></p>
-<p>I watched Parasakthi and found it to be a decent film with several well-executed scenes. My main reason for watching it was the director, Sudha Kongara. Her film <em>Soorarai Pottru</em> is a comfort watch for me, so I naturally expected Parasakthi to be on a similar level.</p>
-<figure style="float: left; margin: 0 1rem 1rem 0; text-align: center;">
-  <img src="https://vishalr.dev/assets/parasakthi-poster.jpg" alt="Parasakthi Poster" width="250" />
-</figure><p>Both films are loosely inspired by real people and their real ambitions, but Parasakthi falls short in one key area. For nearly 40% of the film, the story drifts away from its core purpose. If the protagonist, Che, had been given a single, clear goal and the narrative had stayed focused on it, the film would have been far more effective.</p>
-<p>Instead, the story diverts into his pursuit of a central government job. While this eventually helps him understand the flaws in the system, it introduces too many sub-goals that pull the film into unnecessary side tracks.</p>
-<p>That said, apart from this structural issue, I felt the movie worked reasonably well. It is far from perfect — <strong>but it is definitely not a film that deserves the level of hatred it is receiving.</strong></p>
-<div style="clear: both;"></div>
-]]></content:encoded>
-        </item>
-        <item>
             <title><![CDATA[Plans for 2026]]></title>
             <description><![CDATA[
 - Travelled to Kolkata, will cover the experience in a blog.
@@ -810,7 +566,7 @@ Had a micro war with my friend over choosing the WhatsApp group profile. She wan
 - Before travelling, I have been busy with plans and actions for the coming year 2026. Below are some,
 
 - **Trips for 2026**: Here I have planned out when I‘m gonna meet my parents, my favorite relative, and take trips. This goes like, I...]]></description>
-            <link>https://vishalr.dev/archive/13-plans-for-2026</link>
+            <link>https://vishalr.dev/article/13-plans-for-2026</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/13-plans-for-2026</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Mon, 29 Dec 2025 18:30:00 GMT</pubDate>
@@ -838,9 +594,9 @@ Konnichiwa Readers!
 Last month, I attended an event I found through my regular magazine, **Open Source For You**.  
 If you like holding a physical magazine that talks about tech, especially the soft side of tech changes, I recommend this one.  
 _Also because I don’t think we have another option in...]]></description>
-            <link>https://vishalr.dev/archive/Open-Source-India-2025</link>
+            <link>https://vishalr.dev/article/Open-Source-India-2025</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Open-Source-India-2025</guid>
-            <category><![CDATA[Tech]]></category>
+            <category><![CDATA[Devlog]]></category>
             <pubDate>Sat, 06 Dec 2025 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<p>Konnichiwa Readers!</p>
 <p>Last month, I attended an event I found through my regular magazine, <strong>Open Source For You</strong>.<br>If you like holding a physical magazine that talks about tech, especially the soft side of tech changes, I recommend this one.<br><em>Also because I don’t think we have another option in India.</em></p>
@@ -1117,7 +873,7 @@ Inference latency is simply the time taken to produce output after receiving inp
 Hi! Welcome to my Weekly Note nummbbberrr 7 ✨
 
 - This week I went **go-karting** for the first time. My great friends Sadhana and Mayank took me to **LOCO BEAR**. During a break, Mayank asked, “Let’s go for karting.” I acted casually “Sure, Sadhana, you’re coming too” but damn, my heart was on fire...]]></description>
-            <link>https://vishalr.dev/archive/8-Minutes-of-Pure-Vroooom-Weekly-Note-7</link>
+            <link>https://vishalr.dev/article/8-Minutes-of-Pure-Vroooom-Weekly-Note-7</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/8-Minutes-of-Pure-Vroooom-Weekly-Note-7</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Tue, 18 Nov 2025 18:30:00 GMT</pubDate>
@@ -1144,7 +900,7 @@ Hi! Welcome to my Weekly Note nummbbberrr 7 ✨
 Recently I have updated my morning routine to something that I'm proud of, so here I'm to boost it.
 
 1. First thing (after all the essentials), I do a leetcode question every day. This takes me roughly around 45 mins. Yes I'm a bit above noob at this space. Why this habit? Recently I realized I'm b...]]></description>
-            <link>https://vishalr.dev/archive/Proof-That-Even-I-Can-Stick-to-a-Routine</link>
+            <link>https://vishalr.dev/article/Proof-That-Even-I-Can-Stick-to-a-Routine</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/Proof-That-Even-I-Can-Stick-to-a-Routine</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Fri, 14 Nov 2025 18:30:00 GMT</pubDate>
@@ -1174,7 +930,7 @@ Recently I have updated my morning routine to something that I'm proud of, so he
             <title><![CDATA[Escape Room & Diwali 🧨]]></title>
             <description><![CDATA[
 - Celebrated the **1-year anniversary of the 11 AM Club**, started with paper cutting where the creativity juice flows. I couldn't finalize what to make, every cut I made gave me a new idea. Anyway, I ended up with a unique-looking piece by the end. As usual, Bake Duck got an exquisite cake, this t...]]></description>
-            <link>https://vishalr.dev/archive/escape-room-and-diwali</link>
+            <link>https://vishalr.dev/article/escape-room-and-diwali</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/escape-room-and-diwali</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sun, 19 Oct 2025 18:30:00 GMT</pubDate>
@@ -1203,7 +959,7 @@ Recently I have updated my morning routine to something that I'm proud of, so he
             <description><![CDATA[
 - Got my **IKEA delivery!** Finally received the ALGANÄS shoe stand that I’d been waiting for quite some time , loved it! I was afraid it would be _wobbly-wobbly_ 😅 but it turned out super steady and slim, so it doesn’t take up much space.  
   Also grabbed a few other small things along with two c...]]></description>
-            <link>https://vishalr.dev/archive/ikea-earbuds-and-empathy</link>
+            <link>https://vishalr.dev/article/ikea-earbuds-and-empathy</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/ikea-earbuds-and-empathy</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Fri, 10 Oct 2025 18:30:00 GMT</pubDate>
@@ -1229,7 +985,7 @@ Recently, I’ve been working with a friend of mine on building a lifestyle bran
 
 Started working on the skincare POC,  
 where we first understand the user’s skin. For the POC, we fetch a user’s image and share it with an LLM to ...]]></description>
-            <link>https://vishalr.dev/archive/something-fresh</link>
+            <link>https://vishalr.dev/article/something-fresh</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/something-fresh</guid>
             <category><![CDATA[Devlog]]></category>
             <pubDate>Mon, 06 Oct 2025 18:30:00 GMT</pubDate>
@@ -1249,9 +1005,9 @@ where we first understand the user’s skin. For the POC, we fetch a user’s im
 # 🗓️ The Day:
 
 On the day of **26 July 2025, 09:30 AM** started a 30-hour hackathon. My first full-night hackathon I pulled. Around **700 teams** were shortlisted out of supposedly **3000 teams** who submitted their idea. Yes, they made a **Guinness World Record** with the maximum number of hackat...]]></description>
-            <link>https://vishalr.dev/archive/aa-hackathon</link>
+            <link>https://vishalr.dev/article/aa-hackathon</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/aa-hackathon</guid>
-            <category><![CDATA[Tech]]></category>
+            <category><![CDATA[Devlog]]></category>
             <pubDate>Sun, 27 Jul 2025 18:30:00 GMT</pubDate>
             <content:encoded><![CDATA[<h1>🗓️ The Day:</h1>
 <p>On the day of <strong>26 July 2025, 09:30 AM</strong> started a 30-hour hackathon. My first full-night hackathon I pulled. Around <strong>700 teams</strong> were shortlisted out of supposedly <strong>3000 teams</strong> who submitted their idea. Yes, they made a <strong>Guinness World Record</strong> with the maximum number of hackathon participants (really, we witnessed the Guinness record given to them).</p>
@@ -1317,7 +1073,7 @@ I’m richer than I was in school, but I’m not happier.
 
 So what do I think gives happiness?
 Good health — Freedom — Strong Re...]]></description>
-            <link>https://vishalr.dev/archive/time-money-life</link>
+            <link>https://vishalr.dev/article/time-money-life</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/time-money-life</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Sun, 13 Jul 2025 18:30:00 GMT</pubDate>
@@ -1361,7 +1117,7 @@ div style="display: flex; gap: 20px; margin-bottom: 20px;"
   div style="flex: 1;"
     pI see this picture of my favorite character Luffy from One Piece—a happy, free-living person jumping toward his dreams and goals while taking great pleasure in his journey—I feel inspired./p
     pI saw ...]]></description>
-            <link>https://vishalr.dev/archive/totem-totem-totem</link>
+            <link>https://vishalr.dev/article/totem-totem-totem</link>
             <guid isPermaLink="false">https://vishalr.dev/archive/totem-totem-totem</guid>
             <category><![CDATA[Life]]></category>
             <pubDate>Fri, 04 Jul 2025 18:30:00 GMT</pubDate>

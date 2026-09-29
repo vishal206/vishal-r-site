@@ -1,7 +1,6 @@
 ---
 title: "It’s a Wonderful Life"
 date: "01 Feb 2026"
-image: "https://www.themoviedb.org/t/p/w1280/bSqt9rhDZx1Q7UZ86dBPKdNomp2.jpg"
 banner: "https://www.themoviedb.org/t/p/w1280/bSqt9rhDZx1Q7UZ86dBPKdNomp2.jpg"
 tags: "Movie"
 publishRss: true

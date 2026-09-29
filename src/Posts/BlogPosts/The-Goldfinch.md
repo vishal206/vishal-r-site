@@ -1,7 +1,6 @@
 ---
 title: "The Goldfinch"
 date: "26 Jan 2026"
-image: "/assets/the-goldfinch-poster.jpg"
 banner: "/assets/the-goldfinch-poster.jpg"
 tags: "Movie"
 publishRss: true

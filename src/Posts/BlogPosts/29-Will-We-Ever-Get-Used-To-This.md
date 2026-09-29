@@ -3,6 +3,7 @@ title: "Will We Ever Get Used To This?"
 date: "19 Apr 2026"
 tags: "Life"
 publishRss: true
+banner: "/assets/rant-layoff.png"
 ---
 
 Yo!

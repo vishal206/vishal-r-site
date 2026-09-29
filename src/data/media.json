@@ -1,68 +1,4 @@
 {
-  "books": {
-    "read": [
-      {
-        "title": "The Seven Days of Peter Crumb",
-        "author": "Jonny Glynn",
-        "image": "/assets/seven-days-of-peter-crumb.jpeg",
-        "post": "The-Seven-Days-of-Peter-Crumb"
-      },
-      {
-        "title": "Crooked Kingdom",
-        "author": "Leigh Bardugo",
-        "image": "https://covers.openlibrary.org/b/id/12667428-L.jpg"
-      },
-      {
-        "title": "Six of Crows",
-        "author": "Leigh Bardugo",
-        "olCoverId": 15154301,
-        "image": "https://covers.openlibrary.org/b/id/15154301-L.jpg"
-      },
-      {
-        "title": "The Decagon House Murders",
-        "author": "Yukito Ayatsuji",
-        "image": "https://covers.openlibrary.org/b/id/14648882-L.jpg"
-      },
-      {
-        "title": "The Mill House Murders",
-        "author": "Yukito Ayatsuji",
-        "image": "https://covers.openlibrary.org/b/id/13863987-L.jpg"
-      },
-      {
-        "title": "BAKUMAN",
-        "author": "Tsugumi Ohba & Takeshi Obata",
-        "volumes": [
-          "https://covers.openlibrary.org/b/id/9354224-L.jpg",
-          "https://covers.openlibrary.org/b/id/6667569-L.jpg",
-          "https://covers.openlibrary.org/b/id/6681638-L.jpg",
-          "https://covers.openlibrary.org/b/id/12817366-L.jpg",
-          "https://covers.openlibrary.org/b/id/12962249-L.jpg",
-          "https://covers.openlibrary.org/b/id/7820917-L.jpg",
-          "https://covers.openlibrary.org/b/id/12816891-L.jpg",
-          "https://covers.openlibrary.org/b/id/7838953-L.jpg",
-          "https://covers.openlibrary.org/b/id/7315310-L.jpg",
-          "https://covers.openlibrary.org/b/id/7315314-L.jpg",
-          "https://covers.openlibrary.org/b/id/12816896-L.jpg",
-          "https://covers.openlibrary.org/b/id/9250475-L.jpg",
-          "https://covers.openlibrary.org/b/id/9251358-L.jpg",
-          "https://covers.openlibrary.org/b/id/12769542-L.jpg",
-          "https://covers.openlibrary.org/b/id/7315327-L.jpg",
-          "https://covers.openlibrary.org/b/id/8537695-L.jpg",
-          "https://covers.openlibrary.org/b/id/7335314-L.jpg",
-          "https://covers.openlibrary.org/b/id/7315328-L.jpg",
-          "https://covers.openlibrary.org/b/id/7335318-L.jpg",
-          "https://covers.openlibrary.org/b/id/7335320-L.jpg"
-        ]
-      }
-    ],
-    "wishlist": [
-      {
-        "title": "The Labyrinth House Murders",
-        "author": "Yukito Ayatsuji",
-        "image": null
-      }
-    ]
-  },
   "movies": {
     "watched": [
       {
@@ -236,7 +172,6 @@
         "score": 9,
         "note": null
       },
-
       {
         "title": "Daddy's Home",
         "image": "https://www.themoviedb.org/t/p/w1280/fB9lALk9zKsMYWvf0bJSkJN219Z.jpg",
@@ -255,14 +190,12 @@
         "score": 2,
         "note": null
       },
-
       {
         "title": "A Letter to Momo",
         "image": "https://www.themoviedb.org/t/p/w1280/uH4c5t3Wzzv41Wq9ws2Q47N1Dzo.jpg",
         "score": 3,
         "note": "*“Dear Momo”*"
       },
-
       {
         "title": "100 METERS",
         "image": "https://www.themoviedb.org/t/p/w1280/kQyS2UrSbkd5AF0seuTSvRqWIdh.jpg",
@@ -296,231 +229,456 @@
         "image": "https://www.themoviedb.org/t/p/w1280/4eMN3GANH5GG4kXdHkrTZEUuQ9M.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/609-poltergeist"
+        "url": "https://www.themoviedb.org/movie/609-poltergeist",
+        "runtime": 114,
+        "genres": [
+          "Horror"
+        ],
+        "rating": 7.2
       },
       {
         "title": "CJ7",
         "image": "https://www.themoviedb.org/t/p/w1280/sRzSfpSb3wYYshbaiMRIuFCJJGU.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/13688"
+        "url": "https://www.themoviedb.org/movie/13688",
+        "runtime": 88,
+        "genres": [
+          "Comedy",
+          "Drama",
+          "Family",
+          "Fantasy",
+          "Science Fiction"
+        ],
+        "rating": 7.3
       },
       {
         "title": "Jerry Maguire",
         "image": "https://www.themoviedb.org/t/p/w1280/lABvGN7fDk5ifnwZoxij6G96t2w.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/9390-jerry-maguire"
+        "url": "https://www.themoviedb.org/movie/9390-jerry-maguire",
+        "runtime": 139,
+        "genres": [
+          "Comedy",
+          "Drama",
+          "Romance"
+        ],
+        "rating": 7
       },
       {
         "title": "Lion of the Desert",
         "image": "https://www.themoviedb.org/t/p/w1280/xm7CKN5mo09RNAcL1IP1xmJ5avT.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/26843-lion-of-the-desert"
+        "url": "https://www.themoviedb.org/movie/26843-lion-of-the-desert",
+        "runtime": 173,
+        "genres": [
+          "History",
+          "War",
+          "Drama"
+        ],
+        "rating": 7.3
       },
       {
         "title": "Eyes Wide Shut",
         "image": "https://www.themoviedb.org/t/p/w1280/knEIz1eNGl5MQDbrEAVWA7iRqF9.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/345-eyes-wide-shut"
+        "url": "https://www.themoviedb.org/movie/345-eyes-wide-shut",
+        "runtime": 159,
+        "genres": [
+          "Drama",
+          "Thriller",
+          "Mystery"
+        ],
+        "rating": 7.5
       },
       {
         "title": "Familiar Touch",
         "image": "https://www.themoviedb.org/t/p/w1280/zUKpIGBCiUTyFTEPJxc7nJtLU3P.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/1265717-familiar-touch"
+        "url": "https://www.themoviedb.org/movie/1265717-familiar-touch",
+        "runtime": 90,
+        "genres": [
+          "Drama"
+        ],
+        "rating": 6.3
       },
       {
         "title": "Penguin Highway",
         "image": "https://www.themoviedb.org/t/p/w1280/wMJJk4kkXfqwP5W7wYHWvDXhTlw.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/508422"
+        "url": "https://www.themoviedb.org/movie/508422",
+        "runtime": 118,
+        "genres": [
+          "Animation",
+          "Adventure",
+          "Comedy",
+          "Fantasy"
+        ],
+        "rating": 7.2
       },
       {
         "title": "Gauravam",
         "image": "https://www.themoviedb.org/t/p/w1280/eGysRd8ngrIqZnKiKzZE8gBrU5W.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/185786-gouravam"
+        "url": "https://www.themoviedb.org/movie/185786-gouravam",
+        "runtime": 136,
+        "genres": [
+          "Drama",
+          "Family"
+        ],
+        "rating": 7.5
       },
       {
         "title": "Redline",
         "image": "https://www.themoviedb.org/t/p/w1280/yUkH0y9OsY7J08Dvfzi1P0di559.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/71883"
+        "url": "https://www.themoviedb.org/movie/71883",
+        "runtime": 102,
+        "genres": [
+          "Animation",
+          "Action",
+          "Science Fiction"
+        ],
+        "rating": 7.6
       },
       {
         "title": "The Tank",
         "image": "https://www.themoviedb.org/t/p/w1280/65Jr1JAgWlu9em8zHhAfrNJJQBt.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/1252037-der-tiger"
+        "url": "https://www.themoviedb.org/movie/1252037-der-tiger",
+        "runtime": 117,
+        "genres": [
+          "War",
+          "Action",
+          "Drama"
+        ],
+        "rating": 7.1
       },
       {
         "title": "Lost in Starlight",
         "image": "https://www.themoviedb.org/t/p/w1280/4uD6dD57knWdqDtQsOiNq0D7xOT.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/1165642"
+        "url": "https://www.themoviedb.org/movie/1165642",
+        "runtime": 96,
+        "genres": [
+          "Animation",
+          "Romance",
+          "Science Fiction",
+          "Drama"
+        ],
+        "rating": 7.4
       },
       {
         "title": "Her Blue Sky",
         "image": "https://www.themoviedb.org/t/p/w1280/c2UTAPcfIrvgDVYzpX4R8RSV6tF.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/615165"
+        "url": "https://www.themoviedb.org/movie/615165",
+        "runtime": 108,
+        "genres": [
+          "Animation",
+          "Romance"
+        ],
+        "rating": 7.4
       },
       {
         "title": "Sword of the Stranger",
         "image": "https://www.themoviedb.org/t/p/w1280/lMsUYZq5ITW3rAqF3tB7v74KEnH.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/13980"
+        "url": "https://www.themoviedb.org/movie/13980",
+        "runtime": 103,
+        "genres": [
+          "Action",
+          "Animation",
+          "History"
+        ],
+        "rating": 7.6
       },
       {
         "title": "Maquia: When the Promised Flower Blooms",
         "image": "https://www.themoviedb.org/t/p/w1280/hL3NqRE2ccR4Y2sYSJTrmalRjrz.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/476292"
+        "url": "https://www.themoviedb.org/movie/476292",
+        "runtime": 115,
+        "genres": [
+          "Animation",
+          "Drama",
+          "Fantasy"
+        ],
+        "rating": 8.1
       },
       {
         "title": "Hello World",
         "image": "https://www.themoviedb.org/t/p/w1280/vmizP4G4EWsxNf6PLOvGNaFJ89Y.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/604605-hello-world"
+        "url": "https://www.themoviedb.org/movie/604605-hello-world",
+        "runtime": 98,
+        "genres": [
+          "Animation",
+          "Romance",
+          "Science Fiction",
+          "Drama"
+        ],
+        "rating": 7.3
       },
       {
         "title": "Summer Wars",
         "image": "https://www.themoviedb.org/t/p/w1280/fIFzH5mZOeh9G3UqDd6WdaN72UV.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/28874"
+        "url": "https://www.themoviedb.org/movie/28874",
+        "runtime": 114,
+        "genres": [
+          "Animation",
+          "Science Fiction"
+        ],
+        "rating": 7.5
       },
       {
         "title": "Old",
         "image": "https://www.themoviedb.org/t/p/w1280/vclShucpUmPhdAOmKgf3B3Z4POD.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/631843-old"
+        "url": "https://www.themoviedb.org/movie/631843-old",
+        "runtime": 108,
+        "genres": [
+          "Thriller",
+          "Mystery",
+          "Horror"
+        ],
+        "rating": 6.3
       },
       {
         "title": "Anantaram",
         "image": "https://www.themoviedb.org/t/p/w1280/npiG9m6Skk3fDyugqOJwhQa95Y6.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/275030"
+        "url": "https://www.themoviedb.org/movie/275030",
+        "runtime": 125,
+        "genres": [
+          "Drama"
+        ],
+        "rating": 8.1
       },
       {
         "title": "Ping Pong",
         "image": "https://www.themoviedb.org/t/p/w1280/frgVn3ww547TVQH8vS2bWKZnEBu.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/tv/60811"
+        "url": "https://www.themoviedb.org/tv/60811",
+        "runtime": 23,
+        "episodes": 11,
+        "genres": [
+          "Animation",
+          "Drama"
+        ],
+        "rating": 8.2
       },
       {
         "title": "Temple Grandin",
         "image": "https://www.themoviedb.org/t/p/w1280/gQhQ6yEkUkDDo1zugpq46PJN8xZ.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/33602-temple-grandin"
+        "url": "https://www.themoviedb.org/movie/33602-temple-grandin",
+        "runtime": 108,
+        "genres": [
+          "Drama",
+          "History"
+        ],
+        "rating": 7.9
       },
       {
         "title": "Belle",
         "image": "https://www.themoviedb.org/t/p/w1280/fYHOD4pxZQk4rsP2tQrZI5uBlZV.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/776305"
+        "url": "https://www.themoviedb.org/movie/776305",
+        "runtime": 121,
+        "genres": [
+          "Animation",
+          "Science Fiction",
+          "Drama",
+          "Music"
+        ],
+        "rating": 7.6
       },
       {
         "title": "Crazy, Stupid, Love.",
         "image": "https://www.themoviedb.org/t/p/w1280/p4RafgAPk558muOjnBMHhMArjS2.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/50646-crazy-stupid-love"
+        "url": "https://www.themoviedb.org/movie/50646-crazy-stupid-love",
+        "runtime": 118,
+        "genres": [
+          "Comedy",
+          "Drama",
+          "Romance"
+        ],
+        "rating": 7.3
       },
       {
         "title": "Steamboy",
         "image": "https://www.themoviedb.org/t/p/w1280/he3fyAy1OUruuwhiv2xvup8H3pc.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/8953"
+        "url": "https://www.themoviedb.org/movie/8953",
+        "runtime": 126,
+        "genres": [
+          "Animation",
+          "Fantasy",
+          "Science Fiction"
+        ],
+        "rating": 6.9
       },
       {
         "title": "Chungking Express",
         "image": "https://www.themoviedb.org/t/p/w1280/43I9DcNoCzpyzK8JCkJYpHqHqGG.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/11104"
+        "url": "https://www.themoviedb.org/movie/11104",
+        "runtime": 103,
+        "genres": [
+          "Drama",
+          "Comedy",
+          "Romance"
+        ],
+        "rating": 8
       },
       {
         "title": "2001: A Space Odyssey",
         "image": "https://www.themoviedb.org/t/p/w1280/ve72VxNqjGM69Uky4WTo2bK6rfq.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/62-2001-a-space-odyssey"
+        "url": "https://www.themoviedb.org/movie/62-2001-a-space-odyssey",
+        "runtime": 149,
+        "genres": [
+          "Science Fiction",
+          "Mystery",
+          "Adventure"
+        ],
+        "rating": 8
       },
       {
         "title": "The Secret Life of Walter Mitty",
         "image": "https://www.themoviedb.org/t/p/w1280/iAo1hlzsPV9XpYcLQp6Ud065tGO.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/116745-the-secret-life-of-walter-mitty"
+        "url": "https://www.themoviedb.org/movie/116745-the-secret-life-of-walter-mitty",
+        "runtime": 114,
+        "genres": [
+          "Adventure",
+          "Comedy",
+          "Drama",
+          "Fantasy"
+        ],
+        "rating": 7.2
       },
       {
         "title": "Children of Men",
         "image": "https://www.themoviedb.org/t/p/w1280/k9IAS4TehZFcKi4HVByxZNPfqex.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/9693-children-of-men"
+        "url": "https://www.themoviedb.org/movie/9693-children-of-men",
+        "runtime": 109,
+        "genres": [
+          "Science Fiction",
+          "Thriller",
+          "Action"
+        ],
+        "rating": 7.6
       },
       {
         "title": "Hot Fuzz",
         "image": "https://www.themoviedb.org/t/p/w1280/zPib4ukTSdXvHP9pxGkFCe34f3y.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/4638-hot-fuzz"
+        "url": "https://www.themoviedb.org/movie/4638-hot-fuzz",
+        "runtime": 121,
+        "genres": [
+          "Crime",
+          "Action",
+          "Comedy"
+        ],
+        "rating": 7.6
       },
       {
         "title": "The Fifth Element",
         "image": "https://www.themoviedb.org/t/p/w1280/fPtlCO1yQtnoLHOwKtWz7db6RGU.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/18-le-cinqui-me-l-ment"
+        "url": "https://www.themoviedb.org/movie/18-le-cinqui-me-l-ment",
+        "runtime": 126,
+        "genres": [
+          "Science Fiction",
+          "Action",
+          "Adventure"
+        ],
+        "rating": 7.6
       },
       {
         "title": "Contact",
         "image": "https://www.themoviedb.org/t/p/w1280/bCpMIywuNZeWt3i5UMLEIc0VSwM.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/686-contact"
+        "url": "https://www.themoviedb.org/movie/686-contact",
+        "runtime": 150,
+        "genres": [
+          "Drama",
+          "Science Fiction",
+          "Mystery"
+        ],
+        "rating": 7.5
       },
       {
         "title": "Marty Supreme",
         "image": "https://www.themoviedb.org/t/p/w1280/lYWEXbQgRTR4ZQleSXAgRbxAjvq.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/1317288-marty-supreme"
+        "url": "https://www.themoviedb.org/movie/1317288-marty-supreme",
+        "runtime": 150,
+        "genres": [
+          "Drama",
+          "Thriller"
+        ],
+        "rating": 7.4
       },
       {
         "title": "Lean On Me",
         "image": "https://www.themoviedb.org/t/p/w1280/7xOyz2NlaoqZ6xIjJh0Goptm0tP.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/14621-lean-on-me"
+        "url": "https://www.themoviedb.org/movie/14621-lean-on-me",
+        "runtime": 108,
+        "genres": [
+          "Drama"
+        ],
+        "rating": 7.3
       },
       {
         "title": "Welcome Home",
         "image": "https://www.themoviedb.org/t/p/w1280/bwYxdxIc3jUbivBB425MfhkBzw7.jpg",
         "score": null,
         "note": null,
-        "url": "https://www.themoviedb.org/movie/761226-welcome-home"
+        "url": "https://www.themoviedb.org/movie/761226-welcome-home",
+        "runtime": 125,
+        "genres": [
+          "Drama",
+          "Horror",
+          "Thriller"
+        ],
+        "rating": 6.7
       }
     ]
   }
