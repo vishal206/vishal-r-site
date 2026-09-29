@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import MoviePoster from "./MoviePoster";
 import { getBlogPostsSync } from "../Utils/functions";
 import { media } from "../Utils/media";
@@ -124,47 +124,139 @@ const useHoveredIndex = (rowRef: React.RefObject<HTMLDivElement | null>) => {
   return hovered;
 };
 
+/** Whether a media query matches, live. */
+const useMediaQuery = (query: string) => {
+  const [matches, setMatches] = useState(
+    () => window.matchMedia?.(query).matches ?? false,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia?.(query);
+    if (!mq) return;
+    const onChange = () => setMatches(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [query]);
+  return matches;
+};
+
 /**
- * The touch stand-in for hover: which poster in a row was tapped, by index. A
- * first tap on a poster shows it in full instead of opening it; a second tap
- * on the same poster follows its link. A tap anywhere else clears it. Mouse
- * clicks are left alone — a mouse has real hover.
+ * The touch stand-in for hover: on a screen with no hover (phones, tablets),
+ * the poster at the row's left edge — lined up with the page — is treated as
+ * hovered, and the role moves along as the row scrolls. A poster counts as at
+ * the edge until more than half its visible strip has scrolled past it.
+ * Null wherever there's a real hover.
  */
-const useTappedIndex = (rowRef: React.RefObject<HTMLDivElement | null>) => {
-  const [tapped, setTapped] = useState<number | null>(null);
-  const lastPointer = useRef<string>("mouse");
+const useLeadingIndex = (rowRef: React.RefObject<HTMLDivElement | null>) => {
+  const noHover = useMediaQuery("(hover: none)");
+  const [leading, setLeading] = useState<number | null>(null);
 
   useEffect(() => {
-    const onDown = (e: PointerEvent) => {
-      lastPointer.current = e.pointerType;
-      // A tap outside this row's posters clears the selection.
-      const poster = (e.target as Element | null)?.closest?.("[data-index]");
-      if (!poster || !rowRef.current?.contains(poster)) setTapped(null);
+    const row = rowRef.current;
+    if (!noHover || !row) {
+      setLeading(null);
+      return;
+    }
+
+    const update = () => {
+      const edge =
+        row.getBoundingClientRect().left +
+        parseFloat(getComputedStyle(row).paddingLeft);
+      for (const el of row.querySelectorAll<HTMLElement>("[data-index]")) {
+        const left = el.getBoundingClientRect().left;
+        const next = el.nextElementSibling?.getBoundingClientRect().left;
+        const strip = next != null ? next - left : el.offsetWidth;
+        if (left + strip / 2 >= edge) {
+          setLeading(Number(el.dataset.index));
+          return;
+        }
+      }
     };
-    document.addEventListener("pointerdown", onDown, { passive: true });
-    return () => document.removeEventListener("pointerdown", onDown);
-  }, [rowRef]);
 
-  /** Click capture for a poster: holds a first tap back from the link. */
-  const onPosterClick = (i: number) => (e: React.MouseEvent) => {
-    if (lastPointer.current === "mouse" || tapped === i) return;
-    e.preventDefault();
-    setTapped(i);
-  };
+    update();
+    row.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      row.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [noHover, rowRef]);
 
-  return { tapped, onPosterClick };
+  return leading;
+};
+
+/** How many copies of a row are laid end to end so it can loop. */
+const COPIES = 3;
+
+/**
+ * Makes a row loop: it holds COPIES identical copies of its posters and starts
+ * on the middle one. Whenever the scroll drifts a half copy past either end of
+ * the middle stretch it jumps back by exactly one copy's width — the content
+ * there is identical, so the jump can't be seen, and the row never ends.
+ */
+const useLoopScroll = (
+  rowRef: React.RefObject<HTMLDivElement | null>,
+  listRef: React.RefObject<HTMLDivElement | null>,
+  count: number,
+) => {
+  useLayoutEffect(() => {
+    const row = rowRef.current;
+    const list = listRef.current;
+    if (!row || !list || count === 0) return;
+
+    // One copy's width: from a poster to the same poster in the next copy
+    // (overlaps included, so it's measured rather than summed).
+    const measure = () => {
+      const a = list.children[0] as HTMLElement | undefined;
+      const b = list.children[count] as HTMLElement | undefined;
+      return a && b ? b.offsetLeft - a.offsetLeft : 0;
+    };
+
+    let copy = measure();
+    row.scrollLeft = copy; // start on the middle copy
+
+    const onScroll = () => {
+      if (!copy) return;
+      if (row.scrollLeft < copy * 0.5) {
+        row.scrollLeft += copy;
+      } else if (row.scrollLeft > copy * 1.5) {
+        row.scrollLeft -= copy;
+      }
+    };
+
+    // Poster sizes step at breakpoints; keep the same place in the loop.
+    const ro = new ResizeObserver(() => {
+      const at = copy ? row.scrollLeft / copy : 1;
+      copy = measure();
+      row.scrollLeft = at * copy;
+    });
+    ro.observe(list);
+    row.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      ro.disconnect();
+      row.removeEventListener("scroll", onScroll);
+    };
+  }, [rowRef, listRef, count]);
 };
 
 // One row of posters, dealt out like a hand of cards: each one tucks under
 // the next, and hovering one slides it out from under so it shows in full —
-// on touch, tapping one lifts it above the rest instead (see useTappedIndex).
-// The row scrolls sideways when it runs past the screen.
+// on touch, the poster at the left edge gets that treatment as the row scrolls,
+// lifted above the rest instead of slid (see useLeadingIndex).
+// The row scrolls sideways and loops, so it never runs out (see useLoopScroll).
+// Positions below count across all the copies; `% items.length` gives the film.
+//
+// The subtitle (a watched film's note, a wishlist film's facts) follows the
+// mouse only — phones and tablets show the leading poster without it.
 const PosterRow = ({ label, items }: { label: string; items: ShelfItem[] }) => {
   const rowRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const hovered = useHoveredIndex(rowRef);
-  const { tapped, onPosterClick } = useTappedIndex(rowRef);
-  const revealed = hovered ?? tapped;
-  const note = revealed != null ? items[revealed]?.note : null;
+  const leading = useLeadingIndex(rowRef);
+  useLoopScroll(rowRef, listRef, items.length);
+  const total = items.length * COPIES;
+
+  const note = hovered != null ? items[hovered % items.length]?.note : null;
 
   return (
     <div className="mb-6">
@@ -182,30 +274,37 @@ const PosterRow = ({ label, items }: { label: string; items: ShelfItem[] }) => {
         {/* `isolate` keeps the posters' z-indexes (one per poster, up past
             the section sheet's) stacked inside the row instead of against the
             rest of the page, where they'd show through an open section. */}
-        <div className="flex w-max isolate">
-          {items.map((item, i) => {
+        <div ref={listRef} className="flex w-max isolate">
+          {Array.from({ length: total }, (_, i) => {
+            const item = items[i % items.length];
+            const copy = Math.floor(i / items.length);
+            // Only the middle copy is the "real" list for screen readers and
+            // the keyboard; the others are there to be scrolled into.
+            const duplicate = copy !== Math.floor(COPIES / 2);
             const isHovered = hovered === i;
-            const isTapped = tapped === i;
+            const isLeading = leading === i;
             return (
               <div
-                key={item.key}
+                key={`${copy}-${item.key}`}
                 data-index={i}
-                onClickCapture={onPosterClick(i)}
+                aria-hidden={duplicate || undefined}
                 // Later posters sit on top of earlier ones. On hover a poster
                 // slides left past the overlap (plus a small gap), out from
                 // under the next one, so it shows in full while the rest of the
                 // row stays put. Only the inner poster moves: the wrapper is
                 // the hover target and stays where it is, so the poster can't
                 // slide out from under the cursor and flicker. The last poster
-                // has nothing on top of it, so it stays where it is. A tapped
-                // poster doesn't slide — at the row's left edge that would push
-                // it off a narrow screen — it's lifted above the rest instead.
-                style={{ zIndex: isTapped ? items.length : i }}
+                // has nothing on top of it, so it stays where it is. On touch the
+                // leading poster doesn't slide — at the row's left edge that
+                // would push it off the screen — it's lifted above the rest.
+                // Stacking counts across the copies, so the seams between them
+                // overlap like the rest of the row.
+                style={{ zIndex: isLeading ? total : i }}
                 className="shrink-0 -ml-16 sm:-ml-20 lg:-ml-24 first:ml-0"
               >
                 <div
                   className={`transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
-                    isHovered && i < items.length - 1
+                    isHovered && i < total - 1
                       ? "-translate-x-18 sm:-translate-x-22 lg:-translate-x-26"
                       : ""
                   }`}
@@ -215,9 +314,10 @@ const PosterRow = ({ label, items }: { label: string; items: ShelfItem[] }) => {
                     title={item.title}
                     to={item.to}
                     href={item.href}
-                    // The hovered (or tapped) poster gets a soft marquee-gold glow.
+                    tabIndex={duplicate ? -1 : undefined}
+                    // The hovered (or leading) poster gets a soft marquee-gold glow.
                     className={`w-24 sm:w-32 lg:w-36 transition-shadow duration-300 ${
-                      isHovered || isTapped
+                      isHovered || isLeading
                         ? "shadow-[0_0_18px_2px_rgba(245,185,66,0.45),0_10px_24px_-8px_rgba(0,0,0,0.85)]!"
                         : ""
                     }`}
