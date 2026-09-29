@@ -1,17 +1,22 @@
 import fs from "fs";
 import path from "path";
 
-// ── Fills in poster URLs for the movie lists in src/data/media.json via TMDB
-// (needs TMDB_API_KEY).
+// ── Fills in the movie lists in src/data/media.json from TMDB (needs a TMDB
+// key: TMDB_API_KEY, or the site's VITE_TMDB_API_KEY from .env).
 //
-//   node scripts/fetch-media.js [--dry-run] [--force]
+//   npm run fetch-media [-- --dry-run] [-- --force]
 //
 // Scope: media.json only. Blog posts and reviews keep their hand-uploaded
 // images in /assets — this script never touches markdown.
 //
-// Entries with `"image": null` get resolved and the TMDB URL written back.
-// When the search guesses wrong, pin the entry instead of editing this file:
+// Posters: entries with `"image": null` get resolved and the TMDB URL written
+// back. When the search guesses wrong, pin the entry instead of editing this
+// file:
 //   "tmdbId": 12345
+//
+// Facts: wishlist entries with a TMDB `url` get their runtime, genres and
+// rating (TMDB's score) written back — shown as a subtitle when the poster is
+// revealed. Re-run with --force to refresh them.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DATA_PATH = path.join(process.cwd(), "src/data/media.json");
@@ -28,7 +33,7 @@ const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 const force = args.includes("--force");
 
-const TMDB_KEY = process.env.TMDB_API_KEY;
+const TMDB_KEY = process.env.TMDB_API_KEY ?? process.env.VITE_TMDB_API_KEY;
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -99,6 +104,37 @@ const resolveMoviePoster = async ({ title, tmdbId }) => {
   return posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : null;
 };
 
+/**
+ * The kind and id out of a TMDB link, however it was copied from the address
+ * bar (slug, trailing path and query string ignored). Series matter too: the
+ * wishlist carries anime runs, which TMDB files under /tv.
+ */
+const parseTmdbUrl = (url) => {
+  const found = url?.match(/themoviedb\.org\/(movie|tv)\/(\d+)/);
+  return found ? { type: found[1], id: Number(found[2]) } : null;
+};
+
+/** Runtime, genres and rating for a film or series, from its TMDB link. */
+const resolveFacts = async ({ url }) => {
+  const ref = parseTmdbUrl(url);
+  if (!ref) return null;
+  const d = await getJson(
+    `https://api.themoviedb.org/3/${ref.type}/${ref.id}?api_key=${TMDB_KEY}`,
+  );
+  return {
+    // A series has no single running time: TMDB keeps the lengths its episodes
+    // have run to, and the first is the show's usual one.
+    runtime:
+      ref.type === "tv"
+        ? (d.episode_run_time?.[0] ?? d.last_episode_to_air?.runtime ?? null)
+        : d.runtime || null,
+    episodes: ref.type === "tv" ? (d.number_of_episodes ?? null) : null,
+    genres: (d.genres ?? []).map((g) => g.name),
+    // TMDB returns a flat 0 for anything nobody has voted on.
+    rating: d.vote_average ? Math.round(d.vote_average * 10) / 10 : null,
+  };
+};
+
 // ── Runner ───────────────────────────────────────────────────────────────────
 
 /** Resolves every imageless entry across a section's lists. Mutates in place. */
@@ -108,6 +144,8 @@ const processSection = async (section, resolve) => {
 
   for (const [listName, entries] of Object.entries(section)) {
     for (const entry of entries) {
+      // A reviewed film takes its poster from its post's hand-uploaded banner.
+      if (entry.post) continue;
       if (entry.image && !force) continue;
       try {
         const url = await resolve(entry);
@@ -130,6 +168,35 @@ const processSection = async (section, resolve) => {
   return { ok, missed };
 };
 
+/** Fills in facts for wishlist entries missing them. Mutates in place. */
+const processFacts = async (entries) => {
+  let ok = 0;
+  let missed = 0;
+
+  for (const entry of entries) {
+    if (entry.genres && !force) continue;
+    try {
+      const facts = await resolveFacts(entry);
+      if (!facts) {
+        console.warn(`  ✗ ${entry.title} — no TMDB url`);
+        missed++;
+        continue;
+      }
+      entry.runtime = facts.runtime;
+      if (facts.episodes != null) entry.episodes = facts.episodes;
+      entry.genres = facts.genres;
+      entry.rating = facts.rating;
+      console.log(`  ✓ ${entry.title}`);
+      ok++;
+    } catch (err) {
+      console.warn(`  ✗ ${entry.title} — ${err.message}`);
+      missed++;
+    }
+  }
+
+  return { ok, missed };
+};
+
 const run = async () => {
   if (dryRun) console.log("(dry run — media.json not written)\n");
 
@@ -139,11 +206,16 @@ const run = async () => {
 
   console.log("Movies (TMDB)");
   if (!TMDB_KEY) {
-    console.warn("  skipped — set TMDB_API_KEY to fetch posters");
+    console.warn("  skipped — set TMDB_API_KEY (or VITE_TMDB_API_KEY in .env)");
   } else {
     const r = await processSection(data.movies, resolveMoviePoster);
     ok += r.ok;
     missed += r.missed;
+
+    console.log("Wishlist facts (TMDB)");
+    const f = await processFacts(data.movies.wishlist);
+    ok += f.ok;
+    missed += f.missed;
   }
 
   if (ok > 0 && !dryRun)
