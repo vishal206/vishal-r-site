@@ -3,6 +3,7 @@ title: "First App Launch"
 date: "12 Apr 2026"
 tags: "Life"
 publishRss: true
+banner: "/assets/first-app.png"
 ---
 
 Yo!

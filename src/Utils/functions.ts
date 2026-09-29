@@ -13,7 +13,7 @@ export const getBlogPostsSync = (): BlogPostMeta[] => {
     .map((slug) => {
       const post = loadMarkdownFileSync(slug);
       if (!post) return null;
-      let image = post.frontmatter.image;
+      let image = post.frontmatter.banner;
       if (!image) {
         const imgMatch = post.content.match(/<img.*?src=["'](.*?)["']/);
         image = imgMatch ? imgMatch[1] : undefined;

@@ -21,8 +21,7 @@ interface Entry {
   label: string;
   sublabel: string;
   content: string;
-  banner?: string;
-  image?: string;
+  image?: string; // the post's `banner`
   sortKey: string; // ISO date string or "0000-{sno}" for chapters
   isContextTable?: boolean;
 }
@@ -37,8 +36,7 @@ const loadEntry = (slug: string): Entry | null => {
       label: blog.frontmatter.tags || "Essay",
       sublabel: "",
       content: blog.content,
-      banner: blog.frontmatter.banner,
-      image: blog.frontmatter.image,
+      image: blog.frontmatter.banner,
       sortKey: blog.frontmatter.date,
       isContextTable:
         blog.frontmatter.isContextTable === "true" ||

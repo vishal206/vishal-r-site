@@ -1,7 +1,7 @@
 ---
 title: "Totem Totem Totem"
 date: "05 July 2025"
-image: "https://www.thisiscolossal.com/wp-content/uploads/2021/11/toco-1.jpg"
+banner: "https://www.thisiscolossal.com/wp-content/uploads/2021/11/toco-1.jpg"
 tags: "Life"
 ---
 

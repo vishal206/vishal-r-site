@@ -103,7 +103,7 @@ const metaFor = (data, content, urlPath) => {
   const description = data.description || excerpt(content) || "Blogs and DevLogs from Vishal R";
   const url = `${baseUrl}${urlPath}`;
   // Posts without their own image fall back to the branded logo card.
-  return { title, description, url, image: data.image || data.banner || "/og-default.png" };
+  return { title, description, url, image: data.banner || "/og-default.png" };
 };
 
 const injectHead = (html, meta) => {

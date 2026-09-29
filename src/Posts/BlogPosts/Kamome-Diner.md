@@ -1,7 +1,7 @@
 ---
 title: "Kamome Diner"
 date: "31 May 2026"
-image: "/assets/Kamome-Diner.png"
+banner: "/assets/Kamome-Diner.png"
 tags: "Movie"
 publishRss: true
 description: "A slow, quiet Japanese film set in Finland — and somehow, that's all it needs. My thoughts on Kamome Diner, a movie with no plot and all the heart."
