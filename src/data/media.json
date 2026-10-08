@@ -221,6 +221,13 @@
         "score": 5,
         "note": null,
         "url": "https://www.themoviedb.org/movie/13754"
+      },
+      {
+        "title": "The Secret Life of Walter Mitty",
+        "image": "https://www.themoviedb.org/t/p/w1280/iAo1hlzsPV9XpYcLQp6Ud065tGO.jpg",
+        "score": null,
+        "note": "Beautiful things don't ask for attention.",
+        "url": "https://www.themoviedb.org/movie/116745-the-secret-life-of-walter-mitty"
       }
     ],
     "wishlist": [
@@ -231,9 +238,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/609-poltergeist",
         "runtime": 114,
-        "genres": [
-          "Horror"
-        ],
+        "genres": ["Horror"],
         "rating": 7.2
       },
       {
@@ -243,13 +248,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/13688",
         "runtime": 88,
-        "genres": [
-          "Comedy",
-          "Drama",
-          "Family",
-          "Fantasy",
-          "Science Fiction"
-        ],
+        "genres": ["Comedy", "Drama", "Family", "Fantasy", "Science Fiction"],
         "rating": 7.3
       },
       {
@@ -259,11 +258,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/9390-jerry-maguire",
         "runtime": 139,
-        "genres": [
-          "Comedy",
-          "Drama",
-          "Romance"
-        ],
+        "genres": ["Comedy", "Drama", "Romance"],
         "rating": 7
       },
       {
@@ -273,11 +268,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/26843-lion-of-the-desert",
         "runtime": 173,
-        "genres": [
-          "History",
-          "War",
-          "Drama"
-        ],
+        "genres": ["History", "War", "Drama"],
         "rating": 7.3
       },
       {
@@ -287,11 +278,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/345-eyes-wide-shut",
         "runtime": 159,
-        "genres": [
-          "Drama",
-          "Thriller",
-          "Mystery"
-        ],
+        "genres": ["Drama", "Thriller", "Mystery"],
         "rating": 7.5
       },
       {
@@ -301,9 +288,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/1265717-familiar-touch",
         "runtime": 90,
-        "genres": [
-          "Drama"
-        ],
+        "genres": ["Drama"],
         "rating": 6.3
       },
       {
@@ -313,12 +298,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/508422",
         "runtime": 118,
-        "genres": [
-          "Animation",
-          "Adventure",
-          "Comedy",
-          "Fantasy"
-        ],
+        "genres": ["Animation", "Adventure", "Comedy", "Fantasy"],
         "rating": 7.2
       },
       {
@@ -328,10 +308,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/185786-gouravam",
         "runtime": 136,
-        "genres": [
-          "Drama",
-          "Family"
-        ],
+        "genres": ["Drama", "Family"],
         "rating": 7.5
       },
       {
@@ -341,11 +318,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/71883",
         "runtime": 102,
-        "genres": [
-          "Animation",
-          "Action",
-          "Science Fiction"
-        ],
+        "genres": ["Animation", "Action", "Science Fiction"],
         "rating": 7.6
       },
       {
@@ -355,11 +328,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/1252037-der-tiger",
         "runtime": 117,
-        "genres": [
-          "War",
-          "Action",
-          "Drama"
-        ],
+        "genres": ["War", "Action", "Drama"],
         "rating": 7.1
       },
       {
@@ -369,12 +338,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/1165642",
         "runtime": 96,
-        "genres": [
-          "Animation",
-          "Romance",
-          "Science Fiction",
-          "Drama"
-        ],
+        "genres": ["Animation", "Romance", "Science Fiction", "Drama"],
         "rating": 7.4
       },
       {
@@ -384,10 +348,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/615165",
         "runtime": 108,
-        "genres": [
-          "Animation",
-          "Romance"
-        ],
+        "genres": ["Animation", "Romance"],
         "rating": 7.4
       },
       {
@@ -397,11 +358,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/13980",
         "runtime": 103,
-        "genres": [
-          "Action",
-          "Animation",
-          "History"
-        ],
+        "genres": ["Action", "Animation", "History"],
         "rating": 7.6
       },
       {
@@ -411,11 +368,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/476292",
         "runtime": 115,
-        "genres": [
-          "Animation",
-          "Drama",
-          "Fantasy"
-        ],
+        "genres": ["Animation", "Drama", "Fantasy"],
         "rating": 8.1
       },
       {
@@ -425,12 +378,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/604605-hello-world",
         "runtime": 98,
-        "genres": [
-          "Animation",
-          "Romance",
-          "Science Fiction",
-          "Drama"
-        ],
+        "genres": ["Animation", "Romance", "Science Fiction", "Drama"],
         "rating": 7.3
       },
       {
@@ -440,10 +388,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/28874",
         "runtime": 114,
-        "genres": [
-          "Animation",
-          "Science Fiction"
-        ],
+        "genres": ["Animation", "Science Fiction"],
         "rating": 7.5
       },
       {
@@ -453,11 +398,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/631843-old",
         "runtime": 108,
-        "genres": [
-          "Thriller",
-          "Mystery",
-          "Horror"
-        ],
+        "genres": ["Thriller", "Mystery", "Horror"],
         "rating": 6.3
       },
       {
@@ -467,9 +408,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/275030",
         "runtime": 125,
-        "genres": [
-          "Drama"
-        ],
+        "genres": ["Drama"],
         "rating": 8.1
       },
       {
@@ -480,10 +419,7 @@
         "url": "https://www.themoviedb.org/tv/60811",
         "runtime": 23,
         "episodes": 11,
-        "genres": [
-          "Animation",
-          "Drama"
-        ],
+        "genres": ["Animation", "Drama"],
         "rating": 8.2
       },
       {
@@ -493,10 +429,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/33602-temple-grandin",
         "runtime": 108,
-        "genres": [
-          "Drama",
-          "History"
-        ],
+        "genres": ["Drama", "History"],
         "rating": 7.9
       },
       {
@@ -506,12 +439,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/776305",
         "runtime": 121,
-        "genres": [
-          "Animation",
-          "Science Fiction",
-          "Drama",
-          "Music"
-        ],
+        "genres": ["Animation", "Science Fiction", "Drama", "Music"],
         "rating": 7.6
       },
       {
@@ -521,11 +449,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/50646-crazy-stupid-love",
         "runtime": 118,
-        "genres": [
-          "Comedy",
-          "Drama",
-          "Romance"
-        ],
+        "genres": ["Comedy", "Drama", "Romance"],
         "rating": 7.3
       },
       {
@@ -535,11 +459,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/8953",
         "runtime": 126,
-        "genres": [
-          "Animation",
-          "Fantasy",
-          "Science Fiction"
-        ],
+        "genres": ["Animation", "Fantasy", "Science Fiction"],
         "rating": 6.9
       },
       {
@@ -549,11 +469,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/11104",
         "runtime": 103,
-        "genres": [
-          "Drama",
-          "Comedy",
-          "Romance"
-        ],
+        "genres": ["Drama", "Comedy", "Romance"],
         "rating": 8
       },
       {
@@ -563,27 +479,8 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/62-2001-a-space-odyssey",
         "runtime": 149,
-        "genres": [
-          "Science Fiction",
-          "Mystery",
-          "Adventure"
-        ],
+        "genres": ["Science Fiction", "Mystery", "Adventure"],
         "rating": 8
-      },
-      {
-        "title": "The Secret Life of Walter Mitty",
-        "image": "https://www.themoviedb.org/t/p/w1280/iAo1hlzsPV9XpYcLQp6Ud065tGO.jpg",
-        "score": null,
-        "note": null,
-        "url": "https://www.themoviedb.org/movie/116745-the-secret-life-of-walter-mitty",
-        "runtime": 114,
-        "genres": [
-          "Adventure",
-          "Comedy",
-          "Drama",
-          "Fantasy"
-        ],
-        "rating": 7.2
       },
       {
         "title": "Children of Men",
@@ -592,11 +489,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/9693-children-of-men",
         "runtime": 109,
-        "genres": [
-          "Science Fiction",
-          "Thriller",
-          "Action"
-        ],
+        "genres": ["Science Fiction", "Thriller", "Action"],
         "rating": 7.6
       },
       {
@@ -606,11 +499,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/4638-hot-fuzz",
         "runtime": 121,
-        "genres": [
-          "Crime",
-          "Action",
-          "Comedy"
-        ],
+        "genres": ["Crime", "Action", "Comedy"],
         "rating": 7.6
       },
       {
@@ -620,11 +509,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/18-le-cinqui-me-l-ment",
         "runtime": 126,
-        "genres": [
-          "Science Fiction",
-          "Action",
-          "Adventure"
-        ],
+        "genres": ["Science Fiction", "Action", "Adventure"],
         "rating": 7.6
       },
       {
@@ -634,11 +519,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/686-contact",
         "runtime": 150,
-        "genres": [
-          "Drama",
-          "Science Fiction",
-          "Mystery"
-        ],
+        "genres": ["Drama", "Science Fiction", "Mystery"],
         "rating": 7.5
       },
       {
@@ -648,10 +529,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/1317288-marty-supreme",
         "runtime": 150,
-        "genres": [
-          "Drama",
-          "Thriller"
-        ],
+        "genres": ["Drama", "Thriller"],
         "rating": 7.4
       },
       {
@@ -661,9 +539,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/14621-lean-on-me",
         "runtime": 108,
-        "genres": [
-          "Drama"
-        ],
+        "genres": ["Drama"],
         "rating": 7.3
       },
       {
@@ -673,11 +549,7 @@
         "note": null,
         "url": "https://www.themoviedb.org/movie/761226-welcome-home",
         "runtime": 125,
-        "genres": [
-          "Drama",
-          "Horror",
-          "Thriller"
-        ],
+        "genres": ["Drama", "Horror", "Thriller"],
         "rating": 6.7
       }
     ]
