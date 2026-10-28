@@ -105,7 +105,13 @@ const SiteHeader = ({ onHome }: { onHome?: () => void }) => {
   return (
     <header className="shrink-0 bg-editorial-bg">
       <div className="flex items-center gap-3 md:gap-4 px-6 md:px-12 py-4 md:py-5 max-w-screen-xl mx-auto">
-        <Link to="/" onClick={goHome} aria-label="Home" tabIndex={-1} className="shrink-0">
+        <Link
+          to="/"
+          onClick={goHome}
+          aria-label="Home"
+          tabIndex={-1}
+          className="shrink-0"
+        >
           <img
             src="/assets/stickers/vishal-sticker.png"
             alt=""
@@ -137,7 +143,7 @@ const SiteHeader = ({ onHome }: { onHome?: () => void }) => {
           {/* A touch smaller and tighter on phones so it fits a 320px screen; the
               line stays 10px tall either way, keeping the sum. */}
           <p className="mt-1 text-[9px] sm:text-[10px] leading-[10px] uppercase tracking-[0.1em] sm:tracking-[0.2em] text-editorial-label whitespace-nowrap">
-            Full-Stack Developer
+            Software Engineer
           </p>
         </div>
       </div>
