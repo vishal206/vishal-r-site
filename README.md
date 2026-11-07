@@ -25,7 +25,7 @@ I started building this because I wanted a home on the web that actually felt li
 
 **No database for content.** Every post is a flat markdown file. `import.meta.glob` pulls them all in at build time. No CMS, no admin panel, no hosted backend. The content lives right next to the code.
 
-**Engagement without accounts.** Readers can like and comment on posts without logging in. Firebase handles the counters and comments — it's the only "cloud" piece in the whole stack, and it's only there for that.
+**Engagement without accounts.** Readers can comment on posts without logging in. Firebase handles the counters and comments — it's the only "cloud" piece in the whole stack, and it's only there for that.
 
 **The "Chapters of my life" section.** On the about page, there's a tabbed folder UI — each tab is a chapter of my life so far, written in markdown. It's a weird little detail that I think makes the about page feel less like a resume and more like a person.
 
@@ -38,7 +38,7 @@ I started building this because I wanted a home on the web that actually felt li
 - **Styling:** Tailwind CSS v4
 - **Routing:** React Router v7
 - **Markdown:** react-markdown + remark-gfm
-- **Backend:** Firebase (view counts, likes, comments only)
+- **Backend:** Firebase (view counts and comments only)
 - **Fonts:** Playfair Display, Lora, Caveat
 - **Hosting:** Static — no server
 
