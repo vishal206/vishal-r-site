@@ -12,23 +12,30 @@ function getVisitorId(): string {
   return id;
 }
 
+// Likes were removed; clear the per-post `liked_*` flags older visits left behind.
+function clearLegacyLikeKeys() {
+  try {
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith('liked_'))
+      .forEach((k) => localStorage.removeItem(k));
+  } catch {
+    // storage unavailable — nothing to clean
+  }
+}
+
 export interface PostEngagementData {
   viewCount: number | null;
-  likeCount: number;
-  liked: boolean;
-  toggleLike: () => void;
 }
 
 export function usePostEngagement(slug: string | undefined): PostEngagementData {
   const [viewCount, setViewCount] = useState<number | null>(null);
-  const [likeCount, setLikeCount] = useState<number>(0);
-  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     if (!slug || IS_PRERENDER) return;
 
     const ref = doc(db, 'postImpressions', slug);
     const visitorId = getVisitorId();
+    clearLegacyLikeKeys();
 
     // Increment view count once per visitor per post (never during prerender —
     // a headless build render must not count as a real view)
@@ -38,38 +45,12 @@ export function usePostEngagement(slug: string | undefined): PostEngagementData 
       setDoc(ref, { viewCount: increment(1), lastViewed: serverTimestamp() }, { merge: true });
     }
 
-    // Restore liked state from localStorage
-    setLiked(!!localStorage.getItem(`liked_${slug}_${visitorId}`));
-
-    // Single listener for both counts
     const unsub = onSnapshot(ref, (snap) => {
-      if (snap.exists()) {
-        const data = snap.data();
-        setViewCount(data.viewCount ?? null);
-        setLikeCount(data.likeCount ?? 0);
-      } else {
-        setLikeCount(0);
-      }
+      if (snap.exists()) setViewCount(snap.data().viewCount ?? null);
     });
 
     return unsub;
   }, [slug]);
 
-  const toggleLike = () => {
-    if (!slug) return;
-    const visitorId = getVisitorId();
-    const likedKey = `liked_${slug}_${visitorId}`;
-    const ref = doc(db, 'postImpressions', slug);
-    const isNowLiked = !liked;
-
-    setLiked(isNowLiked);
-    setLikeCount((c) => c + (isNowLiked ? 1 : -1));
-
-    if (isNowLiked) localStorage.setItem(likedKey, '1');
-    else localStorage.removeItem(likedKey);
-
-    setDoc(ref, { likeCount: increment(isNowLiked ? 1 : -1) }, { merge: true });
-  };
-
-  return { viewCount, likeCount, liked, toggleLike };
+  return { viewCount };
 }

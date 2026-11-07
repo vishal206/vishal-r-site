@@ -23,22 +23,6 @@ const EyeIcon = () => (
   </svg>
 );
 
-const HeartIcon = ({ filled }: { filled: boolean }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill={filled ? "currentColor" : "none"}
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-  </svg>
-);
-
 const CommentIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -100,9 +84,6 @@ const ExpandCount = ({
 
 export const PostEngagement = ({
   viewCount,
-  likeCount,
-  liked,
-  toggleLike,
   commentCount,
   variant,
 }: Props) => {
@@ -128,17 +109,6 @@ export const PostEngagement = ({
           <EyeIcon />
           <ExpandCount count={viewCount} />
         </div>
-
-        <button
-          onClick={toggleLike}
-          className={`flex items-center cursor-pointer transition-colors ${liked ? "text-red-400" : "text-editorial-label hover:text-red-400"}`}
-        >
-          <HeartIcon filled={liked} />
-          <ExpandCount
-            count={likeCount}
-            className={liked ? "text-red-400" : ""}
-          />
-        </button>
 
         <div className="flex items-center text-editorial-label">
           <CommentIcon />
@@ -168,17 +138,6 @@ export const PostEngagement = ({
           <EyeIcon />
           <ExpandCount count={viewCount} />
         </div>
-
-        <button
-          onClick={toggleLike}
-          className={`${boxClass} border-r border-editorial-divider cursor-pointer ${liked ? "text-red-400" : "text-editorial-label hover:text-red-400"}`}
-        >
-          <HeartIcon filled={liked} />
-          <ExpandCount
-            count={likeCount}
-            className={liked ? "text-red-400" : ""}
-          />
-        </button>
 
         <div
           className={`${boxClass} border-r border-editorial-divider text-editorial-label`}
