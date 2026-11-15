@@ -18,7 +18,7 @@ const HomeHero = ({
       {/* ── Latest articles ── */}
       <LatestArticles onMore={onMoreArticles} />
 
-      {/* ── Movies: watched, then wishlist ── */}
+      {/* ── Movies watched ── */}
       <MovieShelf />
     </div>
   </div>

@@ -2,7 +2,6 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import MoviePoster from "./MoviePoster";
 import { getBlogPostsSync } from "../Utils/functions";
 import { media } from "../Utils/media";
-import type { MediaMovie } from "../Utils/media";
 
 type ShelfItem = {
   key: string;
@@ -10,37 +9,8 @@ type ShelfItem = {
   image?: string | null;
   to?: string | null;
   href?: string | null;
-  /**
-   * Shown as a subtitle while the poster is revealed: a line from the film
-   * (watched), or its rating, genres and running time (wishlist).
-   */
+  /** A line from the film, shown as a subtitle while the poster is revealed. */
   note?: string | null;
-};
-
-/** "1h 54m", "23m". */
-const duration = (minutes: number) =>
-  minutes >= 60
-    ? `${Math.floor(minutes / 60)}h${minutes % 60 ? ` ${minutes % 60}m` : ""}`
-    : `${minutes}m`;
-
-/**
- * A wishlist film's facts as one subtitle line — "★ 7.2 · Horror · 1h 54m".
- * Two genres at most, to keep it to a line; a series gives its episodes
- * ("11 × 23m") in place of a running time. Null when there's nothing to say.
- */
-const factsLine = (m: MediaMovie) => {
-  const runtime =
-    m.runtime != null
-      ? m.episodes
-        ? `${m.episodes} × ${duration(m.runtime)}`
-        : duration(m.runtime)
-      : null;
-  const parts = [
-    m.rating != null ? `★ ${m.rating.toFixed(1)}` : null,
-    m.genres?.length ? m.genres.slice(0, 2).join(", ") : null,
-    runtime,
-  ].filter(Boolean);
-  return parts.length ? parts.join(" · ") : null;
 };
 
 /** A note as plain words: subtitles aren't italic, so markdown marks go. */
@@ -239,30 +209,132 @@ const useLoopScroll = (
   }, [rowRef, listRef, count]);
 };
 
+/**
+ * Wheel events closer together than this belong to one gesture. A spun wheel
+ * and a trackpad's momentum both send them far faster; a pause to start a new
+ * scroll runs longer.
+ */
+const GESTURE_GAP_MS = 200;
+
+/** Share of the distance still to go that the row covers each 60th of a second. */
+const WHEEL_EASE = 0.18;
+
+/**
+ * Turns the mouse wheel's up and down into the row's left and right while the
+ * cursor is over it, so the posters scroll instead of the page.
+ *
+ * The wheel doesn't move the row directly: a notch is ~100px at once, and
+ * trackpad events don't land in step with the screen, so either way the row
+ * would lurch. Instead the input is banked and paid out a share per frame,
+ * easing to a stop.
+ *
+ * A gesture stays with wherever it started, though. The row spans the screen
+ * and never ends, so if it took every wheel event over it, scrolling down the
+ * page would stop dead the moment the row reached the cursor (momentum
+ * included). Instead the page keeps that gesture; pause, scroll again, and it
+ * goes to the row. Sideways input (a trackpad swipe) the row handles natively,
+ * and pinch-zoom (ctrl + wheel) is left alone.
+ */
+const useWheelScroll = (rowRef: React.RefObject<HTMLDivElement | null>) => {
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!row) return;
+
+    let lastAt = -Infinity;
+    let rowOwns = false;
+
+    let pending = 0; // wheel input not yet scrolled, in pixels
+    let pos = 0; // where the row should be, unrounded
+    let landed = 0; // where the browser put it, read back after each frame
+    let raf = 0;
+    let lastFrame = 0;
+
+    // Moves by steps rather than to a target: useLoopScroll jumps the row back
+    // a copy now and then, and anything else that moves it (that jump, a
+    // swipe, a drag) shows up as a gap between where it is and where it
+    // landed, which `pos` follows.
+    const frame = (now: number) => {
+      pos += row.scrollLeft - landed;
+      const dt = lastFrame ? Math.min(now - lastFrame, 100) : 1000 / 60;
+      lastFrame = now;
+      const share = 1 - Math.pow(1 - WHEEL_EASE, dt / (1000 / 60));
+      const step = Math.abs(pending) < 0.5 ? pending : pending * share;
+      pending -= step;
+      pos += step;
+      row.scrollLeft = pos;
+      landed = row.scrollLeft;
+      if (pending) {
+        raf = requestAnimationFrame(frame);
+      } else {
+        raf = 0;
+        lastFrame = 0;
+      }
+    };
+
+    // Sees every wheel event on the page, in the capture phase so it runs
+    // before the row's own listener: the first event of a gesture decides
+    // who owns it.
+    const onAnyWheel = (e: WheelEvent) => {
+      if (e.timeStamp - lastAt > GESTURE_GAP_MS)
+        rowOwns = row.contains(e.target as Node);
+      lastAt = e.timeStamp;
+    };
+
+    const onRowWheel = (e: WheelEvent) => {
+      if (!rowOwns || e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX))
+        return;
+      e.preventDefault();
+      // Wheels that count in lines or pages, in pixels.
+      const unit =
+        e.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 40
+          : e.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? row.clientWidth
+            : 1;
+      pending += e.deltaY * unit;
+      if (!raf) {
+        pos = landed = row.scrollLeft;
+        raf = requestAnimationFrame(frame);
+      }
+    };
+
+    window.addEventListener("wheel", onAnyWheel, {
+      capture: true,
+      passive: true,
+    });
+    // Not passive, so it can stop the page scrolling.
+    row.addEventListener("wheel", onRowWheel, { passive: false });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("wheel", onAnyWheel, { capture: true });
+      row.removeEventListener("wheel", onRowWheel);
+    };
+  }, [rowRef]);
+};
+
 // One row of posters, dealt out like a hand of cards: each one tucks under
 // the next, and hovering one slides it out from under so it shows in full —
 // on touch, the poster at the left edge gets that treatment as the row scrolls,
 // lifted above the rest instead of slid (see useLeadingIndex).
-// The row scrolls sideways and loops, so it never runs out (see useLoopScroll).
+// The row scrolls sideways and loops, so it never runs out (see useLoopScroll);
+// over it, the mouse wheel scrolls it rather than the page (see useWheelScroll).
 // Positions below count across all the copies; `% items.length` gives the film.
 //
-// The subtitle (a watched film's note, a wishlist film's facts) follows the
-// mouse only — phones and tablets show the leading poster without it.
-const PosterRow = ({ label, items }: { label: string; items: ShelfItem[] }) => {
+// The subtitle (the film's note) follows the mouse only — phones and tablets
+// show the leading poster without it.
+const PosterRow = ({ items }: { items: ShelfItem[] }) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const hovered = useHoveredIndex(rowRef);
   const leading = useLeadingIndex(rowRef);
   useLoopScroll(rowRef, listRef, items.length);
+  useWheelScroll(rowRef);
   const total = items.length * COPIES;
 
   const note = hovered != null ? items[hovered % items.length]?.note : null;
 
   return (
     <div className="mb-6">
-      <div className="text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-1">
-        {label} <span className="text-editorial-muted">· {items.length}</span>
-      </div>
       {/* Bleeds out to both edges of the screen so the row scrolls edge to
           edge, while the padding puts the first poster back in line with the
           page. Vertical padding leaves room for the shadow and hover glow,
@@ -334,17 +406,17 @@ const PosterRow = ({ label, items }: { label: string; items: ShelfItem[] }) => {
   );
 };
 
-// The movies on the home page: what's been watched, then what's next. Both
-// lists come from media.json in its order. A watched film links to its review
-// when there is one, otherwise to its TMDB page; reviews that aren't listed in
-// media.json still go on the end of the watched row.
+// The movies on the home page: what's been watched, from media.json in its
+// order. A film links to its review when there is one, otherwise to its TMDB
+// page; reviews that aren't listed in media.json still go on the end of the
+// row.
 const MovieShelf = () => {
-  const { watched, wishlist } = useMemo(() => {
+  const watched = useMemo<ShelfItem[]>(() => {
     const reviews = getBlogPostsSync().filter((p) => p.tags === "Movie");
     const reviewImage = new Map(reviews.map((p) => [p.slug, p.image]));
     const listed = new Set(media.movies.watched.map((m) => m.post));
 
-    const watched: ShelfItem[] = [
+    return [
       ...media.movies.watched.map((m, i) => ({
         key: `watched-${i}`,
         title: m.title,
@@ -363,25 +435,14 @@ const MovieShelf = () => {
           to: `/article/${p.slug}`,
         })),
     ];
-
-    const wishlist: ShelfItem[] = media.movies.wishlist.map((m, i) => ({
-      key: `wishlist-${i}`,
-      title: m.title,
-      image: m.image,
-      href: m.url,
-      note: factsLine(m),
-    }));
-
-    return { watched, wishlist };
   }, []);
 
   return (
     <section>
       <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-2">
-        Movies I watch
+        Movies I recommend
       </div>
-      <PosterRow label="Watched" items={watched} />
-      <PosterRow label="Wishlist" items={wishlist} />
+      <PosterRow items={watched} />
     </section>
   );
 };
