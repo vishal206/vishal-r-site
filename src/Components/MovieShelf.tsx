@@ -2,7 +2,6 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import MoviePoster from "./MoviePoster";
 import { getBlogPostsSync } from "../Utils/functions";
 import { media } from "../Utils/media";
-import type { MediaMovie } from "../Utils/media";
 
 type ShelfItem = {
   key: string;
@@ -10,37 +9,8 @@ type ShelfItem = {
   image?: string | null;
   to?: string | null;
   href?: string | null;
-  /**
-   * Shown as a subtitle while the poster is revealed: a line from the film
-   * (watched), or its rating, genres and running time (wishlist).
-   */
+  /** A line from the film, shown as a subtitle while the poster is revealed. */
   note?: string | null;
-};
-
-/** "1h 54m", "23m". */
-const duration = (minutes: number) =>
-  minutes >= 60
-    ? `${Math.floor(minutes / 60)}h${minutes % 60 ? ` ${minutes % 60}m` : ""}`
-    : `${minutes}m`;
-
-/**
- * A wishlist film's facts as one subtitle line — "★ 7.2 · Horror · 1h 54m".
- * Two genres at most, to keep it to a line; a series gives its episodes
- * ("11 × 23m") in place of a running time. Null when there's nothing to say.
- */
-const factsLine = (m: MediaMovie) => {
-  const runtime =
-    m.runtime != null
-      ? m.episodes
-        ? `${m.episodes} × ${duration(m.runtime)}`
-        : duration(m.runtime)
-      : null;
-  const parts = [
-    m.rating != null ? `★ ${m.rating.toFixed(1)}` : null,
-    m.genres?.length ? m.genres.slice(0, 2).join(", ") : null,
-    runtime,
-  ].filter(Boolean);
-  return parts.length ? parts.join(" · ") : null;
 };
 
 /** A note as plain words: subtitles aren't italic, so markdown marks go. */
@@ -246,8 +216,8 @@ const useLoopScroll = (
 // The row scrolls sideways and loops, so it never runs out (see useLoopScroll).
 // Positions below count across all the copies; `% items.length` gives the film.
 //
-// The subtitle (a watched film's note, a wishlist film's facts) follows the
-// mouse only — phones and tablets show the leading poster without it.
+// The subtitle (the film's note) follows the mouse only — phones and tablets
+// show the leading poster without it.
 const PosterRow = ({ label, items }: { label: string; items: ShelfItem[] }) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -334,17 +304,17 @@ const PosterRow = ({ label, items }: { label: string; items: ShelfItem[] }) => {
   );
 };
 
-// The movies on the home page: what's been watched, then what's next. Both
-// lists come from media.json in its order. A watched film links to its review
-// when there is one, otherwise to its TMDB page; reviews that aren't listed in
-// media.json still go on the end of the watched row.
+// The movies on the home page: what's been watched, from media.json in its
+// order. A film links to its review when there is one, otherwise to its TMDB
+// page; reviews that aren't listed in media.json still go on the end of the
+// row.
 const MovieShelf = () => {
-  const { watched, wishlist } = useMemo(() => {
+  const watched = useMemo<ShelfItem[]>(() => {
     const reviews = getBlogPostsSync().filter((p) => p.tags === "Movie");
     const reviewImage = new Map(reviews.map((p) => [p.slug, p.image]));
     const listed = new Set(media.movies.watched.map((m) => m.post));
 
-    const watched: ShelfItem[] = [
+    return [
       ...media.movies.watched.map((m, i) => ({
         key: `watched-${i}`,
         title: m.title,
@@ -363,16 +333,6 @@ const MovieShelf = () => {
           to: `/article/${p.slug}`,
         })),
     ];
-
-    const wishlist: ShelfItem[] = media.movies.wishlist.map((m, i) => ({
-      key: `wishlist-${i}`,
-      title: m.title,
-      image: m.image,
-      href: m.url,
-      note: factsLine(m),
-    }));
-
-    return { watched, wishlist };
   }, []);
 
   return (
@@ -381,7 +341,6 @@ const MovieShelf = () => {
         Movies I watch
       </div>
       <PosterRow label="Watched" items={watched} />
-      <PosterRow label="Wishlist" items={wishlist} />
     </section>
   );
 };
