@@ -218,7 +218,7 @@ const useLoopScroll = (
 //
 // The subtitle (the film's note) follows the mouse only — phones and tablets
 // show the leading poster without it.
-const PosterRow = ({ label, items }: { label: string; items: ShelfItem[] }) => {
+const PosterRow = ({ items }: { items: ShelfItem[] }) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const hovered = useHoveredIndex(rowRef);
@@ -230,9 +230,6 @@ const PosterRow = ({ label, items }: { label: string; items: ShelfItem[] }) => {
 
   return (
     <div className="mb-6">
-      <div className="text-[10px] uppercase tracking-[0.2em] text-editorial-label mb-1">
-        {label} <span className="text-editorial-muted">· {items.length}</span>
-      </div>
       {/* Bleeds out to both edges of the screen so the row scrolls edge to
           edge, while the padding puts the first poster back in line with the
           page. Vertical padding leaves room for the shadow and hover glow,
@@ -338,9 +335,9 @@ const MovieShelf = () => {
   return (
     <section>
       <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-2">
-        Movies I watch
+        Movies I recommend
       </div>
-      <PosterRow label="Watched" items={watched} />
+      <PosterRow items={watched} />
     </section>
   );
 };
