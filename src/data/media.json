@@ -26,13 +26,15 @@
         "title": "The Shawshank Redemption",
         "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
         "score": 10,
-        "note": null
+        "note": null,
+        "url": "https://www.themoviedb.org/movie/278-the-shawshank-redemption"
       },
       {
         "title": "Project Hail Mary",
         "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/yihdXomYb5kTeSivtFndMy5iDmf.jpg",
         "score": 8,
-        "note": null
+        "note": null,
+        "url": "https://www.themoviedb.org/movie/687163-project-hail-mary"
       },
       {
         "title": "Schindler's List",
@@ -92,12 +94,6 @@
         "title": "Forrest Gump",
         "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/Cw4hIUIAmSYfK9QfaUW5igp9La.jpg",
         "score": 7,
-        "note": null
-      },
-      {
-        "title": "Goodfellas",
-        "image": "https://media.themoviedb.org/t/p/w600_and_h900_face/9OkCLM73MIU2CrKZbqiT8Ln1wY2.jpg",
-        "score": 4,
         "note": null
       },
       {
@@ -173,22 +169,10 @@
         "note": null
       },
       {
-        "title": "Daddy's Home",
-        "image": "https://www.themoviedb.org/t/p/w1280/fB9lALk9zKsMYWvf0bJSkJN219Z.jpg",
-        "score": 2,
-        "note": "Eat my dust, Dusty!"
-      },
-      {
         "title": "Look Back",
         "image": "https://www.themoviedb.org/t/p/w1280/4f2EcNkp1Mvp9wE5w7HKxcmACWg.jpg",
         "score": 7,
         "note": "*“Don't come out!”*"
-      },
-      {
-        "title": "Troy",
-        "image": "https://www.themoviedb.org/t/p/w1280/a07wLy4ONfpsjnBqMwhlWTJTcm.jpg",
-        "score": 2,
-        "note": null
       },
       {
         "title": "A Letter to Momo",
@@ -209,20 +193,6 @@
         "note": "*“Inu-oh! Tomoari!”*"
       },
       {
-        "title": "The Great Gatsby",
-        "image": "https://www.themoviedb.org/t/p/w600_and_h900_face/nimh1rrDDLhgpG8XAYoUZXHYwb6.jpg",
-        "score": 5,
-        "note": null,
-        "url": "https://www.themoviedb.org/movie/64682-the-great-gatsby"
-      },
-      {
-        "title": "Tekkonkinkreet",
-        "image": "https://www.themoviedb.org/t/p/w1280/e2x1YDuZPpQiaQS25Ego7xMZYOI.jpg",
-        "score": 5,
-        "note": null,
-        "url": "https://www.themoviedb.org/movie/13754"
-      },
-      {
         "title": "The Secret Life of Walter Mitty",
         "image": "https://www.themoviedb.org/t/p/w1280/iAo1hlzsPV9XpYcLQp6Ud065tGO.jpg",
         "score": null,
@@ -230,11 +200,18 @@
         "url": "https://www.themoviedb.org/movie/116745-the-secret-life-of-walter-mitty"
       },
       {
-        "title": "Anna Karenina",
-        "image": "https://www.themoviedb.org/t/p/w600_and_h900_face/b9mvt1kKqDuveD1AJuGSkBEuagU.jpg",
+        "title": "Ping Pong the Animation",
+        "image": "https://www.themoviedb.org/t/p/w1280/frgVn3ww547TVQH8vS2bWKZnEBu.jpg",
         "score": null,
-        "note": "*“Anna isn't a criminal, but she broke the rules!”*",
-        "url": "https://www.themoviedb.org/movie/96724-anna-karenina"
+        "note": "*“The Hero Appears! The Hero Appears! The Hero Appears!”*",
+        "url": "https://www.themoviedb.org/tv/60811"
+      },
+      {
+        "title": "Daemons of the Shadow Realm",
+        "image": "https://www.themoviedb.org/t/p/w1280/vIE1llfr1lcmzlsV4xn8vhgtlQN.jpg",
+        "score": null,
+        "note": "*“Majestic… like a dragon's fart.”*",
+        "url": "https://www.themoviedb.org/tv/260463-yomi-no-tsugai"
       }
     ]
   }

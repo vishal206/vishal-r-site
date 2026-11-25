@@ -312,6 +312,77 @@ const useWheelScroll = (rowRef: React.RefObject<HTMLDivElement | null>) => {
   }, [rowRef]);
 };
 
+/** How far the peek slides the row, and how long it takes there and back. */
+const PEEK_PX = 56;
+const PEEK_MS = 1100;
+
+/**
+ * Scrollbars are hidden site-wide, so nothing says the row scrolls. This
+ * helps two ways: the first time the row is mostly on screen it "peeks" —
+ * slides a little way along and settles back — and it reports whether the
+ * visitor has moved the row themselves yet, so the hint can go once they have.
+ * Reduced motion skips the peek. Any touch, wheel or drag on the row cancels
+ * a peek in progress.
+ */
+const useScrollHint = (rowRef: React.RefObject<HTMLDivElement | null>) => {
+  const [used, setUsed] = useState(false);
+
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!row) return;
+
+    let raf = 0;
+    let timer = 0;
+    const stopPeek = () => {
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+      raf = 0;
+    };
+
+    const onUse = () => {
+      stopPeek();
+      setUsed(true);
+    };
+    const events = ["wheel", "pointerdown", "touchstart", "keydown"] as const;
+    for (const e of events) row.addEventListener(e, onUse, { passive: true });
+
+    const peek = () => {
+      const base = row.scrollLeft;
+      const start = performance.now();
+      const step = (now: number) => {
+        const t = Math.min((now - start) / PEEK_MS, 1);
+        // Out and back on one smooth hump.
+        row.scrollLeft = base + PEEK_PX * Math.sin(Math.PI * t) ** 2;
+        raf = t < 1 ? requestAnimationFrame(step) : 0;
+      };
+      raf = requestAnimationFrame(step);
+    };
+
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")
+      .matches;
+    const io = reduced
+      ? null
+      : new IntersectionObserver(
+          ([entry]) => {
+            if (!entry.isIntersecting) return;
+            io?.disconnect();
+            // A beat after it arrives, so the eye has landed on it.
+            timer = window.setTimeout(peek, 400);
+          },
+          { threshold: 0.6 },
+        );
+    io?.observe(row);
+
+    return () => {
+      stopPeek();
+      io?.disconnect();
+      for (const e of events) row.removeEventListener(e, onUse);
+    };
+  }, [rowRef]);
+
+  return used;
+};
+
 // One row of posters, dealt out like a hand of cards: each one tucks under
 // the next, and hovering one slides it out from under so it shows in full —
 // on touch, the poster at the left edge gets that treatment as the row scrolls,
@@ -322,19 +393,39 @@ const useWheelScroll = (rowRef: React.RefObject<HTMLDivElement | null>) => {
 //
 // The subtitle (the film's note) follows the mouse only — phones and tablets
 // show the leading poster without it.
-const PosterRow = ({ items }: { items: ShelfItem[] }) => {
+const PosterRow = ({ title, items }: { title: string; items: ShelfItem[] }) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const hovered = useHoveredIndex(rowRef);
   const leading = useLeadingIndex(rowRef);
   useLoopScroll(rowRef, listRef, items.length);
   useWheelScroll(rowRef);
+  const scrolled = useScrollHint(rowRef);
+  const touch = useMediaQuery("(hover: none)");
   const total = items.length * COPIES;
 
   const note = hovered != null ? items[hovered % items.length]?.note : null;
 
   return (
     <div className="mb-6">
+      <div className="flex items-baseline justify-between gap-4 mb-2">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-available">
+          {title}
+        </div>
+        {/* A quiet "there's more" beside the heading, gone once the row's
+            been scrolled. */}
+        <div
+          aria-hidden
+          className={`flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-editorial-label transition-opacity duration-500 ${
+            scrolled ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          {touch ? "Swipe" : "Scroll"}
+          <span className="inline-block animate-nudge motion-reduce:animate-none">
+            →
+          </span>
+        </div>
+      </div>
       {/* Bleeds out to both edges of the screen so the row scrolls edge to
           edge, while the padding puts the first poster back in line with the
           page. Vertical padding leaves room for the shadow and hover glow,
@@ -439,10 +530,7 @@ const MovieShelf = () => {
 
   return (
     <section>
-      <div className="text-[10px] uppercase tracking-[0.2em] text-available mb-2">
-        Movies I recommend
-      </div>
-      <PosterRow items={watched} />
+      <PosterRow title="Worth watching" items={watched} />
     </section>
   );
 };

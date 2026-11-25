@@ -23,6 +23,18 @@ body {
   --font-display: "Playfair Display";
   --font-body: "Lora";
   --font-name: "Unbounded";
+
+  /* A small arrow drifting right and back: "there's more this way". */
+  --animate-nudge: nudge 1.8s ease-in-out infinite;
+  @keyframes nudge {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(4px);
+    }
+  }
 }
 
 *::-webkit-scrollbar {
